@@ -4,13 +4,12 @@ CREATE TABLE
     id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
     created timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    deleted boolean NOT NULL DEFAULT FALSE,
+    deleted timestamptz,
     email text UNIQUE NOT NULL,
     role text NOT NULL,
-    "lastLogin" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
+    providerId text NOT NULL
   );
 
--- +migrate Up
 CREATE TRIGGER set_timestamp BEFORE
 UPDATE
   ON users FOR EACH ROW EXECUTE PROCEDURE trigger_set_timestamp ();

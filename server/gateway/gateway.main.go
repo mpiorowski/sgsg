@@ -29,7 +29,6 @@ func main() {
 	router.Use(cors.New(config))
 
 	router.GET("/auth", base.Auth)
-	router.POST("/auth/:email", base.CreateMagicLink)
 	router.POST("/auth", base.Login)
 
 	router.GET("/files/:targetId", base.GetFiles)

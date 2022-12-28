@@ -11,8 +11,8 @@ import (
 	migrate "github.com/rubenv/sql-migrate"
 	"google.golang.org/grpc"
 
-	utils "github.com/mpiorowski/golang"
 	pb "github.com/mpiorowski/go-svelte-grpc/server/grpc"
+	utils "github.com/mpiorowski/golang"
 )
 
 var db *sql.DB
@@ -22,13 +22,12 @@ type server struct {
 }
 
 var (
-	PORT       = utils.MustGetenv("PORT")
-	ENV        = utils.MustGetenv("ENV")
-	PROJECT_ID = utils.MustGetenv("PROJECT_ID")
-	DB_USER    = utils.MustGetenv("DB_USER")
-	DB_PASS    = utils.MustGetenv("DB_PASS")
-	DB_HOST    = utils.MustGetenv("DB_HOST")
-	DB_NAME    = utils.MustGetenv("DB_NAME")
+	PORT    = utils.MustGetenv("PORT")
+	ENV     = utils.MustGetenv("ENV")
+	DB_USER = utils.MustGetenv("DB_USER")
+	DB_PASS = utils.MustGetenv("DB_PASS")
+	DB_HOST = utils.MustGetenv("DB_HOST")
+	DB_NAME = utils.MustGetenv("DB_NAME")
 )
 
 var validate = validator.New()
@@ -55,7 +54,7 @@ func init() {
 	if err != nil {
 		log.Fatalf("Migrations failed: %v", err)
 	}
-	log.Printf("Applied %d migrations", n)
+	log.Printf("Applied migrations: %d", n)
 }
 
 func main() {
@@ -66,8 +65,8 @@ func main() {
 	}
 	s := grpc.NewServer()
 	pb.RegisterUsersServiceServer(s, &server{})
-	log.Printf("Server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("Failed to serve: %v", err)
 	}
+	log.Printf("Server listening at: %v", lis.Addr())
 }

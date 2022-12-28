@@ -14,6 +14,29 @@ message UserId {
     string userId = 1;
 }
 
+service UsersService {
+    rpc Login(LoginRequest) returns (User) {}
+    rpc Auth(AuthRequest) returns (User) {}
+
+    rpc GetUsers(Empty) returns (stream User) {}
+    rpc CreateUser(stream User) returns (stream User) {}
+}
+
+message LoginRequest {
+    string providerId = 1;
+    string email = 2;
+}
+
+message AuthRequest {
+    string providerId = 1;
+}
+
+service FilesService {
+    rpc GetFiles(TargetId) returns (stream File) {}
+    rpc CreateFile(File) returns (File) {}
+    rpc DeleteFile(FileId) returns (File) {}
+}
+
 message TargetId {
     string targetId = 1;
 }
@@ -35,27 +58,4 @@ message File {
 
     bytes data = 8;
     string url = 9;
-}
-
-service UsersService {
-    rpc CreateToken(TokenRequest) returns (Token) {}
-    rpc Login(LoginRequest) returns (Session) {}
-    rpc AuthUser(AuthUserRequest) returns (AuthUserResponse) {}
-
-    rpc GetUsers(Empty) returns (stream User) {}
-    rpc CreateUser(stream User) returns (stream User) {}
-}
-
-message AuthUserRequest {
-    string uid = 1;
-    string email = 2;
-}
-message AuthUserResponse {
-    User user = 1;
-}
-
-service FilesService {
-    rpc GetFiles(TargetId) returns (stream File) {}
-    rpc CreateFile(File) returns (File) {}
-    rpc DeleteFile(FileId) returns (File) {}
 }

@@ -87,7 +87,6 @@ services:
     environment:
       ENV: development
       PORT: 443
-      PROJECT_ID: grpc
       DB_USER: postgres
       DB_PASS: 12345
       DB_HOST: db-users

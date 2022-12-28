@@ -8,14 +8,14 @@ import (
 
 func mapUser(rows *sql.Rows, row *sql.Row) (*pb.User, error) {
 	var user pb.User
-    var err error
+	var err error
 	if rows != nil {
 		err = rows.Scan(
-			&user.Id, &user.Created, &user.Updated, &user.Deleted, &user.Email, &user.Role, &user.LastLogin, &user.Uid,
+			&user.Id, &user.Created, &user.Updated, &user.Deleted, &user.Email, &user.Role, &user.ProviderId,
 		)
 	} else if row != nil {
 		err = row.Scan(
-			&user.Id, &user.Created, &user.Updated, &user.Deleted, &user.Email, &user.Role, &user.LastLogin, &user.Uid,
+			&user.Id, &user.Created, &user.Updated, &user.Deleted, &user.Email, &user.Role, &user.ProviderId,
 		)
 	}
 	if err != nil {

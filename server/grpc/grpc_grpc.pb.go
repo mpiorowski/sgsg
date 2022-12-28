@@ -22,9 +22,8 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UsersServiceClient interface {
-	CreateToken(ctx context.Context, in *TokenRequest, opts ...grpc.CallOption) (*Token, error)
-	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*Session, error)
-	AuthUser(ctx context.Context, in *AuthUserRequest, opts ...grpc.CallOption) (*AuthUserResponse, error)
+	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*User, error)
+	Auth(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*User, error)
 	GetUsers(ctx context.Context, in *Empty, opts ...grpc.CallOption) (UsersService_GetUsersClient, error)
 	CreateUser(ctx context.Context, opts ...grpc.CallOption) (UsersService_CreateUserClient, error)
 }
@@ -37,17 +36,8 @@ func NewUsersServiceClient(cc grpc.ClientConnInterface) UsersServiceClient {
 	return &usersServiceClient{cc}
 }
 
-func (c *usersServiceClient) CreateToken(ctx context.Context, in *TokenRequest, opts ...grpc.CallOption) (*Token, error) {
-	out := new(Token)
-	err := c.cc.Invoke(ctx, "/grpc.UsersService/CreateToken", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *usersServiceClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*Session, error) {
-	out := new(Session)
+func (c *usersServiceClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*User, error) {
+	out := new(User)
 	err := c.cc.Invoke(ctx, "/grpc.UsersService/Login", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -55,9 +45,9 @@ func (c *usersServiceClient) Login(ctx context.Context, in *LoginRequest, opts .
 	return out, nil
 }
 
-func (c *usersServiceClient) AuthUser(ctx context.Context, in *AuthUserRequest, opts ...grpc.CallOption) (*AuthUserResponse, error) {
-	out := new(AuthUserResponse)
-	err := c.cc.Invoke(ctx, "/grpc.UsersService/AuthUser", in, out, opts...)
+func (c *usersServiceClient) Auth(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*User, error) {
+	out := new(User)
+	err := c.cc.Invoke(ctx, "/grpc.UsersService/Auth", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -131,9 +121,8 @@ func (x *usersServiceCreateUserClient) Recv() (*User, error) {
 // All implementations must embed UnimplementedUsersServiceServer
 // for forward compatibility
 type UsersServiceServer interface {
-	CreateToken(context.Context, *TokenRequest) (*Token, error)
-	Login(context.Context, *LoginRequest) (*Session, error)
-	AuthUser(context.Context, *AuthUserRequest) (*AuthUserResponse, error)
+	Login(context.Context, *LoginRequest) (*User, error)
+	Auth(context.Context, *AuthRequest) (*User, error)
 	GetUsers(*Empty, UsersService_GetUsersServer) error
 	CreateUser(UsersService_CreateUserServer) error
 	mustEmbedUnimplementedUsersServiceServer()
@@ -143,14 +132,11 @@ type UsersServiceServer interface {
 type UnimplementedUsersServiceServer struct {
 }
 
-func (UnimplementedUsersServiceServer) CreateToken(context.Context, *TokenRequest) (*Token, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateToken not implemented")
-}
-func (UnimplementedUsersServiceServer) Login(context.Context, *LoginRequest) (*Session, error) {
+func (UnimplementedUsersServiceServer) Login(context.Context, *LoginRequest) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
-func (UnimplementedUsersServiceServer) AuthUser(context.Context, *AuthUserRequest) (*AuthUserResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AuthUser not implemented")
+func (UnimplementedUsersServiceServer) Auth(context.Context, *AuthRequest) (*User, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Auth not implemented")
 }
 func (UnimplementedUsersServiceServer) GetUsers(*Empty, UsersService_GetUsersServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetUsers not implemented")
@@ -171,24 +157,6 @@ func RegisterUsersServiceServer(s grpc.ServiceRegistrar, srv UsersServiceServer)
 	s.RegisterService(&UsersService_ServiceDesc, srv)
 }
 
-func _UsersService_CreateToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(TokenRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UsersServiceServer).CreateToken(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/grpc.UsersService/CreateToken",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UsersServiceServer).CreateToken(ctx, req.(*TokenRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _UsersService_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(LoginRequest)
 	if err := dec(in); err != nil {
@@ -207,20 +175,20 @@ func _UsersService_Login_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UsersService_AuthUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AuthUserRequest)
+func _UsersService_Auth_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AuthRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UsersServiceServer).AuthUser(ctx, in)
+		return srv.(UsersServiceServer).Auth(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/grpc.UsersService/AuthUser",
+		FullMethod: "/grpc.UsersService/Auth",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UsersServiceServer).AuthUser(ctx, req.(*AuthUserRequest))
+		return srv.(UsersServiceServer).Auth(ctx, req.(*AuthRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -280,16 +248,12 @@ var UsersService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*UsersServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "CreateToken",
-			Handler:    _UsersService_CreateToken_Handler,
-		},
-		{
 			MethodName: "Login",
 			Handler:    _UsersService_Login_Handler,
 		},
 		{
-			MethodName: "AuthUser",
-			Handler:    _UsersService_AuthUser_Handler,
+			MethodName: "Auth",
+			Handler:    _UsersService_Auth_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

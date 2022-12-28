@@ -7,7 +7,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"google.golang.org/api/option"
 	"google.golang.org/grpc/status"
 
 	firebase "firebase.google.com/go/v4"
@@ -19,13 +18,10 @@ import (
 var (
 	PORT       = utils.MustGetenv("PORT")
 	ENV        = utils.MustGetenv("ENV")
-	PROJECT_ID = utils.MustGetenv("PROJECT_ID")
 	DOMAIN     = utils.MustGetenv("DOMAIN")
+	PROJECT_ID = utils.MustGetenv("PROJECT_ID")
 	URI_FILES  = utils.MustGetenv("URI_FILES")
 	URI_USER   = utils.MustGetenv("URI_USER")
-	URI_BILLS  = utils.MustGetenv("URI_BILLS")
-	URI_FOOD   = utils.MustGetenv("URI_FOOD")
-	URI_ENERGY = utils.MustGetenv("URI_ENERGY")
 )
 
 var ctx = context.Background()
@@ -46,8 +42,7 @@ func GatewayError(c *gin.Context, err string, message string) {
 }
 
 func ConnectToFirebase() (*auth.Client, error) {
-	opt := option.WithCredentialsFile("./serviceAccountKey.json")
-	app, err := firebase.NewApp(context.Background(), nil, opt)
+	app, err := firebase.NewApp(context.Background(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +73,7 @@ func GetFirebaseToken(c *gin.Context) (*auth.Token, *auth.Client, error) {
 	return token, client, nil
 }
 
-func Authorization(c *gin.Context) (*pb.Session, error) {
+func Authorization(c *gin.Context) (*pb.User, error) {
 
 	token, _, err := GetFirebaseToken(c)
 	if err != nil {
@@ -99,20 +94,16 @@ func Authorization(c *gin.Context) (*pb.Session, error) {
 
 	// Make a gRPC request.
 	service := pb.NewUsersServiceClient(conn)
-	user, err := service.AuthUser(ctx, &pb.AuthUserRequest{
-		Uid: token.UID,
+	user, err := service.Auth(ctx, &pb.AuthRequest{
+		ProviderId: token.UID,
 	})
 
-	if err != nil || user.GetUser().GetId() == "" {
+	if err != nil || user.GetId() == "" {
 		log.Printf("service.AuthUser: %v", err)
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		return nil, err
 	}
 
-	var session pb.Session
-	session.UserId = user.GetUser().GetId()
-	session.Email = user.GetUser().GetEmail()
-	session.Role = user.GetUser().GetRole()
-
-	return &session, nil
+    user.ProviderId = ""
+	return user, nil
 }

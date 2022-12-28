@@ -13,11 +13,11 @@ import (
 
 func GetUsers(c *gin.Context) {
 
-	session, err := base.Authorization(c)
+	user, err := base.Authorization(c)
 	if err != nil {
 		return
 	}
-    if session.GetRole() != pb.UserRole_ROLE_ADMIN.String() {
+    if user.GetRole() != pb.UserRole_ROLE_ADMIN.String() {
         c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
         return
     }

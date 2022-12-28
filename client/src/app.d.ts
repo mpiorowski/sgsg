@@ -3,7 +3,13 @@
 // and what to do when importing types
 declare namespace App {
 	// interface Error {}
-	// interface Locals {}
+	interface Locals {
+        pb: PocketBase;
+        user: {
+            id: string;
+            email: string;
+        }
+    }
 	// interface PageData {}
 	// interface Platform {}
 }
