@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package grpc;
+
+option go_package = "go-svelte-grpc/server/grpc";
+option java_multiple_files = true;
+option java_outer_classname = "HomeItProto";
+option java_package = "io.homeit.proto";
+
+import "users.proto";
+
+message Empty {}
+message UserId {
+    string userId = 1;
+}
+
+message TargetId {
+    string targetId = 1;
+}
+
+message FileId {
+    string fileId = 1;
+    string targetId = 2;
+}
+
+message File {
+    string id = 1;
+    string created = 2;
+    string updated = 3;
+    bool deleted = 4;
+
+    string targetId = 5;
+    string name = 6;
+    string type = 7;
+
+    bytes data = 8;
+    string url = 9;
+}
+
+service UsersService {
+    rpc CreateToken(TokenRequest) returns (Token) {}
+    rpc Login(LoginRequest) returns (Session) {}
+    rpc AuthUser(AuthUserRequest) returns (AuthUserResponse) {}
+
+    rpc GetUsers(Empty) returns (stream User) {}
+    rpc CreateUser(stream User) returns (stream User) {}
+}
+
+message AuthUserRequest {
+    string uid = 1;
+    string email = 2;
+}
+message AuthUserResponse {
+    User user = 1;
+}
+
+service FilesService {
+    rpc GetFiles(TargetId) returns (stream File) {}
+    rpc CreateFile(File) returns (File) {}
+    rpc DeleteFile(FileId) returns (File) {}
+}

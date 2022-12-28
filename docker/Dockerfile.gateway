@@ -1,0 +1,12 @@
+FROM golang:1.19
+
+WORKDIR /usr/src/app
+
+COPY ./server/gateway/go.sum ./
+COPY ./server/gateway/go.mod ./
+RUN go mod download && go mod verify
+
+COPY ./server/gateway ./
+RUN go build -v -o /usr/local/bin ./...
+
+CMD ["gateway"]

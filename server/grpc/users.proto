@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package grpc;
+
+option go_package = "go-svelte-grpc/server/grpc";
+option java_multiple_files = true;
+option java_outer_classname = "HomeItProto";
+option java_package = "io.grpc.homeit.proto";
+
+
+message TokenRequest {
+  string email = 1;
+}
+
+message LoginRequest {
+  string email = 1;
+  string code = 2;
+}
+
+message Session {
+  string sessionId = 1;
+  string userId = 2;
+  string role = 3;
+  string email = 4;
+}
+
+message Token {
+  string id = 1;
+  string created = 2;
+  string updated = 3;
+  bool deleted = 4;
+
+  string code = 5;
+  string email = 6;
+  string expires = 7;
+}
+
+enum UserRole {
+  ROLE_USER = 0;
+  ROLE_ADMIN = 1;
+}
+
+message User {
+  string id = 1;
+  string created = 2;
+  string updated = 3;
+  bool deleted = 4;
+
+  string email = 5;
+  string role = 6;
+  string lastLogin = 7;
+
+  string uid = 8;
+}
+

@@ -1,0 +1,102 @@
+version: '3'
+services:
+  client: 
+    container_name: grpc-client
+    image: node:19-alpine
+    working_dir: /client
+    volumes:
+      - ./client:/client
+    command: npm run dev
+    environment:
+      VITE_DOMAIN_URL: http://localhost:3000
+      VITE_API_URL: http://localhost:7000
+      VITE_NODE_ENV: development
+    ports: 
+      - 3000:3000
+
+  gateway:
+    container_name: grpc-gateway
+    image: golang:1.19
+    working_dir: /server/gateway
+    volumes:
+      - ./server:/server
+    command: sh -c "go mod tidy && go run ."
+    environment:
+      PORT: 7000
+      PROJECT_ID: grpc
+      ENV: development
+      DOMAIN: localhost
+      URI_FILES: service-files
+      URI_USER: service-users
+      URI_BILLS: service-bills
+      URI_FOOD: service-food
+      URI_ENERGY: service-energy
+    ports: 
+      - 7000:7000
+
+  service-email:
+    container_name: grpc-service-email
+    image: golang:1.19
+    working_dir: /server/service-email
+    volumes:
+      - ./server:/server
+    command: sh -c "go mod tidy && go run ."
+    environment:
+      PORT: 3000
+      ENV: development
+      CLIENT_URL: http://localhost:3000
+      EMAIL_API_KEY: xxxxxx
+      EMAIL_FROM: email@gmail.com
+      EMAIL_NAME: GrpcEmail
+
+  service-files:
+    container_name: grpc-service-files
+    image: golang:1.19
+    depends_on:
+      - db-files
+    working_dir: /server/service-files
+    volumes:
+      - ./server:/server
+    command: sh -c "go mod tidy && go run ."
+    environment:
+      ENV: development
+      PORT: 443
+      BUCKET: grpc-bucket
+      DB_USER: postgres
+      DB_PASS: 12345
+      DB_HOST: db-files
+      DB_NAME: files
+
+  db-files:
+    container_name: grpc-db-files
+    image: postgres:14.1
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: files
+
+  service-users:
+    container_name: grpc-service-users
+    image: golang:1.19
+    depends_on:
+      - db-users
+    working_dir: /server/service-users
+    volumes:
+      - ./server:/server
+    command: sh -c "go mod tidy && go run ."
+    environment:
+      ENV: development
+      PORT: 443
+      PROJECT_ID: grpc
+      DB_USER: postgres
+      DB_PASS: 12345
+      DB_HOST: db-users
+      DB_NAME: users
+
+  db-users:
+    container_name: grpc-db-users
+    image: postgres:14.1
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: users

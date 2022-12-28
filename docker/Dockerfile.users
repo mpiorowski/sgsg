@@ -1,0 +1,12 @@
+FROM golang:1.19
+
+WORKDIR /usr/src/app
+
+COPY ./server/service-users/go.sum ./
+COPY ./server/service-users/go.mod ./
+RUN go mod download && go mod verify
+
+COPY ./server/service-users ./
+RUN go build -v -o /usr/local/bin/app ./...
+
+CMD ["app"]
