@@ -6,8 +6,11 @@ services:
     working_dir: /client
     volumes:
       - ./client:/client
+      - ./service.json:/service.json
     command: npm run dev
     environment:
+      VITE_FIREBASE_API_KEY: "xxx"
+      VITE_FIREBASE_AUTH_DOMAIN: "xxx"
       VITE_DOMAIN_URL: http://localhost:3000
       VITE_API_URL: http://localhost:7000
       VITE_NODE_ENV: development
@@ -23,14 +26,11 @@ services:
     command: sh -c "go mod tidy && go run ."
     environment:
       PORT: 7000
-      PROJECT_ID: grpc
       ENV: development
       DOMAIN: localhost
+      PROJECT_ID: xxxx
       URI_FILES: service-files
       URI_USER: service-users
-      URI_BILLS: service-bills
-      URI_FOOD: service-food
-      URI_ENERGY: service-energy
     ports: 
       - 7000:7000
 
@@ -45,9 +45,9 @@ services:
       PORT: 3000
       ENV: development
       CLIENT_URL: http://localhost:3000
-      EMAIL_API_KEY: xxxxxx
-      EMAIL_FROM: email@gmail.com
-      EMAIL_NAME: GrpcEmail
+      EMAIL_API_KEY: xxxx
+      EMAIL_FROM: xxxx
+      EMAIL_NAME: xxxx
 
   service-files:
     container_name: grpc-service-files
@@ -61,7 +61,7 @@ services:
     environment:
       ENV: development
       PORT: 443
-      BUCKET: grpc-bucket
+      BUCKET: xxxx
       DB_USER: postgres
       DB_PASS: 12345
       DB_HOST: db-files

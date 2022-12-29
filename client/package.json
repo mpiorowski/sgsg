@@ -30,6 +30,8 @@
 	"type": "module",
 	"dependencies": {
 		"@mpiorowski/svelte-init": "^2.0.4",
+		"firebase": "^9.15.0",
+		"firebase-admin": "^11.4.1",
 		"pocketbase": "^0.9.1",
 		"zod": "^3.20.2"
 	}

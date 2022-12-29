@@ -1,9 +1,11 @@
+import { checkEnv } from "$lib/env.util";
+
 export const Config = {
-    VITE_API_URL: import.meta.env.VITE_API_URL as string,
-    VITE_NODE_ENV: import.meta.env.VITE_NODE_ENV as string,
-    VITE_DOMAIN_URL: import.meta.env.VITE_DOMAIN_URL as string,
-    VITE_FIREBASE_API_KEY: import.meta.env.VITE_FIREBASE_API_KEY as string,
-    VITE_FIREBASE_AUTH_DOMAIN: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN as string,
+    VITE_API_URL: checkEnv(import.meta.env.VITE_API_URL),
+    VITE_NODE_ENV: checkEnv(import.meta.env.VITE_NODE_ENV),
+    VITE_DOMAIN_URL: checkEnv(import.meta.env.VITE_DOMAIN_URL),
+    VITE_FIREBASE_API_KEY: checkEnv(import.meta.env.VITE_FIREBASE_API_KEY),
+    VITE_FIREBASE_AUTH_DOMAIN: checkEnv(import.meta.env.VITE_FIREBASE_AUTH_DOMAIN),
     DAY_FORMAT: 'YYYY-MM-DD',
     MONTH_FORMAT: 'YYYY-MM',
     DAYTIME_FORMAT: 'YYYY-MM-DDTHH:mm:ss',
