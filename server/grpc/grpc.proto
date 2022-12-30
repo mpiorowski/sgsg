@@ -15,20 +15,15 @@ message UserId {
 }
 
 service UsersService {
-    rpc Login(LoginRequest) returns (User) {}
     rpc Auth(AuthRequest) returns (User) {}
 
     rpc GetUsers(Empty) returns (stream User) {}
     rpc CreateUser(stream User) returns (stream User) {}
 }
 
-message LoginRequest {
-    string providerId = 1;
-    string email = 2;
-}
-
 message AuthRequest {
     string providerId = 1;
+    string email = 2;
 }
 
 service FilesService {

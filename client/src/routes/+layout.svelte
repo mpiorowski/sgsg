@@ -1,9 +1,15 @@
 <script lang="ts">
+    import { clientAuth } from "$lib/firebase.client";
+    import { inMemoryPersistence } from "firebase/auth";
     import "./app.css";
+
+    clientAuth.setPersistence(inMemoryPersistence)
 </script>
 
 <div class="grid grid-rows-[auto_1fr_auto] h-screen">
-    <header class="font-semibold p-2 text-2xl">Go with svelte using grpc</header>
+    <header>
+        <div class="font-semibold p-2 text-2xl">Go with svelte using grpc</div>
+    </header>
 
     <main>
         <slot />

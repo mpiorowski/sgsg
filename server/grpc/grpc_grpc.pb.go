@@ -22,7 +22,6 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UsersServiceClient interface {
-	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*User, error)
 	Auth(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*User, error)
 	GetUsers(ctx context.Context, in *Empty, opts ...grpc.CallOption) (UsersService_GetUsersClient, error)
 	CreateUser(ctx context.Context, opts ...grpc.CallOption) (UsersService_CreateUserClient, error)
@@ -34,15 +33,6 @@ type usersServiceClient struct {
 
 func NewUsersServiceClient(cc grpc.ClientConnInterface) UsersServiceClient {
 	return &usersServiceClient{cc}
-}
-
-func (c *usersServiceClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*User, error) {
-	out := new(User)
-	err := c.cc.Invoke(ctx, "/grpc.UsersService/Login", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *usersServiceClient) Auth(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*User, error) {
@@ -121,7 +111,6 @@ func (x *usersServiceCreateUserClient) Recv() (*User, error) {
 // All implementations must embed UnimplementedUsersServiceServer
 // for forward compatibility
 type UsersServiceServer interface {
-	Login(context.Context, *LoginRequest) (*User, error)
 	Auth(context.Context, *AuthRequest) (*User, error)
 	GetUsers(*Empty, UsersService_GetUsersServer) error
 	CreateUser(UsersService_CreateUserServer) error
@@ -132,9 +121,6 @@ type UsersServiceServer interface {
 type UnimplementedUsersServiceServer struct {
 }
 
-func (UnimplementedUsersServiceServer) Login(context.Context, *LoginRequest) (*User, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
-}
 func (UnimplementedUsersServiceServer) Auth(context.Context, *AuthRequest) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Auth not implemented")
 }
@@ -155,24 +141,6 @@ type UnsafeUsersServiceServer interface {
 
 func RegisterUsersServiceServer(s grpc.ServiceRegistrar, srv UsersServiceServer) {
 	s.RegisterService(&UsersService_ServiceDesc, srv)
-}
-
-func _UsersService_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LoginRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UsersServiceServer).Login(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/grpc.UsersService/Login",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UsersServiceServer).Login(ctx, req.(*LoginRequest))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _UsersService_Auth_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -247,10 +215,6 @@ var UsersService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "grpc.UsersService",
 	HandlerType: (*UsersServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "Login",
-			Handler:    _UsersService_Login_Handler,
-		},
 		{
 			MethodName: "Auth",
 			Handler:    _UsersService_Auth_Handler,

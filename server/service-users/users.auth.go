@@ -11,31 +11,15 @@ import (
 )
 
 /**
-* Authorize user
- */
-func (s *server) AuthUser(c context.Context, in *pb.AuthRequest) (*pb.User, error) {
-	var user *pb.User
-
-	row := db.QueryRow(`select * from users where "providerId" = $1 and deleted is null`, in.ProviderId)
-    user, err := mapUser(nil, row)
-    if err != nil {
-        log.Printf("mapUser: %v", err)
-        return nil, status.Errorf(codes.NotFound, "User not found")
-    }
-
-	return user, nil
-}
-
-/**
 * Check if user exists, if not create new user
  */
-func (s *server) Login(ctx context.Context, in *pb.LoginRequest) (*pb.User, error) {
+func (s *server) Auth(ctx context.Context, in *pb.AuthRequest) (*pb.User, error) {
 
 	rules := map[string]string{
-		"Email": "required,max=100,email",
-		"Id":    "required,max=100",
+		"Email":      "required,max=100,email",
+		"ProviderId": "required,max=100",
 	}
-	validate.RegisterStructValidationMapRules(rules, pb.LoginRequest{})
+	validate.RegisterStructValidationMapRules(rules, pb.AuthRequest{})
 	err := validate.Struct(in)
 	if err != nil {
 		log.Printf("validate.Struct: %v", err)
@@ -49,9 +33,9 @@ func (s *server) Login(ctx context.Context, in *pb.LoginRequest) (*pb.User, erro
 		return nil, err
 	}
 
-    if user.GetDeleted() != "" {
-        return nil, status.Error(codes.Unauthenticated, "User is deleted")
-    }
+	if user.GetDeleted() != "" {
+		return nil, status.Error(codes.Unauthenticated, "User is deleted")
+	}
 
 	if err == sql.ErrNoRows {
 		// TODO - dynamic role assign

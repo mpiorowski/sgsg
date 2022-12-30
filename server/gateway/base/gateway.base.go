@@ -7,12 +7,13 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"google.golang.org/api/option"
 	"google.golang.org/grpc/status"
 
 	firebase "firebase.google.com/go/v4"
 	"firebase.google.com/go/v4/auth"
-	utils "github.com/mpiorowski/golang"
 	pb "github.com/mpiorowski/go-svelte-grpc/server/grpc"
+	utils "github.com/mpiorowski/golang"
 )
 
 var (
@@ -37,12 +38,13 @@ func GrpcError(c *gin.Context, err error, message string) {
 }
 
 func GatewayError(c *gin.Context, err string, message string) {
-    log.Printf(message+": %v", err)
+	log.Printf(message+": %v", err)
 	c.JSON(http.StatusBadRequest, gin.H{"error": err, "code": "BAD_REQUEST"})
 }
 
 func ConnectToFirebase() (*auth.Client, error) {
-	app, err := firebase.NewApp(context.Background(), nil)
+	opt := option.WithCredentialsFile("../../serviceAccount.json")
+	app, err := firebase.NewApp(context.Background(), nil, opt)
 	if err != nil {
 		return nil, err
 	}
@@ -56,17 +58,15 @@ func ConnectToFirebase() (*auth.Client, error) {
 }
 
 func GetFirebaseToken(c *gin.Context) (*auth.Token, *auth.Client, error) {
-	idToken := c.GetHeader("Authorization")
-	idToken = idToken[7:]
-
-	if idToken == "" {
-		return nil, nil, errors.New("idToken is empty")
+	sessionCookie, err := c.Cookie("sessionCookie")
+	if err != nil {
+		return nil, nil, errors.New("sessionCookie is empty")
 	}
 	client, err := ConnectToFirebase()
 	if err != nil {
 		return nil, nil, err
 	}
-	token, err := client.VerifyIDToken(ctx, idToken)
+	token, err := client.VerifySessionCookie(ctx, sessionCookie)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -76,7 +76,8 @@ func GetFirebaseToken(c *gin.Context) (*auth.Token, *auth.Client, error) {
 func Authorization(c *gin.Context) (*pb.User, error) {
 
 	token, _, err := GetFirebaseToken(c)
-	if err != nil {
+	email := token.Claims["email"].(string)
+	if err != nil || email == "" {
 		log.Printf("GetFirebaseToken: %v", err)
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		return nil, err
@@ -95,6 +96,7 @@ func Authorization(c *gin.Context) (*pb.User, error) {
 	// Make a gRPC request.
 	service := pb.NewUsersServiceClient(conn)
 	user, err := service.Auth(ctx, &pb.AuthRequest{
+		Email:      email,
 		ProviderId: token.UID,
 	})
 
@@ -104,6 +106,6 @@ func Authorization(c *gin.Context) (*pb.User, error) {
 		return nil, err
 	}
 
-    user.ProviderId = ""
+	user.ProviderId = ""
 	return user, nil
 }

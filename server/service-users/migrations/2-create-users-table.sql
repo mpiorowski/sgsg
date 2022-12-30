@@ -7,7 +7,7 @@ CREATE TABLE
     deleted timestamptz,
     email text UNIQUE NOT NULL,
     role text NOT NULL,
-    providerId text NOT NULL
+    "providerId" text NOT NULL
   );
 
 CREATE TRIGGER set_timestamp BEFORE

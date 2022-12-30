@@ -7,5 +7,5 @@ const firebaseConfig = {
     authDomain: Config.VITE_FIREBASE_AUTH_DOMAIN,
 };
 
-export const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
+const app = initializeApp(firebaseConfig);
+export const clientAuth = getAuth(app);

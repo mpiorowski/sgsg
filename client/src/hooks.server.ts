@@ -1,26 +1,40 @@
 import type { Handle } from "@sveltejs/kit";
-import { credential, initializeApp, type ServiceAccount } from "firebase-admin";
-import serviceAccount from "../../service.json";
+import { Config } from "./config";
+import type { User } from "./types/user.type";
 
 export const handle: Handle = async ({ event, resolve }) => {
-    const token = event.request.headers.get("Authorization")?.split("Bearer ")[1];
-    if (!token) {
-        console.info("No token found");
+    try {
+        const session = event.cookies.get("sessionCookie");
+        if (!session) {
+            console.info("No session cookie");
+            event.locals.user = null;
+            return await resolve(event);
+        }
+
+        const respone = await fetch(Config.VITE_API_URL + "/auth", {
+            method: "GET",
+            headers: {
+                Cookie: `sessionCookie=${session}`,
+            },
+        });
+        if (!respone.ok) {
+            throw new Error("Failed to get user");
+        }
+        const user = await respone.json() as User;
+
+        // const decodedToken = await serverAuth.verifySessionCookie(session);
+        event.locals.user = {
+            id: user.id,
+            email: user.email,
+            role: user.role,
+            providerId: user.providerId,
+        }
+
+        const response = await resolve(event);
+        return response;
+    } catch (error) {
+        console.error(error);
         event.locals.user = null;
         return await resolve(event);
     }
-
-    const app = initializeApp({
-        credential: credential.cert(serviceAccount as ServiceAccount),
-    });
-
-    app
-        .auth()
-        .verifyIdToken(token)
-        .then((decodedToken) => {
-            console.log(decodedToken);
-        });
-
-    const response = await resolve(event);
-    return response;
 };

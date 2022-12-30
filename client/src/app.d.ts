@@ -8,6 +8,8 @@ declare namespace App {
         user: {
             id: string;
             email: string;
+            role: UserRole;
+            providerId: string;
         } | null;
     }
     // interface PageData {}
