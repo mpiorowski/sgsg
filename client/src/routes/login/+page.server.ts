@@ -29,6 +29,7 @@ export const actions = {
             // Set session expiration to 5 days.
             const expiresIn = 60 * 60 * 24 * 5 * 1000;
 
+            // TODO - do this on golang backend?
             const sessionCookie = await serverAuth.createSessionCookie(
                 idToken,
                 { expiresIn },

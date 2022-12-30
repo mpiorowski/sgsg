@@ -106,6 +106,5 @@ func Authorization(c *gin.Context) (*pb.User, error) {
 		return nil, err
 	}
 
-	user.ProviderId = ""
 	return user, nil
 }
