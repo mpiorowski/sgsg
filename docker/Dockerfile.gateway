@@ -2,11 +2,11 @@ FROM golang:1.19
 
 WORKDIR /usr/src/app
 
-COPY ./server/gateway/go.sum ./
-COPY ./server/gateway/go.mod ./
+COPY ./server/go.sum /usr/src
+COPY ./server/go.mod /usr/src
 RUN go mod download && go mod verify
 
-COPY ./server/gateway ./
+COPY ./server/gateway /usr/src/app
 RUN go build -v -o /usr/local/bin ./...
 
 CMD ["gateway"]

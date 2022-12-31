@@ -6,12 +6,11 @@ services:
     working_dir: /client
     volumes:
       - ./client:/client
-      - ./service.json:/service.json
+      - ./serviceAccount.json:/serviceAccount.json
     command: npm run dev
     environment:
       VITE_FIREBASE_API_KEY: "xxx"
       VITE_FIREBASE_AUTH_DOMAIN: "xxx"
-      VITE_DOMAIN_URL: http://localhost:3000
       VITE_API_URL: http://localhost:7000
       VITE_NODE_ENV: development
     ports: 

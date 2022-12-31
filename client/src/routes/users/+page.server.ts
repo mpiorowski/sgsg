@@ -1,3 +1,4 @@
+import { apiRequest } from "$lib/api.util";
 import { error, redirect } from "@sveltejs/kit";
 import { Config } from "src/config";
 import type { User } from "src/types/user.type";
@@ -22,21 +23,27 @@ export const load = (async ({ locals, cookies }) => {
 }) satisfies PageServerLoad;
 
 export const actions = {
-    delete: async ({ locals, cookies, params }) => {
+    delete: async ({ locals, cookies, request }) => {
         if (!locals.user?.id) {
             throw redirect(303, "/login");
         }
 
-        const response = await fetch(Config.VITE_API_URL + "/users", {
-            method: "DELETE",
-            headers: {
-                Cookie: `sessionCookie=${cookies.get("sessionCookie")}`,
-            },
-        });
-        if (!response.ok) {
-            console.error(await response.json());
+        const form = await request.formData();
+        const user = form.get("user");
+
+        try {
+            const response = await apiRequest<User>({
+                url: "/users",
+                method: "DELETE",
+                body: user as string,
+                cookies,
+            });
+            return {
+                user: response,
+            }
+        } catch (err) {
+            console.error(err);
             throw error(500, "Failed to delete user");
         }
-        return redirect(303, "/users");
     }
 } satisfies Actions;

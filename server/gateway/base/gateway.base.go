@@ -43,8 +43,14 @@ func GatewayError(c *gin.Context, err string, message string) {
 }
 
 func ConnectToFirebase() (*auth.Client, error) {
-	opt := option.WithCredentialsFile("../../serviceAccount.json")
-	app, err := firebase.NewApp(context.Background(), nil, opt)
+    var app *firebase.App
+    var err error
+	if ENV == "production" {
+        app, err = firebase.NewApp(context.Background(), nil)
+	} else {
+		opt := option.WithCredentialsFile("../../serviceAccount.json")
+		app, err = firebase.NewApp(context.Background(), nil, opt)
+	}
 	if err != nil {
 		return nil, err
 	}
@@ -85,7 +91,7 @@ func Authorization(c *gin.Context) (*pb.User, error) {
 	if token.Claims["email"] != nil {
 		email = token.Claims["email"].(string)
 	} else {
-        log.Printf("token.Claims[email] is empty")
+		log.Printf("token.Claims[email] is empty")
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		return nil, errors.New("token.Claims[email] is empty")
 	}
