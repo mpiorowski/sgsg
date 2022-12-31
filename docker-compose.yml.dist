@@ -6,7 +6,6 @@ services:
     working_dir: /client
     volumes:
       - ./client:/client
-      - ./serviceAccount.json:/serviceAccount.json
     command: npm run dev
     environment:
       VITE_FIREBASE_API_KEY: "xxx"

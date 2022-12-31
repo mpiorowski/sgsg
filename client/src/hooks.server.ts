@@ -1,6 +1,5 @@
 import { apiRequest } from "$lib/api.util";
 import type { Handle, HandleServerError } from "@sveltejs/kit";
-import { Config } from "./config";
 import type { User } from "./types/user.type";
 
 // TODO - finish handle error

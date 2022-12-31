@@ -2,6 +2,7 @@ import type { Actions, PageServerLoad } from "./$types";
 import { error, redirect } from "@sveltejs/kit";
 import { serverAuth } from "$lib/firebase.server";
 import { Config } from "src/config";
+import { apiRequest } from "$lib/api.util";
 
 export const load = (({ locals }) => {
     if (locals.user?.id) {
@@ -26,20 +27,18 @@ export const actions = {
             // return { status: 403, message: "Invalid CSRF token" };
             // }
 
-            // Set session expiration to 5 days.
-            const expiresIn = 60 * 60 * 24 * 5 * 1000;
-
             // TODO - do this on golang backend?
-            const sessionCookie = await serverAuth.createSessionCookie(
-                idToken,
-                { expiresIn },
-            );
+            const sessionCookie = await apiRequest<{ cookie: string }>({
+                url: "/login",
+                method: "POST",
+                body: JSON.stringify({ idToken }),
+            });
 
             // Add user to server
             const response = await fetch(Config.VITE_API_URL + "/auth", {
                 method: "GET",
                 headers: {
-                    "Cookie": `sessionCookie=${sessionCookie}`,
+                    "Cookie": `sessionCookie=${sessionCookie.cookie}`,
                 },
             });
             if (!response.ok) {
@@ -47,11 +46,11 @@ export const actions = {
             }
 
             // TODO - config cookie
-            cookies.set("sessionCookie", sessionCookie, {
+            cookies.set("sessionCookie", sessionCookie.cookie, {
                 httpOnly: true,
                 secure: true,
                 sameSite: "strict",
-                maxAge: expiresIn,
+                maxAge: 60 * 60 * 24 * 5, // 5 days
             });
         } catch (err) {
             console.error(err);

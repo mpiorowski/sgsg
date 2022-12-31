@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { clientAuth } from "$lib/firebase.client";
+    import { clientAuth } from "$lib/firebase.util";
     import { inMemoryPersistence } from "firebase/auth";
     import "./app.css";
 

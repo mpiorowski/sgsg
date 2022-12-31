@@ -25,6 +25,7 @@ func main() {
 	router.Use(cors.New(config))
 
 	router.GET("/auth", base.Auth)
+	router.POST("/login", base.Login)
 
 	router.GET("/files/:targetId", base.GetFiles)
 	router.POST("/files", base.CreateFile)
