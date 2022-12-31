@@ -36,7 +36,7 @@ func main() {
 
 	router.GET("/users", users.GetUsers)
 	router.POST("/users", users.CreateUser)
-	router.DELETE("/users", users.CreateUser)
+	router.DELETE("/users", users.DeleteUser)
 
 	if err := router.Run(fmt.Sprintf("0.0.0.0:%v", base.PORT)); err != nil {
 		panic(err)
