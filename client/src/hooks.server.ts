@@ -1,6 +1,15 @@
-import type { Handle } from "@sveltejs/kit";
+import type { Handle, HandleServerError } from "@sveltejs/kit";
 import { Config } from "./config";
 import type { User } from "./types/user.type";
+
+// TODO - finish handle error
+export const handleError: HandleServerError = ({ error, event }) => {
+    console.error(error);
+    return {
+        message: 'Whoops!',
+        code: 'UNKNOWN'
+    };
+};
 
 export const handle: Handle = async ({ event, resolve }) => {
     try {
