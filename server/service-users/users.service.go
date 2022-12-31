@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"io"
 	"log"
 
@@ -32,6 +33,16 @@ func (s *server) GetUsers(in *pb.Empty, stream pb.UsersService_GetUsersServer) e
 		return err
 	}
 	return nil
+}
+
+func (s *server) DeleteUser(ctx context.Context, in *pb.User) (*pb.User, error) {
+	row := db.QueryRow(`update users set deleted = now() where id = $1 and "providerId" = $2 and email = $3 returning *`, in.Id, in.ProviderId, in.Email)
+	user, err := mapUser(nil, row)
+	if err != nil {
+		log.Printf("db.Exec: %v", err)
+		return nil, err
+	}
+	return user, nil
 }
 
 func (s *server) CreateUser(stream pb.UsersService_CreateUserServer) error {

@@ -1,5 +1,9 @@
 export type User = {
     id: string;
+    created: Date;
+    updated: Date;
+    deleted: Date;
+
     email: string;
     role: UserRole;
     providerId: string;

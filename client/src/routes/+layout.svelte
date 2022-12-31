@@ -7,11 +7,14 @@
 </script>
 
 <div class="grid grid-rows-[auto_1fr_auto] h-screen">
-    <header>
-        <div class="font-semibold p-2 text-2xl">Go with svelte using grpc</div>
+    <header class="flex flex-row items-center gap-4 font-semibold text-xl p-4">
+        <div>Go with svelte using grpc</div>
+        <a href="/login" class="text-gray-400 hover:text-green-700 border border-gray-400 px-2 rounded">Login</a>
+        <a href="/" class="text-gray-400 hover:text-green-700 border border-gray-400 px-2 rounded">Home</a>
+        <a href="/users" class="text-gray-400 hover:text-green-700 border border-gray-400 px-2 rounded">Users</a>
     </header>
 
-    <main>
+    <main class="max-w-xl m-auto h-full w-full">
         <slot />
     </main>
 

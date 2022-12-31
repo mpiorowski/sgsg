@@ -43,8 +43,14 @@ func GatewayError(c *gin.Context, err string, message string) {
 }
 
 func ConnectToFirebase() (*auth.Client, error) {
-	opt := option.WithCredentialsFile("../../serviceAccount.json")
-	app, err := firebase.NewApp(context.Background(), nil, opt)
+    var app *firebase.App
+    var err error
+	if ENV == "production" {
+        app, err = firebase.NewApp(context.Background(), nil)
+	} else {
+		opt := option.WithCredentialsFile("../../serviceAccount.json")
+		app, err = firebase.NewApp(context.Background(), nil, opt)
+	}
 	if err != nil {
 		return nil, err
 	}
@@ -76,11 +82,18 @@ func GetFirebaseToken(c *gin.Context) (*auth.Token, *auth.Client, error) {
 func Authorization(c *gin.Context) (*pb.User, error) {
 
 	token, _, err := GetFirebaseToken(c)
-	email := token.Claims["email"].(string)
-	if err != nil || email == "" {
+	if err != nil || token == nil {
 		log.Printf("GetFirebaseToken: %v", err)
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		return nil, err
+	}
+	var email string
+	if token.Claims["email"] != nil {
+		email = token.Claims["email"].(string)
+	} else {
+		log.Printf("token.Claims[email] is empty")
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return nil, errors.New("token.Claims[email] is empty")
 	}
 
 	// Connect to gRPC server.
@@ -106,6 +119,5 @@ func Authorization(c *gin.Context) (*pb.User, error) {
 		return nil, err
 	}
 
-	user.ProviderId = ""
 	return user, nil
 }

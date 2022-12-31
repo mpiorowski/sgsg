@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { applyAction, deserialize } from "$app/forms";
     import { goto } from "$app/navigation";
     import { clientAuth } from "$lib/firebase.client";
     import { Button } from "@mpiorowski/svelte-init";
@@ -9,7 +8,6 @@
         try {
             const google = new GoogleAuthProvider();
             const response = await signInWithPopup(clientAuth, google);
-            GoogleAuthProvider.credentialFromResult(response);
             const idToken = await response.user.getIdToken();
             if (!idToken) {
                 throw new Error("No token");

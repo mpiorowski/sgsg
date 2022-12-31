@@ -20,7 +20,7 @@
         Roles: {data.user.role}
     </div>
     <div>
-        ProviderId: {data.user.id}
+        ProviderId: {data.user.providerId}
     </div>
     <form action="/login?/logout" id="logout" method="post">
         <Button form="logout">Logout</Button>

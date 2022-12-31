@@ -19,6 +19,7 @@ service UsersService {
 
     rpc GetUsers(Empty) returns (stream User) {}
     rpc CreateUser(stream User) returns (stream User) {}
+    rpc DeleteUser(User) returns (User) {}
 }
 
 message AuthRequest {

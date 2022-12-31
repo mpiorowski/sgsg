@@ -2,13 +2,14 @@ package users
 
 import (
 	"io"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	utils "github.com/mpiorowski/golang"
 	pb "github.com/mpiorowski/go-svelte-grpc/server/grpc"
+	utils "github.com/mpiorowski/golang"
 
-    base "github.com/mpiorowski/go-svelte-grpc/server/gateway/base"
+	base "github.com/mpiorowski/go-svelte-grpc/server/gateway/base"
 )
 
 func GetUsers(c *gin.Context) {
@@ -17,10 +18,12 @@ func GetUsers(c *gin.Context) {
 	if err != nil {
 		return
 	}
-    if user.GetRole() != pb.UserRole_ROLE_ADMIN.String() {
-        c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
-        return
-    }
+	// TODO - change to admin
+	if user.GetRole() != pb.UserRole_ROLE_USER.String() {
+		log.Printf("Unauthorized user: %v", user.GetEmail())
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
+	}
 
 	// Connect to gRPC server.
 	conn, err, ctx, cancel := utils.Connect(base.ENV, base.URI_USER)
@@ -62,14 +65,14 @@ func CreateUser(c *gin.Context) {
 
 	err := c.BindJSON(&request)
 	if err != nil {
-        base.GrpcError(c, err, "c.BindJSON")
+		base.GrpcError(c, err, "c.BindJSON")
 		return
 	}
 
 	// Connect to gRPC server.
 	conn, err, ctx, cancel := utils.Connect(base.ENV, base.URI_USER)
 	if err != nil {
-        base.GrpcError(c, err, "utils.Connect")
+		base.GrpcError(c, err, "utils.Connect")
 		return
 	}
 	defer conn.Close()
@@ -79,18 +82,18 @@ func CreateUser(c *gin.Context) {
 	service := pb.NewUsersServiceClient(conn)
 	stream, err := service.CreateUser(ctx)
 	if err != nil {
-        base.GrpcError(c, err, "service.CreateUser")
+		base.GrpcError(c, err, "service.CreateUser")
 		return
 	}
 
 	err = stream.Send(&request)
 	if err != nil {
-        base.GrpcError(c, err, "stream.Send")
+		base.GrpcError(c, err, "stream.Send")
 		return
 	}
 	err = stream.CloseSend()
 	if err != nil {
-        base.GrpcError(c, err, "stream.CloseSend")
+		base.GrpcError(c, err, "stream.CloseSend")
 		return
 	}
 
@@ -100,9 +103,39 @@ func CreateUser(c *gin.Context) {
 			break
 		}
 		if err != nil {
-            base.GrpcError(c, err, "stream.Recv")
+			base.GrpcError(c, err, "stream.Recv")
 			return
 		}
 		c.JSON(http.StatusOK, user)
 	}
+}
+
+func DeleteUser(c *gin.Context) {
+
+	var request pb.User
+	err := c.BindJSON(&request)
+	if err != nil {
+		base.GrpcError(c, err, "c.BindJSON")
+		return
+	}
+
+	// Connect to gRPC server.
+	conn, err, ctx, cancel := utils.Connect(base.ENV, base.URI_USER)
+	if err != nil {
+		base.GrpcError(c, err, "utils.Connect")
+		return
+	}
+	defer conn.Close()
+	defer cancel()
+
+	// Make a gRPC request.
+	service := pb.NewUsersServiceClient(conn)
+
+	user, err := service.DeleteUser(ctx, &request)
+	if err != nil {
+		base.GrpcError(c, err, "service.DeleteUser")
+		return
+	}
+
+	c.JSON(http.StatusOK, user)
 }

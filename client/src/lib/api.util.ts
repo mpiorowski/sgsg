@@ -1,6 +1,7 @@
 import { writable, type Writable } from 'svelte/store';
 import { Config } from '../config';
 import type { SafeParseReturnType } from 'zod';
+import type { Cookies } from '@sveltejs/kit';
 
 type UseApiResponse<D, V> = {
     fetching: Writable<boolean>;
@@ -63,6 +64,7 @@ type Options = {
     url: string;
     method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
     body?: string | FormData;
+    cookies?: Cookies;
 };
 
 /**
@@ -70,13 +72,13 @@ type Options = {
  * @param {Options} Options
  * @returns {Promise<T>} Promise
  */
-export const apiRequest = async <T>({ url, method, body }: Options): Promise<T> => {
+export const apiRequest = async <T>({ url, method, body, cookies }: Options): Promise<T> => {
     const headers = new Headers();
+    headers.append('Cookie', `sessionCookie=${cookies?.get('sessionCookie')}`);
 
     const response = await fetch(`${Config.VITE_API_URL}${url}`, {
         method: method,
         body: body,
-        credentials: 'include',
         headers,
     });
     if (response.status === 401) {
