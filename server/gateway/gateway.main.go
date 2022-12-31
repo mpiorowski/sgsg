@@ -17,13 +17,9 @@ func main() {
 	}
 	router := gin.Default()
 	router.MaxMultipartMemory = 8 << 20 // 8 MiB
-	url := "http://" + base.DOMAIN + ":3000"
-	if base.ENV == "production" {
-		url = "https://www." + base.DOMAIN
-	}
 
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{url}
+	config.AllowOrigins = []string{base.DOMAIN}
 	config.AllowCredentials = true
     config.AllowHeaders = []string{"Authorization", "Content-Type"}
 	router.Use(cors.New(config))
