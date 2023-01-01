@@ -1,11 +1,11 @@
 FROM golang:1.19
 
-WORKDIR /usr/src
+WORKDIR /usr/src/app
 
 COPY ./server/go.sum /usr/src
 COPY ./server/go.mod /usr/src
 COPY ./server/gateway /usr/src/app
 RUN go mod tidy
-RUN go build -v -o /usr/local/bin ./app/...
+RUN go build -v -o /usr/local/bin ./...
 
 CMD ["gateway"]
