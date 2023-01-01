@@ -1,4 +1,4 @@
-module github.com/mpiorowski/go-svelte-grpc/server
+module github.com/mpiorowski/go-svelte-grpc
 
 go 1.19
 
