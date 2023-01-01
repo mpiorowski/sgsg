@@ -1,8 +1,9 @@
 # Go with SvelteKit using gRPC template
 
 ## Architecture
-- SvelteKit for frontend deployed on Vercel
-- Go for backend deployed on Google Cloud Run
+- SvelteKit for frontend
+- Go for backend
+- Everything is deployed using Google Cloud Run
 - Backend build as microservices, with api gateway between client and server
 - Communication between microservices using gRPC
 - Authorization using firebase auth
@@ -10,7 +11,7 @@
 - Go create firebase client at start, so no need to reconnect/recreate firebase client
 
 ## Demo page
-https://go-svelte-grpc.vercel.app/login
+https://client-dz5ydq3n2q-lz.a.run.app/
 
 ## TODO
 - Emails using Pubsub
