@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { goto } from "$app/navigation";
+    import { goto, invalidateAll } from "$app/navigation";
     import { clientAuth } from "$lib/firebase.util";
     import { Button } from "@mpiorowski/svelte-init";
     import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
@@ -21,6 +21,7 @@
             if (!result.ok) {
                 throw new Error("Login failed");
             }
+            invalidateAll();
             goto("/");
         } catch (error) {
             console.error(error);

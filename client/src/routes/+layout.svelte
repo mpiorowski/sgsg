@@ -1,17 +1,38 @@
 <script lang="ts">
     import { clientAuth } from "$lib/firebase.util";
     import { inMemoryPersistence } from "firebase/auth";
+    import { UserRole } from "src/types/user.type";
+    import type { LayoutData } from "./$types";
     import "./app.css";
 
-    clientAuth.setPersistence(inMemoryPersistence)
+    export let data: LayoutData;
+
+    clientAuth.setPersistence(inMemoryPersistence);
 </script>
 
 <div class="grid grid-rows-[auto_1fr_auto] h-screen">
     <header class="flex flex-row items-center gap-4 font-semibold text-xl p-4">
         <div>Go with svelte using grpc</div>
-        <a href="/login" class="text-gray-400 hover:text-green-700 border border-gray-400 px-2 rounded">Login</a>
-        <a href="/" class="text-gray-400 hover:text-green-700 border border-gray-400 px-2 rounded">Home</a>
-        <a href="/users" class="text-gray-400 hover:text-green-700 border border-gray-400 px-2 rounded">Users</a>
+        <a
+            href="/login"
+            class="text-gray-400 hover:text-green-700 border border-gray-400 px-2 rounded"
+        >
+            Login
+        </a>
+        <a
+            href="/"
+            class="text-gray-400 hover:text-green-700 border border-gray-400 px-2 rounded"
+        >
+            Home
+        </a>
+        {#if data.user?.role === UserRole.ROLE_ADMIN}
+            <a
+                href="/users"
+                class="text-gray-400 hover:text-green-700 border border-gray-400 px-2 rounded"
+            >
+                Users
+            </a>
+        {/if}
     </header>
 
     <main class="max-w-xl m-auto h-full w-full">

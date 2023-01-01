@@ -39,7 +39,13 @@ func (s *server) Auth(ctx context.Context, in *pb.AuthRequest) (*pb.User, error)
 
 	if err == sql.ErrNoRows {
 		// TODO - dynamic role assign
-		row = db.QueryRow(`insert into users (email, role, "providerId") values ($1, $2, $3) returning *`, in.Email, pb.UserRole_ROLE_USER.String(), in.ProviderId)
+        var role string
+        if in.Email == "mateuszpiorowski@gmail.com" {
+            role = pb.UserRole_ROLE_ADMIN.String()
+        } else {
+            role = pb.UserRole_ROLE_USER.String()
+        }
+		row = db.QueryRow(`insert into users (email, role, "providerId") values ($1, $2, $3) returning *`, in.Email, role, in.ProviderId)
 		user, err = mapUser(nil, row)
 		if err != nil {
 			log.Printf("mapUser: %v", err)
