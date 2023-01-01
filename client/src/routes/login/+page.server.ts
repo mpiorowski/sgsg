@@ -1,6 +1,5 @@
 import type { Actions, PageServerLoad } from "./$types";
 import { error, redirect } from "@sveltejs/kit";
-import { serverAuth } from "$lib/firebase.server";
 import { Config } from "src/config";
 import { apiRequest } from "$lib/api.util";
 
