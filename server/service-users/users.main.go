@@ -47,9 +47,9 @@ func init() {
 	log.Println("Connected to database")
 
 	// Migrations
-    var migrationsDir = "/migrations"
-    if ENV == "development" {
-        migrationsDir = "./migrations"
+    var migrationsDir = "./migrations"
+    if ENV == "production" {
+        migrationsDir = "/migrations"
     }
 	migrations := &migrate.FileMigrationSource{
 		Dir: migrationsDir,
