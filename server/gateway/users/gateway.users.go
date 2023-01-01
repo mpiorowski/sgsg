@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	pb "go-svelte-grpc/server/grpc"
+	pb "go-svelte-grpc/grpc"
 	utils "github.com/mpiorowski/golang"
 
 	base "go-svelte-grpc/gateway/base"

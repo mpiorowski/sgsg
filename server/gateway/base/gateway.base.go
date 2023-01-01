@@ -13,7 +13,7 @@ import (
 	firebase "firebase.google.com/go/v4"
 	"firebase.google.com/go/v4/auth"
 	utils "github.com/mpiorowski/golang"
-	pb "go-svelte-grpc/gateway/grpc"
+	pb "go-svelte-grpc/grpc"
 )
 
 var (

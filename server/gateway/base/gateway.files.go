@@ -8,7 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	utils "github.com/mpiorowski/golang"
-	pb "go-svelte-grpc/gateway/grpc"
+	pb "go-svelte-grpc/grpc"
 )
 
 func GetFiles(c *gin.Context) {
