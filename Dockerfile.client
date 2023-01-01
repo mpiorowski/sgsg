@@ -1,0 +1,10 @@
+FROM node:19-alpine
+
+WORKDIR /app
+
+COPY client .
+
+RUN npm ci
+RUN npm run build
+
+CMD ["node", "build"]
