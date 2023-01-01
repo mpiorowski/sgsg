@@ -6,8 +6,8 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
-    base "github.com/mpiorowski/go-svelte-grpc/server/gateway/base"
-    users "github.com/mpiorowski/go-svelte-grpc/server/gateway/users"
+    base "go-svelte-grpc/server/gateway/base"
+    users "go-svelte-grpc/server/gateway/users"
 )
 
 

@@ -12,8 +12,8 @@ import (
 
 	firebase "firebase.google.com/go/v4"
 	"firebase.google.com/go/v4/auth"
-	pb "github.com/mpiorowski/go-svelte-grpc/server/grpc"
 	utils "github.com/mpiorowski/golang"
+	pb "go-svelte-grpc/server/grpc"
 )
 
 var (

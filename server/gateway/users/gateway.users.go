@@ -6,10 +6,10 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	pb "github.com/mpiorowski/go-svelte-grpc/server/grpc"
+	pb "go-svelte-grpc/server/grpc"
 	utils "github.com/mpiorowski/golang"
 
-	base "github.com/mpiorowski/go-svelte-grpc/server/gateway/base"
+	base "go-svelte-grpc/server/gateway/base"
 )
 
 func GetUsers(c *gin.Context) {
