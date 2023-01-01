@@ -31,13 +31,6 @@ export const actions = {
                 body: JSON.stringify({ idToken }),
             });
 
-            // Add user to server
-            await apiRequest<{ cookie: string }>({
-                url: "/auth",
-                method: "GET",
-                cookies,
-            });
-
             // TODO - config cookie
             cookies.set("sessionCookie", sessionCookie.cookie, {
                 httpOnly: true,
