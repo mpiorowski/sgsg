@@ -9,7 +9,7 @@ import (
 	pb "go-svelte-grpc/server/grpc"
 	utils "github.com/mpiorowski/golang"
 
-	base "go-svelte-grpc/server/gateway/base"
+	base "go-svelte-grpc/gateway/base"
 )
 
 func GetUsers(c *gin.Context) {
