@@ -7,10 +7,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"google.golang.org/api/option"
 	"google.golang.org/grpc/status"
 
-	firebase "firebase.google.com/go/v4"
 	"firebase.google.com/go/v4/auth"
 	utils "github.com/mpiorowski/golang"
 	pb "go-svelte-grpc/grpc"
@@ -25,7 +23,8 @@ var (
 	URI_USER   = utils.MustGetenv("URI_USER")
 )
 
-var ctx = context.Background()
+var Client *auth.Client
+var Ctx = context.Background()
 
 func GrpcError(c *gin.Context, err error, message string) {
 	log.Printf(message+": %v", err)
@@ -42,41 +41,19 @@ func GatewayError(c *gin.Context, err string, message string) {
 	c.JSON(http.StatusBadRequest, gin.H{"error": err, "code": "BAD_REQUEST"})
 }
 
-func ConnectToFirebase() (*auth.Client, error) {
-    var app *firebase.App
-    var err error
-	if ENV == "production" {
-        app, err = firebase.NewApp(context.Background(), nil)
-	} else {
-		opt := option.WithCredentialsFile("../../serviceAccount.json")
-		app, err = firebase.NewApp(context.Background(), nil, opt)
-	}
-	if err != nil {
-		return nil, err
-	}
-
-	client, err := app.Auth(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	return client, nil
-}
-
 func GetFirebaseToken(c *gin.Context) (*auth.Token, *auth.Client, error) {
 	sessionCookie, err := c.Cookie("sessionCookie")
 	if err != nil {
 		return nil, nil, errors.New("sessionCookie is empty")
 	}
-	client, err := ConnectToFirebase()
 	if err != nil {
 		return nil, nil, err
 	}
-	token, err := client.VerifySessionCookie(ctx, sessionCookie)
+	token, err := Client.VerifySessionCookie(Ctx, sessionCookie)
 	if err != nil {
 		return nil, nil, err
 	}
-	return token, client, nil
+	return token, Client, nil
 }
 
 func Authorization(c *gin.Context) (*pb.User, error) {

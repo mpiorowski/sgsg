@@ -119,6 +119,11 @@ func DeleteUser(c *gin.Context) {
 		return
 	}
 
+	_, err = base.Authorization(c)
+	if err != nil {
+		return
+	}
+
 	// Connect to gRPC server.
 	conn, err, ctx, cancel := utils.Connect(base.ENV, base.URI_USER)
 	if err != nil {
