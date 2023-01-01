@@ -303,8 +303,8 @@ github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742/go.mod h1:bx2lN
 github.com/modern-go/reflect2 v1.0.1/go.mod h1:bx2lNnkwVCuqBIxFjflWJWanXIb3RllmbCylyMrvgv0=
 github.com/modern-go/reflect2 v1.0.2 h1:xBagoLtFs94CBntxluKeaWgTMpvLxC4ur3nMaC9Gz0M=
 github.com/modern-go/reflect2 v1.0.2/go.mod h1:yWuevngMOJpCy52FWWMvUC8ws7m/LJsjYzDa0/r8luk=
-github.com/mpiorowski/golang v1.2.0 h1:lJIGh8cBU+4szda4R4CS66ZfVAeOKZxwb7ulrjbbfR0=
-github.com/mpiorowski/golang v1.2.0/go.mod h1:EbOh3JSTaVKiCTrbdZVAu7y8tzqrXoDUf7xwVLOv/64=
+github.com/mpiorowski/golang v1.3.0 h1:plu86jD1P/OChi8PnJGjolwQCsMZ762x7KLaJSPZk7E=
+github.com/mpiorowski/golang v1.3.0/go.mod h1:EbOh3JSTaVKiCTrbdZVAu7y8tzqrXoDUf7xwVLOv/64=
 github.com/olekukonko/tablewriter v0.0.5/go.mod h1:hPp6KlRPjbx+hW8ykQs1w3UBbZlj6HuIJcUGPhkA7kY=
 github.com/pascaldekloe/goe v0.0.0-20180627143212-57f6aae5913c/go.mod h1:lzWF7FIEvWOWxwDKqyGYQf6ZUaNfKdP144TG7ZOy1lc=
 github.com/pelletier/go-toml v1.9.3/go.mod h1:u1nR/EPcESfeI/szUZKdtJ0xRNbUoANCkoOuaOx1Y+c=

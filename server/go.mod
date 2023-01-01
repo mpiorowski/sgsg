@@ -9,7 +9,7 @@ require (
 	github.com/gin-gonic/gin v1.8.2
 	github.com/go-playground/validator/v10 v10.11.1
 	github.com/jackc/pgx/v5 v5.2.0
-	github.com/mpiorowski/golang v1.2.0
+	github.com/mpiorowski/golang v1.3.0
 	github.com/rubenv/sql-migrate v1.2.0
 	github.com/sendgrid/sendgrid-go v3.12.0+incompatible
 	google.golang.org/api v0.105.0
