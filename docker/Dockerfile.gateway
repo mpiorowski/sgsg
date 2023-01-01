@@ -1,6 +1,6 @@
 FROM golang:1.19
 
-WORKDIR /usr/src/app
+WORKDIR /usr/src
 
 COPY ./server/go.sum /usr/src
 COPY ./server/go.mod /usr/src
@@ -8,6 +8,6 @@ COPY ./server/grpc /usr/src/grpc
 COPY ./server/gateway /usr/src/app
 
 RUN go mod tidy
-RUN go build -v -o /usr/local/bin ./gateway.main.go
+RUN go build -v -o /usr/local/bin ./app/gateway.main.go
 
 CMD ["gateway"]
