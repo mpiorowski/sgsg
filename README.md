@@ -8,7 +8,6 @@
 - Authorization using firebase auth
 - SvelteKit server for cookie and page protection, nothing is exposed to client, can work without any Javascript
 - Go create firebase client at start, so no need to reconnect/recreate firebase client
-- 4 calls to api with firebase authorization takes something aroung 10-20 ms :)
 
 ## Demo page
 https://go-svelte-grpc.vercel.app/login
