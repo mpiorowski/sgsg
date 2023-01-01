@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"log"
 
-	pb "go-svelte-grpc/server/grpc"
+	pb "go-svelte-grpc/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

@@ -11,7 +11,7 @@ import (
 	migrate "github.com/rubenv/sql-migrate"
 	"google.golang.org/grpc"
 
-	pb "go-svelte-grpc/server/grpc"
+	pb "go-svelte-grpc/grpc"
 	utils "github.com/mpiorowski/golang"
 )
 
