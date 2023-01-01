@@ -10,3 +10,7 @@
 
 ## Demo page
 https://go-svelte-grpc.vercel.app/login
+
+## TODO
+- Emails using Pubsub
+- Files using Buckets
