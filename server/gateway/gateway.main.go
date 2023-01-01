@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
-    base "go-svelte-grpc/gateway/base"
-    users "go-svelte-grpc/gateway/users"
+	base "go-svelte-grpc/gateway/base"
+	users "go-svelte-grpc/gateway/users"
 )
 
 
@@ -38,4 +39,5 @@ func main() {
 	if err := router.Run(fmt.Sprintf("0.0.0.0:%v", base.PORT)); err != nil {
 		panic(err)
 	}
+	log.Printf("Server listening at: %v", base.PORT)
 }
