@@ -1,6 +1,5 @@
 import { apiRequest } from "$lib/api.util";
 import { error, redirect } from "@sveltejs/kit";
-import { Config } from "src/config";
 import type { User } from "src/types/user.type";
 import type { PageServerLoad, Actions } from "./$types";
 
@@ -9,17 +8,18 @@ export const load = (async ({ locals, cookies }) => {
         throw redirect(303, "/login");
     }
 
-    const response = await fetch(Config.VITE_API_URL + "/users", {
-        headers: {
-            Cookie: `sessionCookie=${cookies.get("sessionCookie")}`,
-        },
-    });
-    if (!response.ok) {
-        console.error(await response.json());
-        throw error(500, "Failed to get users");
+    try {
+        const users = await apiRequest<User[]>({
+            url: "/users",
+            method: "GET",
+            cookies
+        });
+        return { users: users };
     }
-    const users = await response.json() as User[];
-    return { users: users };
+    catch (err) {
+        console.error(err);
+        throw error(500, "Could not load users");
+    }
 }) satisfies PageServerLoad;
 
 export const actions = {

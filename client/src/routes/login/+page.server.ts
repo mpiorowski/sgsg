@@ -1,6 +1,5 @@
 import type { Actions, PageServerLoad } from "./$types";
 import { error, redirect } from "@sveltejs/kit";
-import { Config } from "src/config";
 import { apiRequest } from "$lib/api.util";
 
 export const load = (({ locals }) => {
@@ -26,7 +25,6 @@ export const actions = {
             // return { status: 403, message: "Invalid CSRF token" };
             // }
 
-            // TODO - do this on golang backend?
             const sessionCookie = await apiRequest<{ cookie: string }>({
                 url: "/login",
                 method: "POST",
@@ -34,15 +32,11 @@ export const actions = {
             });
 
             // Add user to server
-            const response = await fetch(Config.VITE_API_URL + "/auth", {
+            await apiRequest<{ cookie: string }>({
+                url: "/auth",
                 method: "GET",
-                headers: {
-                    "Cookie": `sessionCookie=${sessionCookie.cookie}`,
-                },
+                cookies,
             });
-            if (!response.ok) {
-                throw new Error("Failed to add user to server");
-            }
 
             // TODO - config cookie
             cookies.set("sessionCookie", sessionCookie.cookie, {

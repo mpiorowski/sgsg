@@ -8,10 +8,7 @@ services:
       - ./client:/client
     command: npm run dev
     environment:
-      VITE_FIREBASE_API_KEY: "xxx"
-      VITE_FIREBASE_AUTH_DOMAIN: "xxx"
-      VITE_API_URL: http://localhost:7000
-      VITE_NODE_ENV: development
+      API_URL: "xxx"
     ports: 
       - 3000:3000
 

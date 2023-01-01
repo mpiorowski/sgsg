@@ -1,7 +1,7 @@
 import { writable, type Writable } from 'svelte/store';
-import { Config } from '../config';
 import type { SafeParseReturnType } from 'zod';
 import type { Cookies } from '@sveltejs/kit';
+import { API_URL } from '$env/static/private';
 
 type UseApiResponse<D, V> = {
     fetching: Writable<boolean>;
@@ -76,7 +76,7 @@ export const apiRequest = async <T>({ url, method, body, cookies }: Options): Pr
     const headers = new Headers();
     headers.append('Cookie', `sessionCookie=${cookies?.get('sessionCookie')}`);
 
-    const response = await fetch(`${Config.VITE_API_URL}${url}`, {
+    const response = await fetch(`${API_URL}${url}`, {
         method: method,
         body: body,
         headers,

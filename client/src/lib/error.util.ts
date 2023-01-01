@@ -1,5 +1,4 @@
 import { toast, ToastType } from '@mpiorowski/svelte-init';
-import { Config } from '../config';
 import { t } from "svelte-i18n"
 
 type GrpcError = {
@@ -15,9 +14,7 @@ const isGrpcError = (error: unknown): error is GrpcError => {
 };
 
 export const handleError = (error: unknown) => {
-    if (Config.VITE_NODE_ENV === 'development') {
-        console.error(error);
-    }
+    console.error(error);
     if (isGrpcError(error)) {
         t.subscribe((value) => {
             toast(value(error.error), ToastType.ERROR)

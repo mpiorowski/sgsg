@@ -5,6 +5,6 @@ WORKDIR /app
 COPY client .
 
 RUN npm ci
-RUN npm run build
+RUN API_URL="https://gateway-dz5ydq3n2q-lz.a.run.app" npm run build
 
 CMD ["node", "build"]
