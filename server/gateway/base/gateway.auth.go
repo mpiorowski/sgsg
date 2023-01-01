@@ -30,7 +30,6 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	client, err := ConnectToFirebase()
 	if err != nil {
 		log.Printf("ConnectToFirebase: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
@@ -39,7 +38,7 @@ func Login(c *gin.Context) {
 
 	// Set session expiration to 5 days.
 	expiresIn := time.Hour * 24 * 5
-	cookie, err := client.SessionCookie(c, idToken.IdToken, expiresIn)
+	cookie, err := Client.SessionCookie(c, idToken.IdToken, expiresIn)
 	if err != nil {
 		log.Printf("client.SessionCookie: %v", err)
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid idToken"})

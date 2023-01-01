@@ -1,15 +1,36 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 
+	firebase "firebase.google.com/go/v4"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"google.golang.org/api/option"
 
 	base "go-svelte-grpc/gateway/base"
 	users "go-svelte-grpc/gateway/users"
 )
+
+func init() {
+    var err error
+    var app *firebase.App
+	if base.ENV == "production" {
+        app, err = firebase.NewApp(context.Background(), nil)
+	} else {
+		opt := option.WithCredentialsFile("../../serviceAccount.json")
+		app, err = firebase.NewApp(context.Background(), nil, opt)
+	}
+    if err != nil {
+        log.Fatalf("Error initializing firebase app: %v", err)
+    }
+    base.Client, err = app.Auth(base.Ctx)
+    if err != nil {
+        log.Fatalf("Error initializing firebase auth: %v", err)
+    }
+}
 
 
 func main() {
