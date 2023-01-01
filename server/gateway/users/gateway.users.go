@@ -18,8 +18,7 @@ func GetUsers(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	// TODO - change to admin
-	if user.GetRole() != pb.UserRole_ROLE_USER.String() {
+	if user.GetRole() != pb.UserRole_ROLE_ADMIN.String() {
 		log.Printf("Unauthorized user: %v", user.GetEmail())
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		return
