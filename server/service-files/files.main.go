@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc"
 
 	utils "github.com/mpiorowski/golang"
-	pb "github.com/mpiorowski/go-svelte-grpc/server/grpc"
+	pb "go-svelte-grpc/server/grpc"
 )
 
 var db *sql.DB

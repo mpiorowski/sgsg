@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"cloud.google.com/go/storage"
-	pb "github.com/mpiorowski/go-svelte-grpc/server/grpc"
+	pb "go-svelte-grpc/server/grpc"
 )
 
 func mapFile(rows *sql.Rows) (*pb.File, error) {

@@ -3,7 +3,7 @@ package main
 import (
 	"database/sql"
 
-	pb "github.com/mpiorowski/go-svelte-grpc/server/grpc"
+	pb "go-svelte-grpc/server/grpc"
 )
 
 func mapUser(rows *sql.Rows, row *sql.Row) (*pb.User, error) {

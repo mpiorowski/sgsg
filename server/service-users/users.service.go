@@ -5,7 +5,7 @@ import (
 	"io"
 	"log"
 
-	pb "github.com/mpiorowski/go-svelte-grpc/server/grpc"
+	pb "go-svelte-grpc/server/grpc"
 )
 
 func (s *server) GetUsers(in *pb.Empty, stream pb.UsersService_GetUsersServer) error {
