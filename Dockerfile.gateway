@@ -2,12 +2,12 @@ FROM golang:1.19
 
 WORKDIR /usr/src
 
-COPY ./server/go.sum /usr/src
-COPY ./server/go.mod /usr/src
-COPY ./server/grpc /usr/src/grpc
-COPY ./server/gateway /usr/src/gateway
+COPY ./server/go.sum ./
+COPY ./server/go.mod ./
+COPY ./server/grpc ./grpc
+COPY ./server/gateway ./gateway
 
 RUN go mod tidy
-RUN go build -v -o /usr/local/bin/app ./gateway/gateway.main.go
+RUN go build -v -o /usr/local/bin/app ./gateway/...
 
 CMD ["app"]
