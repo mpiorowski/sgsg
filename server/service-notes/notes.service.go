@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"log"
 
+	utils "github.com/mpiorowski/golang"
 	pb "go-svelte-grpc/grpc"
 )
 
@@ -16,12 +17,34 @@ func (s *server) GetNotes(in *pb.UserId, stream pb.NotesService_GetNotesServer) 
 	}
 	defer rows.Close()
 
+	// Connect to gRPC server.
+	conn, err, ctx, cancel := utils.Connect(ENV, URI_USERS)
+	if err != nil {
+        log.Printf("utils.Connect: %v", err)
+		return err
+	}
+	defer conn.Close()
+	defer cancel()
+
+	// Make a gRPC request.
+	service := pb.NewUsersServiceClient(conn)
+
+
 	for rows.Next() {
 		note, err := mapNote(rows, nil)
 		if err != nil {
 			log.Printf("mapNote: %v", err)
 			return err
 		}
+
+        // Get user for note
+	    user, err := service.GetUser(ctx, &pb.UserId{UserId: in.UserId})
+        if err != nil {
+            log.Printf("service.GetUser: %v", err)
+            return err
+        }
+        note.User = user
+
 		err = stream.Send(note)
 		if err != nil {
 			log.Printf("stream.Send: %v", err)

@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type UsersServiceClient interface {
 	Auth(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*User, error)
 	GetUsers(ctx context.Context, in *Empty, opts ...grpc.CallOption) (UsersService_GetUsersClient, error)
+	GetUser(ctx context.Context, in *UserId, opts ...grpc.CallOption) (*User, error)
 	CreateUser(ctx context.Context, opts ...grpc.CallOption) (UsersService_CreateUserClient, error)
 	DeleteUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*User, error)
 }
@@ -77,6 +78,15 @@ func (x *usersServiceGetUsersClient) Recv() (*User, error) {
 	return m, nil
 }
 
+func (c *usersServiceClient) GetUser(ctx context.Context, in *UserId, opts ...grpc.CallOption) (*User, error) {
+	out := new(User)
+	err := c.cc.Invoke(ctx, "/grpc.UsersService/GetUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *usersServiceClient) CreateUser(ctx context.Context, opts ...grpc.CallOption) (UsersService_CreateUserClient, error) {
 	stream, err := c.cc.NewStream(ctx, &UsersService_ServiceDesc.Streams[1], "/grpc.UsersService/CreateUser", opts...)
 	if err != nil {
@@ -123,6 +133,7 @@ func (c *usersServiceClient) DeleteUser(ctx context.Context, in *User, opts ...g
 type UsersServiceServer interface {
 	Auth(context.Context, *AuthRequest) (*User, error)
 	GetUsers(*Empty, UsersService_GetUsersServer) error
+	GetUser(context.Context, *UserId) (*User, error)
 	CreateUser(UsersService_CreateUserServer) error
 	DeleteUser(context.Context, *User) (*User, error)
 	mustEmbedUnimplementedUsersServiceServer()
@@ -137,6 +148,9 @@ func (UnimplementedUsersServiceServer) Auth(context.Context, *AuthRequest) (*Use
 }
 func (UnimplementedUsersServiceServer) GetUsers(*Empty, UsersService_GetUsersServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetUsers not implemented")
+}
+func (UnimplementedUsersServiceServer) GetUser(context.Context, *UserId) (*User, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
 }
 func (UnimplementedUsersServiceServer) CreateUser(UsersService_CreateUserServer) error {
 	return status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
@@ -196,6 +210,24 @@ func (x *usersServiceGetUsersServer) Send(m *User) error {
 	return x.ServerStream.SendMsg(m)
 }
 
+func _UsersService_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserId)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsersServiceServer).GetUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/grpc.UsersService/GetUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsersServiceServer).GetUser(ctx, req.(*UserId))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UsersService_CreateUser_Handler(srv interface{}, stream grpc.ServerStream) error {
 	return srv.(UsersServiceServer).CreateUser(&usersServiceCreateUserServer{stream})
 }
@@ -250,6 +282,10 @@ var UsersService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Auth",
 			Handler:    _UsersService_Auth_Handler,
+		},
+		{
+			MethodName: "GetUser",
+			Handler:    _UsersService_GetUser_Handler,
 		},
 		{
 			MethodName: "DeleteUser",

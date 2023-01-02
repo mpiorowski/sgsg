@@ -35,6 +35,16 @@ func (s *server) GetUsers(in *pb.Empty, stream pb.UsersService_GetUsersServer) e
 	return nil
 }
 
+func (s *server) GetUser(ctx context.Context, in *pb.UserId) (*pb.User, error) {
+	row := db.QueryRow(`select * from users where id = $1`, in.UserId)
+	user, err := mapUser(nil, row)
+	if err != nil {
+		log.Printf("mapUser: %v", err)
+		return nil, err
+	}
+	return user, nil
+}
+
 func (s *server) DeleteUser(ctx context.Context, in *pb.User) (*pb.User, error) {
 	row := db.QueryRow(`update users set deleted = now() where id = $1 and "providerId" = $2 and email = $3 returning *`, in.Id, in.ProviderId, in.Email)
 	user, err := mapUser(nil, row)

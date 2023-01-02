@@ -25,7 +25,7 @@ services:
       ENV: development
       DOMAIN: http://localhost:3000
       PROJECT_ID: grpc
-      URI_USER: service-users
+      URI_USERS: service-users
       URI_NOTES: service-notes
       URI_FILES: service-files
     ports: 
@@ -109,6 +109,7 @@ services:
     environment:
       ENV: development
       PORT: 443
+      URI_USERS: service-users
       DB_USER: postgres
       DB_PASS: 12345
       DB_HOST: db-notes

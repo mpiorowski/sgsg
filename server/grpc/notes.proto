@@ -7,6 +7,8 @@ option java_multiple_files = true;
 option java_outer_classname = "HomeItProto";
 option java_package = "io.grpc.homeit.proto";
 
+import "users.proto";
+
 message Note {
   string id = 1;
   string created = 2;
@@ -16,5 +18,7 @@ message Note {
   string userId = 5;
   string title = 6;
   string content = 7;
+
+  User user = 8;
 }
 

@@ -19,9 +19,9 @@ var (
 	ENV        = utils.MustGetenv("ENV")
 	DOMAIN     = utils.MustGetenv("DOMAIN")
 	PROJECT_ID = utils.MustGetenv("PROJECT_ID")
-	URI_USER   = utils.MustGetenv("URI_USER")
+	URI_USERS  = utils.MustGetenv("URI_USERS")
 	URI_NOTES  = utils.MustGetenv("URI_NOTES")
-    URI_FILES  = utils.MustGetenv("URI_FILES")
+	URI_FILES  = utils.MustGetenv("URI_FILES")
 )
 
 var Client *auth.Client
@@ -75,7 +75,7 @@ func Authorization(c *gin.Context) (*pb.User, error) {
 	}
 
 	// Connect to gRPC server.
-	conn, err, ctx, cancel := utils.Connect(ENV, URI_USER)
+	conn, err, ctx, cancel := utils.Connect(ENV, URI_USERS)
 	if err != nil {
 		log.Printf("utils.Connect: %v", err)
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})

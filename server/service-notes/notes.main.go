@@ -11,8 +11,8 @@ import (
 	migrate "github.com/rubenv/sql-migrate"
 	"google.golang.org/grpc"
 
-	pb "go-svelte-grpc/grpc"
 	utils "github.com/mpiorowski/golang"
+	pb "go-svelte-grpc/grpc"
 )
 
 var db *sql.DB
@@ -22,12 +22,13 @@ type server struct {
 }
 
 var (
-	PORT    = utils.MustGetenv("PORT")
-	ENV     = utils.MustGetenv("ENV")
-	DB_USER = utils.MustGetenv("DB_USER")
-	DB_PASS = utils.MustGetenv("DB_PASS")
-	DB_HOST = utils.MustGetenv("DB_HOST")
-	DB_NAME = utils.MustGetenv("DB_NAME")
+	PORT      = utils.MustGetenv("PORT")
+	ENV       = utils.MustGetenv("ENV")
+	URI_USERS = utils.MustGetenv("URI_USERS")
+	DB_USER   = utils.MustGetenv("DB_USER")
+	DB_PASS   = utils.MustGetenv("DB_PASS")
+	DB_HOST   = utils.MustGetenv("DB_HOST")
+	DB_NAME   = utils.MustGetenv("DB_NAME")
 )
 
 var validate = validator.New()
@@ -47,10 +48,10 @@ func init() {
 	log.Println("Connected to database")
 
 	// Migrations
-    var migrationsDir = "./migrations"
-    if ENV == "production" {
-        migrationsDir = "/migrations"
-    }
+	var migrationsDir = "./migrations"
+	if ENV == "production" {
+		migrationsDir = "/migrations"
+	}
 	migrations := &migrate.FileMigrationSource{
 		Dir: migrationsDir,
 	}
@@ -74,6 +75,3 @@ func main() {
 	}
 	log.Printf("Server listening at: %v", lis.Addr())
 }
-
-
-

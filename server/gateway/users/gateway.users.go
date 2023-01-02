@@ -25,7 +25,7 @@ func GetUsers(c *gin.Context) {
 	}
 
 	// Connect to gRPC server.
-	conn, err, ctx, cancel := utils.Connect(base.ENV, base.URI_USER)
+	conn, err, ctx, cancel := utils.Connect(base.ENV, base.URI_USERS)
 	if err != nil {
 		base.GrpcError(c, err, "utils.Connect")
 		return
@@ -69,7 +69,7 @@ func CreateUser(c *gin.Context) {
 	}
 
 	// Connect to gRPC server.
-	conn, err, ctx, cancel := utils.Connect(base.ENV, base.URI_USER)
+	conn, err, ctx, cancel := utils.Connect(base.ENV, base.URI_USERS)
 	if err != nil {
 		base.GrpcError(c, err, "utils.Connect")
 		return
@@ -124,7 +124,7 @@ func DeleteUser(c *gin.Context) {
 	}
 
 	// Connect to gRPC server.
-	conn, err, ctx, cancel := utils.Connect(base.ENV, base.URI_USER)
+	conn, err, ctx, cancel := utils.Connect(base.ENV, base.URI_USERS)
 	if err != nil {
 		base.GrpcError(c, err, "utils.Connect")
 		return
