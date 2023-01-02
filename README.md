@@ -4,7 +4,7 @@
 - SvelteKit for frontend
 - Go for backend
 - Everything is deployed using Google Cloud Run
-- Backend build as microservices, with api gateway between client and server
+- Backend build as microservices, with api gateway between client and services
 - Communication between microservices using gRPC
 - Authorization using firebase auth
 - SvelteKit server for cookie and page protection, nothing is exposed to client, can work without any Javascript
