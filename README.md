@@ -11,8 +11,8 @@
 - Go create firebase client at start, so no need to reconnect/recreate firebase client
 
 ## Overview
-- User can log in using google acount via firebase auth
-- Every call go through api gateway, that takes cares of authorizing requests
+- User can log in using google account via firebase auth
+- Every call goes through api gateway, that takes care of authorizing requests
 - User can add notes
 - Notes sevice communicate with users services to get the user info for current note
 
