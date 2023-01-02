@@ -25,6 +25,12 @@
         >
             Home
         </a>
+        <a
+            href="/notes"
+            class="text-gray-400 hover:text-green-700 border border-gray-400 px-2 rounded"
+        >
+            Notes
+        </a>
         {#if data.user?.role === UserRole.ROLE_ADMIN}
             <a
                 href="/users"

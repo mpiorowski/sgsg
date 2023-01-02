@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package grpc;
+
+option go_package = "go-svelte-grpc/server/grpc";
+option java_multiple_files = true;
+option java_outer_classname = "HomeItProto";
+option java_package = "io.grpc.homeit.proto";
+
+message Note {
+  string id = 1;
+  string created = 2;
+  string updated = 3;
+  optional string deleted = 4;
+
+  string userId = 5;
+  string title = 6;
+  string content = 7;
+}
+

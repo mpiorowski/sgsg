@@ -8,6 +8,7 @@ option java_outer_classname = "HomeItProto";
 option java_package = "io.homeit.proto";
 
 import "users.proto";
+import "notes.proto";
 
 message Empty {}
 message UserId {
@@ -54,4 +55,14 @@ message File {
 
     bytes data = 8;
     string url = 9;
+}
+
+service NotesService {
+    rpc GetNotes(UserId) returns (stream Note) {}
+    rpc CreateNote(Note) returns (Note) {}
+    rpc DeleteNote(NoteId) returns (Note) {}
+}
+message NoteId {
+    string noteId = 1;
+    string userId = 2;
 }

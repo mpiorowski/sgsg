@@ -8,7 +8,7 @@ services:
       - ./client:/client
     command: npm run dev
     environment:
-      API_URL: "xxx"
+      API_URL: http://gateway:7000
     ports: 
       - 3000:3000
 
@@ -18,14 +18,16 @@ services:
     working_dir: /server/gateway
     volumes:
       - ./server:/server
+      - ./serviceAccount.json:/serviceAccount.json
     command: sh -c "go mod tidy && go run ."
     environment:
       PORT: 7000
       ENV: development
-      DOMAIN: localhost
-      PROJECT_ID: xxxx
-      URI_FILES: service-files
+      DOMAIN: http://localhost:3000
+      PROJECT_ID: grpc
       URI_USER: service-users
+      URI_NOTES: service-notes
+      URI_FILES: service-files
     ports: 
       - 7000:7000
 
@@ -94,3 +96,28 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 12345
       POSTGRES_DB: users
+
+  service-notes:
+    container_name: grpc-service-notes
+    image: golang:1.19
+    depends_on:
+      - db-notes
+    working_dir: /server/service-notes
+    volumes:
+      - ./server:/server
+    command: sh -c "go mod tidy && go run ."
+    environment:
+      ENV: development
+      PORT: 443
+      DB_USER: postgres
+      DB_PASS: 12345
+      DB_HOST: db-notes
+      DB_NAME: notes
+
+  db-notes:
+    container_name: grpc-db-notes
+    image: postgres:14.1
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: notes

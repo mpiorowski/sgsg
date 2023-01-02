@@ -10,8 +10,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"google.golang.org/api/option"
 
-	base "go-svelte-grpc/gateway/base"
-	users "go-svelte-grpc/gateway/users"
+	"go-svelte-grpc/gateway/base"
+	"go-svelte-grpc/gateway/notes"
+	"go-svelte-grpc/gateway/users"
 )
 
 func init() {
@@ -56,6 +57,10 @@ func main() {
 	router.GET("/users", users.GetUsers)
 	router.POST("/users", users.CreateUser)
 	router.DELETE("/users", users.DeleteUser)
+
+    router.GET("/notes", notes.GetNotes)
+    router.POST("/notes", notes.CreateNote)
+    router.DELETE("/notes/:noteId", notes.DeleteNote)
 
 	if err := router.Run(fmt.Sprintf("0.0.0.0:%v", base.PORT)); err != nil {
 		log.Fatalf("Failed to serve: %v", err)

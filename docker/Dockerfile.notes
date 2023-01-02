@@ -1,0 +1,14 @@
+FROM golang:1.19
+
+WORKDIR /usr/src
+
+COPY ./server/go.sum ./
+COPY ./server/go.mod ./
+COPY ./server/grpc ./grpc
+COPY ./server/service-notes ./service-notes
+
+RUN go mod tidy
+RUN go build -v -o /usr/local/bin/app ./service-notes/notes.main.go
+COPY ./server/service-notes/migrations /migrations
+
+CMD ["app"]

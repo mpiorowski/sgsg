@@ -19,8 +19,9 @@ var (
 	ENV        = utils.MustGetenv("ENV")
 	DOMAIN     = utils.MustGetenv("DOMAIN")
 	PROJECT_ID = utils.MustGetenv("PROJECT_ID")
-	URI_FILES  = utils.MustGetenv("URI_FILES")
 	URI_USER   = utils.MustGetenv("URI_USER")
+	URI_NOTES  = utils.MustGetenv("URI_NOTES")
+    URI_FILES  = utils.MustGetenv("URI_FILES")
 )
 
 var Client *auth.Client
@@ -33,7 +34,7 @@ func GrpcError(c *gin.Context, err error, message string) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": s.Message(), "code": s.Code().String()})
 		return
 	}
-	c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	c.JSON(http.StatusBadRequest, gin.H{"error": "Something went wrong", "code": "BAD_REQUEST"})
 }
 
 func GatewayError(c *gin.Context, err string, message string) {
