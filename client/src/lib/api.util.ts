@@ -76,11 +76,14 @@ export const apiRequest = async <T>({ url, method, body, cookies }: Options): Pr
     const headers = new Headers();
     headers.append('Cookie', `sessionCookie=${cookies?.get('sessionCookie')}`);
 
+    console.time(`apiRequest: ${method} ${url}`);
     const response = await fetch(`${API_URL}${url}`, {
         method: method,
         body: body,
         headers,
     });
+    console.timeEnd(`apiRequest: ${method} ${url}`);
+
     if (response.status === 401) {
         throw new Error('Unauthorized');
     }
