@@ -13,9 +13,13 @@ import (
 	"go-svelte-grpc/gateway/base"
 	"go-svelte-grpc/gateway/notes"
 	"go-svelte-grpc/gateway/users"
+
+	pb "go-svelte-grpc/grpc"
 )
 
 func init() {
+
+    // Init Firebase Admin SDK
     var err error
     var app *firebase.App
 	if base.ENV == "production" {
@@ -31,6 +35,20 @@ func init() {
     if err != nil {
         log.Fatalf("Error initializing firebase auth: %v", err)
     }
+
+    // Init gRPC client
+    usersConn, err := base.Connect(base.ENV, base.URI_USERS)
+    if err != nil {
+        log.Fatalf("Error connecting to users gRPC server: %v", err)
+    }
+    base.UsersGrpcClient = pb.NewUsersServiceClient(usersConn)
+
+    notesConn, err := base.Connect(base.ENV, base.URI_NOTES)
+    if err != nil {
+        log.Fatalf("Error connecting to notes gRPC server: %v", err)
+    }
+    base.NotesGrpcClient = pb.NewNotesServiceClient(notesConn)
+
 }
 
 

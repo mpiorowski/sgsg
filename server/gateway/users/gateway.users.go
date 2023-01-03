@@ -7,7 +7,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	pb "go-svelte-grpc/grpc"
-	utils "github.com/mpiorowski/golang"
 
 	base "go-svelte-grpc/gateway/base"
 )
@@ -24,18 +23,14 @@ func GetUsers(c *gin.Context) {
 		return
 	}
 
-	// Connect to gRPC server.
-	conn, err, ctx, cancel := utils.Connect(base.ENV, base.URI_USERS)
-	if err != nil {
-		base.GrpcError(c, err, "utils.Connect")
-		return
-	}
-	defer conn.Close()
-	defer cancel()
-
 	// Make a gRPC request.
-	service := pb.NewUsersServiceClient(conn)
-	stream, err := service.GetUsers(ctx, &pb.Empty{})
+    ctx, err, cancel := base.CreateContext(base.ENV, base.URI_USERS)
+    if err != nil {
+        base.GrpcError(c, err, "base.CreateContext")
+        return
+    }
+    defer cancel()
+	stream, err := base.UsersGrpcClient.GetUsers(ctx, &pb.Empty{})
 
 	if err != nil {
 		base.GrpcError(c, err, "service.GetUsers")
@@ -68,18 +63,14 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	// Connect to gRPC server.
-	conn, err, ctx, cancel := utils.Connect(base.ENV, base.URI_USERS)
-	if err != nil {
-		base.GrpcError(c, err, "utils.Connect")
-		return
-	}
-	defer conn.Close()
-	defer cancel()
-
 	// Make a gRPC request.
-	service := pb.NewUsersServiceClient(conn)
-	stream, err := service.CreateUser(ctx)
+    ctx, err, cancel := base.CreateContext(base.ENV, base.URI_USERS)
+    if err != nil {
+        base.GrpcError(c, err, "base.CreateContext")
+        return
+    }
+    defer cancel()
+	stream, err := base.UsersGrpcClient.CreateUser(ctx)
 	if err != nil {
 		base.GrpcError(c, err, "service.CreateUser")
 		return
@@ -122,20 +113,14 @@ func DeleteUser(c *gin.Context) {
 	if err != nil {
 		return
 	}
-
-	// Connect to gRPC server.
-	conn, err, ctx, cancel := utils.Connect(base.ENV, base.URI_USERS)
-	if err != nil {
-		base.GrpcError(c, err, "utils.Connect")
-		return
-	}
-	defer conn.Close()
-	defer cancel()
-
 	// Make a gRPC request.
-	service := pb.NewUsersServiceClient(conn)
-
-	user, err := service.DeleteUser(ctx, &request)
+    ctx, err, cancel := base.CreateContext(base.ENV, base.URI_USERS)
+    if err != nil {
+        base.GrpcError(c, err, "base.CreateContext")
+        return
+    }
+    defer cancel()
+	user, err := base.UsersGrpcClient.DeleteUser(ctx, &request)
 	if err != nil {
 		base.GrpcError(c, err, "service.DeleteUser")
 		return

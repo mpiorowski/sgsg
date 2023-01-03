@@ -11,7 +11,6 @@ import (
 
 	"firebase.google.com/go/v4/auth"
 	utils "github.com/mpiorowski/golang"
-	pb "go-svelte-grpc/grpc"
 )
 
 var (
@@ -57,45 +56,3 @@ func GetFirebaseToken(c *gin.Context) (*auth.Token, *auth.Client, error) {
 	return token, Client, nil
 }
 
-func Authorization(c *gin.Context) (*pb.User, error) {
-
-	token, _, err := GetFirebaseToken(c)
-	if err != nil || token == nil {
-		log.Printf("GetFirebaseToken: %v", err)
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
-		return nil, err
-	}
-	var email string
-	if token.Claims["email"] != nil {
-		email = token.Claims["email"].(string)
-	} else {
-		log.Printf("token.Claims[email] is empty")
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
-		return nil, errors.New("token.Claims[email] is empty")
-	}
-
-	// Connect to gRPC server.
-	conn, err, ctx, cancel := utils.Connect(ENV, URI_USERS)
-	if err != nil {
-		log.Printf("utils.Connect: %v", err)
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
-		return nil, err
-	}
-	defer conn.Close()
-	defer cancel()
-
-	// Make a gRPC request.
-	service := pb.NewUsersServiceClient(conn)
-	user, err := service.Auth(ctx, &pb.AuthRequest{
-		Email:      email,
-		ProviderId: token.UID,
-	})
-
-	if err != nil || user.GetId() == "" {
-		log.Printf("service.AuthUser: %v", err)
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
-		return nil, err
-	}
-
-	return user, nil
-}

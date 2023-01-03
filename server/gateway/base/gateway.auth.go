@@ -1,12 +1,52 @@
 package base
 
 import (
+	"errors"
+	pb "go-svelte-grpc/grpc"
 	"log"
 	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
 )
+
+func Authorization(c *gin.Context) (*pb.User, error) {
+
+	token, _, err := GetFirebaseToken(c)
+	if err != nil || token == nil {
+		log.Printf("GetFirebaseToken: %v", err)
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return nil, err
+	}
+	var email string
+	if token.Claims["email"] != nil {
+		email = token.Claims["email"].(string)
+	} else {
+		log.Printf("token.Claims[email] is empty")
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return nil, errors.New("token.Claims[email] is empty")
+	}
+
+	// Make a gRPC request.
+    ctx, err, cancel := CreateContext(ENV, URI_USERS)
+    if err != nil {
+        GrpcError(c, err, "base.CreateContext")
+        return nil, err
+    }
+    defer cancel()
+	user, err := UsersGrpcClient.Auth(ctx, &pb.AuthRequest{
+		Email:      email,
+		ProviderId: token.UID,
+	})
+
+	if err != nil || user.GetId() == "" {
+		log.Printf("service.AuthUser: %v", err)
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return nil, err
+	}
+
+	return user, nil
+}
 
 func Auth(c *gin.Context) {
 	session, err := Authorization(c)

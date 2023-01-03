@@ -7,7 +7,6 @@ import (
 	pb "go-svelte-grpc/grpc"
 
 	"github.com/gin-gonic/gin"
-	utils "github.com/mpiorowski/golang"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -21,21 +20,16 @@ func GetNotes(c *gin.Context) {
 		return
 	}
 
-	// Connect to gRPC server.
-	conn, err, ctx, cancel := utils.Connect(base.ENV, base.URI_NOTES)
-	if err != nil {
-		base.GrpcError(c, err, "utils.Connect")
-		return
-	}
-	defer conn.Close()
-	defer cancel()
-
 	// Make a gRPC request.
-	service := pb.NewNotesServiceClient(conn)
-	stream, err := service.GetNotes(ctx, &pb.UserId{
+    ctx, err, cancel := base.CreateContext(base.ENV, base.URI_NOTES)
+    if err != nil {
+        base.GrpcError(c, err, "base.CreateContext")
+        return
+    }
+    defer cancel()
+	stream, err := base.NotesGrpcClient.GetNotes(ctx, &pb.UserId{
         UserId: user.Id,
     })
-
 	if err != nil {
 		base.GrpcError(c, err, "service.GetNotes")
 		return
@@ -71,20 +65,15 @@ func CreateNote(c *gin.Context) {
 		return
 	}
 
-	// Connect to gRPC server.
-	conn, err, ctx, cancel := utils.Connect(base.ENV, base.URI_NOTES)
-	if err != nil {
-		base.GrpcError(c, err, "utils.Connect")
-		return
-	}
-	defer conn.Close()
-	defer cancel()
-
 	// Make a gRPC request.
-	service := pb.NewNotesServiceClient(conn)
-
+    ctx, err, cancel := base.CreateContext(base.ENV, base.URI_NOTES)
+    if err != nil {
+        base.GrpcError(c, err, "base.CreateContext")
+        return
+    }
+    defer cancel()
     request.UserId = user.Id
-    note, err := service.CreateNote(ctx, &request)
+    note, err := base.NotesGrpcClient.CreateNote(ctx, &request)
     if err != nil {
         base.GrpcError(c, err, "service.CreateNote")
         return
@@ -106,19 +95,14 @@ func DeleteNote(c *gin.Context) {
 		return
 	}
 
-	// Connect to gRPC server.
-	conn, err, ctx, cancel := utils.Connect(base.ENV, base.URI_NOTES)
-	if err != nil {
-		base.GrpcError(c, err, "utils.Connect")
-		return
-	}
-	defer conn.Close()
-	defer cancel()
-
 	// Make a gRPC request.
-	service := pb.NewNotesServiceClient(conn)
-
-	note, err := service.DeleteNote(ctx, &pb.NoteId{
+    ctx, err, cancel := base.CreateContext(base.ENV, base.URI_NOTES)
+    if err != nil {
+        base.GrpcError(c, err, "base.CreateContext")
+        return
+    }
+    defer cancel()
+	note, err := base.NotesGrpcClient.DeleteNote(ctx, &pb.NoteId{
         NoteId: noteId,
         UserId: user.Id,
     })
