@@ -30,6 +30,8 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@auth/core": "^0.2.5",
+		"@auth/sveltekit": "^0.1.12",
 		"@mpiorowski/svelte-init": "^2.0.4",
 		"@sveltejs/adapter-node": "^1.0.0",
 		"firebase": "^9.15.0",

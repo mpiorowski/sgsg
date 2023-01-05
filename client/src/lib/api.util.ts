@@ -74,7 +74,10 @@ type Options = {
  */
 export const apiRequest = async <T>({ url, method, body, cookies }: Options): Promise<T> => {
     const headers = new Headers();
-    headers.append('Cookie', `sessionCookie=${cookies?.get('sessionCookie')}`);
+    headers.append('Cookie', `sessionCookie=${cookies?.get('next-auth.session-token')}`);
+
+    // const token = await fetchToken(API_URL);
+    // headers.append('Authorization', `Bearer ${token}`);
 
     console.time(`apiRequest: ${method} ${url}`);
     const response = await fetch(`${API_URL}${url}`, {
@@ -100,4 +103,17 @@ export const apiRequest = async <T>({ url, method, body, cookies }: Options): Pr
         return data;
     }
     throw data;
+};
+
+const fetchToken = async (serviceUrl: string) => {
+  const tokenFetch = await fetch(
+    `http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/identity?audience=${serviceUrl}`,
+    {
+      method: 'GET',
+      headers: {
+        'Metadata-Flavor': 'Google',
+      },
+    }
+  );
+  return await tokenFetch.text();
 };

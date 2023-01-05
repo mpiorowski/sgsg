@@ -7,36 +7,51 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/dvsekhvalnov/jose2go"
 	"github.com/gin-gonic/gin"
 )
 
 func Authorization(c *gin.Context) (*pb.User, error) {
 
-	token, _, err := GetFirebaseToken(c)
-	if err != nil || token == nil {
-		log.Printf("GetFirebaseToken: %v", err)
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
-		return nil, err
+	cookie, err := c.Cookie("sessionCookie")
+	if err != nil {
+		log.Printf("c.Cookie: %v", err)
+		return nil, errors.New("Unauthorized")
 	}
-	var email string
-	if token.Claims["email"] != nil {
-		email = token.Claims["email"].(string)
-	} else {
-		log.Printf("token.Claims[email] is empty")
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
-		return nil, errors.New("token.Claims[email] is empty")
+	log.Printf("token: %v", cookie)
+
+	var tokenString = cookie
+	var secret = []byte(SECRET)
+
+	payload, headers, err := jose.Decode(tokenString, secret)
+	if err != nil {
+		log.Printf("jose.Decode: %v", err)
+		return nil, errors.New("Unauthorized")
 	}
 
+	if err == nil {
+		//go use token
+		log.Printf("\npayload = %v\n", payload)
+
+		//and/or use headers
+		log.Printf("\nheaders = %v\n", headers)
+	}
+	c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+	return nil, errors.New("Unauthorized")
+
+	var email = ""
+	var proviedId = ""
+
 	// Make a gRPC request.
-    ctx, err, cancel := CreateContext(ENV, URI_USERS)
-    if err != nil {
-        GrpcError(c, err, "base.CreateContext")
-        return nil, err
-    }
-    defer cancel()
+	ctx, err, cancel := CreateContext(ENV, URI_USERS)
+	if err != nil {
+		GrpcError(c, err, "base.CreateContext")
+		return nil, err
+	}
+	defer cancel()
 	user, err := UsersGrpcClient.Auth(ctx, &pb.AuthRequest{
 		Email:      email,
-		ProviderId: token.UID,
+		ProviderId: proviedId,
 	})
 
 	if err != nil || user.GetId() == "" {

@@ -18,6 +18,7 @@ var (
 	ENV        = utils.MustGetenv("ENV")
 	DOMAIN     = utils.MustGetenv("DOMAIN")
 	PROJECT_ID = utils.MustGetenv("PROJECT_ID")
+    SECRET     = utils.MustGetenv("SECRET")
 	URI_USERS  = utils.MustGetenv("URI_USERS")
 	URI_NOTES  = utils.MustGetenv("URI_NOTES")
 	URI_FILES  = utils.MustGetenv("URI_FILES")

@@ -3,11 +3,8 @@ import { error, redirect } from "@sveltejs/kit";
 import type { Note } from "src/types/note.type";
 import type { PageServerLoad, Actions } from "./$types";
 
-export const load = (async ({ locals, cookies }) => {
-    if (!locals.user?.id) {
-        throw redirect(303, "/login");
-    }
-
+export const load = (async ({ cookies }) => {
+    console.log(cookies);
     try {
         const notes = await apiRequest<Note[]>({
             url: "/notes",
@@ -23,11 +20,7 @@ export const load = (async ({ locals, cookies }) => {
 }) satisfies PageServerLoad;
 
 export const actions = {
-    create: async ({ locals, cookies, request }) => {
-        if (!locals.user?.id) {
-            throw redirect(303, "/login");
-        }
-
+    create: async ({ cookies, request }) => {
         const form = await request.formData();
         const title = form.get("title");
         const content = form.get("content");

@@ -2,9 +2,9 @@
     import { enhance } from "$app/forms";
     import { Button, Input } from "@mpiorowski/svelte-init";
     import type { Note } from "src/types/note.type";
-    import type { PageServerData } from "./$types";
+    import type { PageData } from "./$types";
 
-    export let data: PageServerData;
+    export let data: PageData;
     let note: Note = {
         id: "",
         userId: "",
@@ -15,6 +15,9 @@
 
 <section>
     <h1>Notes</h1>
+    <div>
+        for user {data.session?.user?.email}
+    </div>
     <form action="?/create" method="post" id="create" use:enhance>
         <Input
             name="title"
@@ -34,12 +37,7 @@
         {#each data.notes as note}
             <li>
                 <pre>{JSON.stringify(note, undefined, 2)}</pre>
-                <form
-                    action="?/delete"
-                    method="post"
-                    use:enhance
-                    id={note.id}
-                >
+                <form action="?/delete" method="post" use:enhance id={note.id}>
                     <input type="hidden" name="id" value={note.id} />
                     <Button type="error" form={note.id}>Delete</Button>
                 </form>

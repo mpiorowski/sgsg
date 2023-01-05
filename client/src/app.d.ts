@@ -4,14 +4,7 @@
 // and what to do when importing types
 declare namespace App {
     // interface Error {}
-    interface Locals {
-        user: {
-            id: string;
-            email: string;
-            role: UserRole;
-            providerId: string;
-        } | null;
-    }
+    // interface Locals {}
     // interface PageData {}
     // interface Platform {}
 }
