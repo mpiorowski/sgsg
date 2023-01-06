@@ -26,7 +26,6 @@ require (
 	cloud.google.com/go/longrunning v0.3.0 // indirect
 	cloud.google.com/go/pubsub v1.27.1 // indirect
 	github.com/MicahParks/keyfunc v1.5.1 // indirect
-	github.com/dvsekhvalnov/jose2go v1.5.0
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-gorp/gorp/v3 v3.0.2 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
