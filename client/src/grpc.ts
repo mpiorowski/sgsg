@@ -3,10 +3,11 @@ import grpc from '@grpc/grpc-js';
 import type { ProtoGrpcType } from "../../grpc/grpc";
 import type { UserId } from "../../grpc/grpc/UserId";
 import type { Note } from "../../grpc/grpc/Note";
-import { URI_USERS, URI_NOTES } from "$env/static/private";
+import { URI_USERS, URI_NOTES, NODE_ENV } from "$env/static/private";
 
 export { UserId, Note };
 
+// TODO - cache token
 export const fetchToken = async (serviceUrl: string) => {
     const tokenFetch = await fetch(
         `http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/identity?audience=https://${serviceUrl}`,
@@ -30,11 +31,11 @@ export const proto = grpc.loadPackageDefinition(
 
 export const usersClient = new proto.grpc.UsersService(
     URI_USERS,
-    grpc.credentials.createSsl()
+    NODE_ENV === 'production' ? grpc.credentials.createSsl() : grpc.credentials.createInsecure()
 );
 
 export const notesClient = new proto.grpc.NotesService(
     URI_NOTES,
-    grpc.credentials.createSsl()
+    NODE_ENV === 'production' ? grpc.credentials.createSsl() : grpc.credentials.createInsecure()
 );
 
