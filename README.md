@@ -9,6 +9,7 @@
 - So yeah, everything works on gRPC, either as streams or unary, IT IS FAST (locally request can be as fast as 3-10 ms)
 - Everything is deployed using Google Cloud Run
 - Authorization using Auth.js (experimental version for svelte)
+
 ![Screenshot from 2023-01-07 20-55-32](https://user-images.githubusercontent.com/26543876/211168251-5dab78ef-1b20-4a13-9588-6f8400dd110c.png)
 
 
