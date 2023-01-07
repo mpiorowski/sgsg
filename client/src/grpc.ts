@@ -9,7 +9,7 @@ export { UserId, Note };
 
 export const fetchToken = async (serviceUrl: string) => {
     const tokenFetch = await fetch(
-        `http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/identity?audience=${serviceUrl}`,
+        `http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/identity?audience=https://${serviceUrl}`,
         {
             method: 'GET',
             headers: {
