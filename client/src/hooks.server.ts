@@ -1,11 +1,11 @@
 import type { HandleServerError } from "@sveltejs/kit";
 import { SvelteKitAuth } from "@auth/sveltekit";
-import { GOOGLE_ID, GOOGLE_SECRET } from "$env/static/private";
+import { GOOGLE_ID, GOOGLE_SECRET, URI_USERS } from "$env/static/private";
 import { redirect, type Handle } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
 import Google from "@auth/core/providers/google";
 import type { Provider } from "@auth/core/providers";
-import { usersClient } from "./grpc";
+import { fetchToken, usersClient } from "./grpc";
 import type { AuthRequest } from "../../grpc/grpc/AuthRequest";
 
 // TODO - finish handle error
@@ -28,8 +28,9 @@ export const authorization = (async ({ event, resolve }) => {
             email: session.user.email,
         };
 
+        const metadata = await fetchToken(URI_USERS);
         const promise = new Promise<void>((resolve, reject) => {
-            usersClient.Auth(request, (err, response) => {
+            usersClient.Auth(request, metadata, (err, response) => {
                 if (err || !response?.id || !response?.role) {
                     return reject(err);
                 }

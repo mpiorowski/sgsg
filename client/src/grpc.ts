@@ -7,14 +7,30 @@ import { URI_USERS, URI_NOTES } from "$env/static/private";
 
 export { UserId, Note };
 
+export const fetchToken = async (serviceUrl: string) => {
+    const tokenFetch = await fetch(
+        `http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/identity?audience=${serviceUrl}`,
+        {
+            method: 'GET',
+            headers: {
+                'Metadata-Flavor': 'Google',
+            },
+        }
+    );
+    const token = await tokenFetch.text();
+    const metadata = new grpc.Metadata();
+    metadata.add('authorization', `Bearer ${token}`);
+    return metadata;
+};
+
 export const packageDefinition = protoLoader.loadSync('../../grpc/grpc.proto');
 export const proto = grpc.loadPackageDefinition(
-  packageDefinition
+    packageDefinition
 ) as unknown as ProtoGrpcType;
 
 export const usersClient = new proto.grpc.UsersService(
     URI_USERS,
-    grpc.credentials.createInsecure()
+    grpc.credentials.createInsecure(),
 );
 
 export const notesClient = new proto.grpc.NotesService(
