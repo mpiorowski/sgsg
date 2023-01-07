@@ -1,6 +1,6 @@
 // Original file: notes.proto
 
-import type { User as _grpc_User, User__Output as _grpc_User__Output } from '../grpc/User';
+import type { User as _proto_User, User__Output as _proto_User__Output } from '../proto/User';
 
 export interface Note {
   'id'?: (string);
@@ -10,7 +10,7 @@ export interface Note {
   'userId'?: (string);
   'title'?: (string);
   'content'?: (string);
-  'user'?: (_grpc_User | null);
+  'user'?: (_proto_User | null);
   '_deleted'?: "deleted";
 }
 
@@ -22,6 +22,6 @@ export interface Note__Output {
   'userId': (string);
   'title': (string);
   'content': (string);
-  'user': (_grpc_User__Output | null);
+  'user': (_proto_User__Output | null);
   '_deleted': "deleted";
 }

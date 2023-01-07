@@ -3,7 +3,7 @@ package base
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
-	pb "go-svelte-grpc/grpc"
+	pb "go-svelte-grpc/proto"
 	"log"
 	"net/http"
 	"time"

@@ -7,7 +7,7 @@ type SubtypeConstructor<Constructor extends new (...args: any) => any, Subtype> 
 };
 
 export interface ProtoGrpcType {
-  grpc: {
+  proto: {
     Note: MessageTypeDefinition
     User: MessageTypeDefinition
     UserRole: EnumTypeDefinition

@@ -1,4 +1,4 @@
-// Original file: grpc.proto
+// Original file: main.proto
 
 
 export interface File {

@@ -14,7 +14,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 
 	grpcMetadata "google.golang.org/grpc/metadata"
-	pb "go-svelte-grpc/grpc"
+	pb "go-svelte-grpc/proto"
 )
 
 type Cache struct {

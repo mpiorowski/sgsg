@@ -4,7 +4,7 @@ import (
 	"io"
 	"net/http"
 
-	pb "go-svelte-grpc/grpc"
+	pb "go-svelte-grpc/proto"
 
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc/codes"

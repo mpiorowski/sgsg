@@ -5,7 +5,7 @@ import (
 	"io"
 	"log"
 
-	pb "go-svelte-grpc/grpc"
+	pb "go-svelte-grpc/proto"
 )
 
 func (s *server) GetUsers(in *pb.Empty, stream pb.UsersService_GetUsersServer) error {
@@ -33,6 +33,32 @@ func (s *server) GetUsers(in *pb.Empty, stream pb.UsersService_GetUsersServer) e
 		return err
 	}
 	return nil
+}
+
+func (s *server) GetUsersByIds(stream pb.UsersService_GetUsersByIdsServer) error {
+	for {
+		userId, err := stream.Recv()
+		if err == io.EOF {
+			return nil
+		}
+		if err != nil {
+			log.Printf("stream.Recv: %v", err)
+			return err
+		}
+		rows := db.QueryRow(`select * from users where id = $1`, userId.UserId)
+		user, err := mapUser(nil, rows)
+		if err != nil {
+			log.Printf("mapUser: %v", err)
+			return err
+		}
+
+		err = stream.Send(user)
+		if err != nil {
+			log.Printf("stream.Send: %v", err)
+			return err
+		}
+
+	}
 }
 
 func (s *server) GetUser(ctx context.Context, in *pb.UserId) (*pb.User, error) {

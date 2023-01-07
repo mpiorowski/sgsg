@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package grpc;
+package proto;
 
-option go_package = "go-svelte-grpc/server/grpc";
+option go_package = "go-svelte-grpc/proto";
 option java_multiple_files = true;
 option java_outer_classname = "HomeItProto";
 option java_package = "io.homeit.proto";
@@ -20,6 +20,7 @@ service UsersService {
 
     rpc GetUsers(Empty) returns (stream User) {}
     rpc GetUser(UserId) returns (User) {}
+    rpc GetUsersByIds(stream UserId) returns (stream User) {}
     rpc CreateUser(stream User) returns (stream User) {}
     rpc DeleteUser(User) returns (User) {}
 }

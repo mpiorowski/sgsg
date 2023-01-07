@@ -4,7 +4,7 @@ WORKDIR /usr/src
 
 COPY ./go.sum ./
 COPY ./go.mod ./
-COPY ./grpc ./grpc
+COPY ./proto ./proto
 COPY ./server/service-notes ./service-notes
 
 RUN go mod tidy

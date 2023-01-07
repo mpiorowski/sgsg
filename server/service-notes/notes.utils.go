@@ -2,7 +2,7 @@ package main
 
 import (
 	"database/sql"
-	pb "go-svelte-grpc/grpc"
+	pb "go-svelte-grpc/proto"
 )
 
 func mapNote(rows *sql.Rows, row *sql.Row) (*pb.Note, error) {

@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { UserRole } from "../../../proto/proto/UserRole";
     import type { LayoutData } from "./$types";
     import "./app.css";
 
@@ -26,12 +27,14 @@
         >
             Notes
         </a>
-        <a
-            href="/users"
-            class="text-gray-400 hover:text-green-700 border border-gray-400 px-2 rounded"
-        >
-            Users
-        </a>
+        {#if data.role === UserRole.ROLE_ADMIN}
+            <a
+                href="/users"
+                class="text-gray-400 hover:text-green-700 border border-gray-400 px-2 rounded"
+            >
+                Users
+            </a>
+        {/if}
     </header>
 
     <main class="max-w-xl m-auto h-full w-full">

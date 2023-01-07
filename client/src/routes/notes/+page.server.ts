@@ -1,8 +1,8 @@
 import { error } from "@sveltejs/kit";
 import type { PageServerLoad, Actions } from "./$types";
 import { fetchToken, notesClient, type Note, type UserId } from "src/grpc";
-import type { NoteId } from "../../../../grpc/grpc/NoteId";
-import type { Note__Output } from "../../../../grpc/grpc/Note";
+import type { NoteId } from "../../../../proto/proto/NoteId";
+import type { Note__Output } from "../../../../proto/proto/Note";
 import { URI_NOTES } from "$env/static/private";
 
 export const load = (async ({ locals }) => {

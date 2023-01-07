@@ -1,9 +1,7 @@
 <script lang="ts">
-    import { enhance } from "$app/forms";
-    import { Button } from "@mpiorowski/svelte-init";
-    import type { PageServerData } from "./$types";
+    import type { PageData } from "./$types";
 
-    export let data: PageServerData;
+    export let data: PageData;
 </script>
 
 <section>
@@ -14,10 +12,6 @@
                 <pre>
                 {JSON.stringify(user, null, 2)}
                 </pre>
-                <form action="?/delete" use:enhance method="post" id={user.id}>
-                    <input type="hidden" name="user" value={JSON.stringify(user)} />
-                    <Button form={user.id}>Delete</Button>
-                </form>
             </li>
         {/each}
     </ul>

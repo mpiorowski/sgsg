@@ -6,7 +6,7 @@ import { sequence } from "@sveltejs/kit/hooks";
 import Google from "@auth/core/providers/google";
 import type { Provider } from "@auth/core/providers";
 import { fetchToken, usersClient } from "./grpc";
-import type { AuthRequest } from "../../grpc/grpc/AuthRequest";
+import type { AuthRequest } from "../../proto/proto/AuthRequest";
 
 // TODO - finish handle error
 export const handleError: HandleServerError = ({ error }) => {

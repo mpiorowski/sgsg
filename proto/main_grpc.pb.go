@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v3.21.12
-// source: grpc.proto
+// source: main.proto
 
-package grpc
+package proto
 
 import (
 	context "context"
@@ -25,6 +25,7 @@ type UsersServiceClient interface {
 	Auth(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*User, error)
 	GetUsers(ctx context.Context, in *Empty, opts ...grpc.CallOption) (UsersService_GetUsersClient, error)
 	GetUser(ctx context.Context, in *UserId, opts ...grpc.CallOption) (*User, error)
+	GetUsersByIds(ctx context.Context, opts ...grpc.CallOption) (UsersService_GetUsersByIdsClient, error)
 	CreateUser(ctx context.Context, opts ...grpc.CallOption) (UsersService_CreateUserClient, error)
 	DeleteUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*User, error)
 }
@@ -39,7 +40,7 @@ func NewUsersServiceClient(cc grpc.ClientConnInterface) UsersServiceClient {
 
 func (c *usersServiceClient) Auth(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*User, error) {
 	out := new(User)
-	err := c.cc.Invoke(ctx, "/grpc.UsersService/Auth", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/proto.UsersService/Auth", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +48,7 @@ func (c *usersServiceClient) Auth(ctx context.Context, in *AuthRequest, opts ...
 }
 
 func (c *usersServiceClient) GetUsers(ctx context.Context, in *Empty, opts ...grpc.CallOption) (UsersService_GetUsersClient, error) {
-	stream, err := c.cc.NewStream(ctx, &UsersService_ServiceDesc.Streams[0], "/grpc.UsersService/GetUsers", opts...)
+	stream, err := c.cc.NewStream(ctx, &UsersService_ServiceDesc.Streams[0], "/proto.UsersService/GetUsers", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -80,15 +81,46 @@ func (x *usersServiceGetUsersClient) Recv() (*User, error) {
 
 func (c *usersServiceClient) GetUser(ctx context.Context, in *UserId, opts ...grpc.CallOption) (*User, error) {
 	out := new(User)
-	err := c.cc.Invoke(ctx, "/grpc.UsersService/GetUser", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/proto.UsersService/GetUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
+func (c *usersServiceClient) GetUsersByIds(ctx context.Context, opts ...grpc.CallOption) (UsersService_GetUsersByIdsClient, error) {
+	stream, err := c.cc.NewStream(ctx, &UsersService_ServiceDesc.Streams[1], "/proto.UsersService/GetUsersByIds", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &usersServiceGetUsersByIdsClient{stream}
+	return x, nil
+}
+
+type UsersService_GetUsersByIdsClient interface {
+	Send(*UserId) error
+	Recv() (*User, error)
+	grpc.ClientStream
+}
+
+type usersServiceGetUsersByIdsClient struct {
+	grpc.ClientStream
+}
+
+func (x *usersServiceGetUsersByIdsClient) Send(m *UserId) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *usersServiceGetUsersByIdsClient) Recv() (*User, error) {
+	m := new(User)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 func (c *usersServiceClient) CreateUser(ctx context.Context, opts ...grpc.CallOption) (UsersService_CreateUserClient, error) {
-	stream, err := c.cc.NewStream(ctx, &UsersService_ServiceDesc.Streams[1], "/grpc.UsersService/CreateUser", opts...)
+	stream, err := c.cc.NewStream(ctx, &UsersService_ServiceDesc.Streams[2], "/proto.UsersService/CreateUser", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -120,7 +152,7 @@ func (x *usersServiceCreateUserClient) Recv() (*User, error) {
 
 func (c *usersServiceClient) DeleteUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*User, error) {
 	out := new(User)
-	err := c.cc.Invoke(ctx, "/grpc.UsersService/DeleteUser", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/proto.UsersService/DeleteUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -134,6 +166,7 @@ type UsersServiceServer interface {
 	Auth(context.Context, *AuthRequest) (*User, error)
 	GetUsers(*Empty, UsersService_GetUsersServer) error
 	GetUser(context.Context, *UserId) (*User, error)
+	GetUsersByIds(UsersService_GetUsersByIdsServer) error
 	CreateUser(UsersService_CreateUserServer) error
 	DeleteUser(context.Context, *User) (*User, error)
 	mustEmbedUnimplementedUsersServiceServer()
@@ -151,6 +184,9 @@ func (UnimplementedUsersServiceServer) GetUsers(*Empty, UsersService_GetUsersSer
 }
 func (UnimplementedUsersServiceServer) GetUser(context.Context, *UserId) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
+}
+func (UnimplementedUsersServiceServer) GetUsersByIds(UsersService_GetUsersByIdsServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetUsersByIds not implemented")
 }
 func (UnimplementedUsersServiceServer) CreateUser(UsersService_CreateUserServer) error {
 	return status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
@@ -181,7 +217,7 @@ func _UsersService_Auth_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/grpc.UsersService/Auth",
+		FullMethod: "/proto.UsersService/Auth",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UsersServiceServer).Auth(ctx, req.(*AuthRequest))
@@ -220,12 +256,38 @@ func _UsersService_GetUser_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/grpc.UsersService/GetUser",
+		FullMethod: "/proto.UsersService/GetUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UsersServiceServer).GetUser(ctx, req.(*UserId))
 	}
 	return interceptor(ctx, in, info, handler)
+}
+
+func _UsersService_GetUsersByIds_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(UsersServiceServer).GetUsersByIds(&usersServiceGetUsersByIdsServer{stream})
+}
+
+type UsersService_GetUsersByIdsServer interface {
+	Send(*User) error
+	Recv() (*UserId, error)
+	grpc.ServerStream
+}
+
+type usersServiceGetUsersByIdsServer struct {
+	grpc.ServerStream
+}
+
+func (x *usersServiceGetUsersByIdsServer) Send(m *User) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *usersServiceGetUsersByIdsServer) Recv() (*UserId, error) {
+	m := new(UserId)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
 }
 
 func _UsersService_CreateUser_Handler(srv interface{}, stream grpc.ServerStream) error {
@@ -264,7 +326,7 @@ func _UsersService_DeleteUser_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/grpc.UsersService/DeleteUser",
+		FullMethod: "/proto.UsersService/DeleteUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UsersServiceServer).DeleteUser(ctx, req.(*User))
@@ -276,7 +338,7 @@ func _UsersService_DeleteUser_Handler(srv interface{}, ctx context.Context, dec 
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var UsersService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "grpc.UsersService",
+	ServiceName: "proto.UsersService",
 	HandlerType: (*UsersServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -299,13 +361,19 @@ var UsersService_ServiceDesc = grpc.ServiceDesc{
 			ServerStreams: true,
 		},
 		{
+			StreamName:    "GetUsersByIds",
+			Handler:       _UsersService_GetUsersByIds_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
+		},
+		{
 			StreamName:    "CreateUser",
 			Handler:       _UsersService_CreateUser_Handler,
 			ServerStreams: true,
 			ClientStreams: true,
 		},
 	},
-	Metadata: "grpc.proto",
+	Metadata: "main.proto",
 }
 
 // FilesServiceClient is the client API for FilesService service.
@@ -326,7 +394,7 @@ func NewFilesServiceClient(cc grpc.ClientConnInterface) FilesServiceClient {
 }
 
 func (c *filesServiceClient) GetFiles(ctx context.Context, in *TargetId, opts ...grpc.CallOption) (FilesService_GetFilesClient, error) {
-	stream, err := c.cc.NewStream(ctx, &FilesService_ServiceDesc.Streams[0], "/grpc.FilesService/GetFiles", opts...)
+	stream, err := c.cc.NewStream(ctx, &FilesService_ServiceDesc.Streams[0], "/proto.FilesService/GetFiles", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -359,7 +427,7 @@ func (x *filesServiceGetFilesClient) Recv() (*File, error) {
 
 func (c *filesServiceClient) CreateFile(ctx context.Context, in *File, opts ...grpc.CallOption) (*File, error) {
 	out := new(File)
-	err := c.cc.Invoke(ctx, "/grpc.FilesService/CreateFile", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/proto.FilesService/CreateFile", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -368,7 +436,7 @@ func (c *filesServiceClient) CreateFile(ctx context.Context, in *File, opts ...g
 
 func (c *filesServiceClient) DeleteFile(ctx context.Context, in *FileId, opts ...grpc.CallOption) (*File, error) {
 	out := new(File)
-	err := c.cc.Invoke(ctx, "/grpc.FilesService/DeleteFile", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/proto.FilesService/DeleteFile", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -442,7 +510,7 @@ func _FilesService_CreateFile_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/grpc.FilesService/CreateFile",
+		FullMethod: "/proto.FilesService/CreateFile",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(FilesServiceServer).CreateFile(ctx, req.(*File))
@@ -460,7 +528,7 @@ func _FilesService_DeleteFile_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/grpc.FilesService/DeleteFile",
+		FullMethod: "/proto.FilesService/DeleteFile",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(FilesServiceServer).DeleteFile(ctx, req.(*FileId))
@@ -472,7 +540,7 @@ func _FilesService_DeleteFile_Handler(srv interface{}, ctx context.Context, dec 
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var FilesService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "grpc.FilesService",
+	ServiceName: "proto.FilesService",
 	HandlerType: (*FilesServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -491,7 +559,7 @@ var FilesService_ServiceDesc = grpc.ServiceDesc{
 			ServerStreams: true,
 		},
 	},
-	Metadata: "grpc.proto",
+	Metadata: "main.proto",
 }
 
 // NotesServiceClient is the client API for NotesService service.
@@ -512,7 +580,7 @@ func NewNotesServiceClient(cc grpc.ClientConnInterface) NotesServiceClient {
 }
 
 func (c *notesServiceClient) GetNotes(ctx context.Context, in *UserId, opts ...grpc.CallOption) (NotesService_GetNotesClient, error) {
-	stream, err := c.cc.NewStream(ctx, &NotesService_ServiceDesc.Streams[0], "/grpc.NotesService/GetNotes", opts...)
+	stream, err := c.cc.NewStream(ctx, &NotesService_ServiceDesc.Streams[0], "/proto.NotesService/GetNotes", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -545,7 +613,7 @@ func (x *notesServiceGetNotesClient) Recv() (*Note, error) {
 
 func (c *notesServiceClient) CreateNote(ctx context.Context, in *Note, opts ...grpc.CallOption) (*Note, error) {
 	out := new(Note)
-	err := c.cc.Invoke(ctx, "/grpc.NotesService/CreateNote", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/proto.NotesService/CreateNote", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -554,7 +622,7 @@ func (c *notesServiceClient) CreateNote(ctx context.Context, in *Note, opts ...g
 
 func (c *notesServiceClient) DeleteNote(ctx context.Context, in *NoteId, opts ...grpc.CallOption) (*Note, error) {
 	out := new(Note)
-	err := c.cc.Invoke(ctx, "/grpc.NotesService/DeleteNote", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/proto.NotesService/DeleteNote", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -628,7 +696,7 @@ func _NotesService_CreateNote_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/grpc.NotesService/CreateNote",
+		FullMethod: "/proto.NotesService/CreateNote",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(NotesServiceServer).CreateNote(ctx, req.(*Note))
@@ -646,7 +714,7 @@ func _NotesService_DeleteNote_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/grpc.NotesService/DeleteNote",
+		FullMethod: "/proto.NotesService/DeleteNote",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(NotesServiceServer).DeleteNote(ctx, req.(*NoteId))
@@ -658,7 +726,7 @@ func _NotesService_DeleteNote_Handler(srv interface{}, ctx context.Context, dec 
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var NotesService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "grpc.NotesService",
+	ServiceName: "proto.NotesService",
 	HandlerType: (*NotesServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -677,5 +745,5 @@ var NotesService_ServiceDesc = grpc.ServiceDesc{
 			ServerStreams: true,
 		},
 	},
-	Metadata: "grpc.proto",
+	Metadata: "main.proto",
 }

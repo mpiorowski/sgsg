@@ -14,7 +14,7 @@ import (
 	"go-svelte-grpc/gateway/notes"
 	"go-svelte-grpc/gateway/users"
 
-	pb "go-svelte-grpc/grpc"
+	pb "go-svelte-grpc/proto"
 )
 
 func init() {

@@ -1,41 +1,35 @@
-import { apiRequest } from "$lib/api.util";
-import { error } from "@sveltejs/kit";
-import type { User } from "src/types/user.type";
-import type { PageServerLoad, Actions } from "./$types";
+import { URI_USERS } from "$env/static/private";
+import { error, redirect } from "@sveltejs/kit";
+import { fetchToken, usersClient } from "src/grpc";
+import type { User__Output } from "../../../../proto/proto/User";
+import { UserRole } from "../../../../proto/proto/UserRole";
+import type { PageServerLoad } from "./$types";
 
-export const load = (async ({ cookies }) => {
-    try {
-        const users = await apiRequest<User[]>({
-            url: "/users",
-            method: "GET",
-            cookies
-        });
-        return { users: users };
+export const load = (async ({ locals }) => {
+    if (locals.role !== UserRole.ROLE_ADMIN) {
+        throw redirect(303, "/");
     }
-    catch (err) {
+    try {
+        const metadata = await fetchToken(URI_USERS);
+        const stream = usersClient.getUsers(metadata);
+        const users: User__Output[] = [];
+
+        const promise = new Promise<User__Output[]>((resolve, reject) => {
+            stream.on("data", (user: User__Output) => {
+                users.push(user);
+            });
+            stream.on("end", () => {
+                resolve(users);
+            });
+            stream.on("error", (err) => {
+                reject(err);
+            });
+        });
+        return {
+            users: await promise,
+        };
+    } catch (err) {
         console.error(err);
         throw error(500, "Could not load users");
     }
 }) satisfies PageServerLoad;
-
-export const actions = {
-    delete: async ({ cookies, request }) => {
-        const form = await request.formData();
-        const user = form.get("user");
-
-        try {
-            const response = await apiRequest<User>({
-                url: "/users",
-                method: "DELETE",
-                body: user as string,
-                cookies,
-            });
-            return {
-                user: response,
-            }
-        } catch (err) {
-            console.error(err);
-            throw error(500, "Failed to delete user");
-        }
-    }
-} satisfies Actions;
