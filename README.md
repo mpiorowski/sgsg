@@ -1,6 +1,8 @@
 # Go with SvelteKit using gRPC template
 
 ## Architecture
+![Screenshot from 2023-01-07 20-55-32](https://user-images.githubusercontent.com/26543876/211168251-5dab78ef-1b20-4a13-9588-6f8400dd110c.png)
+
 - SvelteKit for frontend and for gRPC gateway using nodejs
 - Go for microservices
 - SvelteKit server for page protection and data gateway, nothing is exposed to client, can work without any Javascript
@@ -9,9 +11,6 @@
 - So yeah, everything works on gRPC, either as streams or unary, IT IS FAST (locally request can be as fast as 3-10 ms)
 - Everything is deployed using Google Cloud Run
 - Authorization using Auth.js (experimental version for svelte)
-
-![Screenshot from 2023-01-07 20-55-32](https://user-images.githubusercontent.com/26543876/211168251-5dab78ef-1b20-4a13-9588-6f8400dd110c.png)
-
 
 ## Overview
 - User can log in using google account via AuthJs
