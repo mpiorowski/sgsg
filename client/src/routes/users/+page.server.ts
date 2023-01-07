@@ -11,7 +11,7 @@ export const load = (async ({ locals }) => {
     }
     try {
         const metadata = await fetchToken(URI_USERS);
-        const stream = usersClient.getUsers(metadata);
+        const stream = usersClient.GetUsers(metadata);
         const users: User__Output[] = [];
 
         const promise = new Promise<User__Output[]>((resolve, reject) => {
