@@ -1,7 +1,7 @@
 # Go with SvelteKit using gRPC template
 
 ## Architecture
-- SvelteKit for frontend and for api gateway using it's nodejs server
+- SvelteKit for frontend and for gRPC gateway using it's nodejs server
 - Go for microservices
 - SvelteKit server for page protection and data gateway, nothing is exposed to client, can work without any Javascript
 - Svelte nodejs api gateway communicate with go backend using gRPC (nightmare to make it worke using Typescript...)
