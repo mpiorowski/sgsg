@@ -30,11 +30,11 @@ export const proto = grpc.loadPackageDefinition(
 
 export const usersClient = new proto.grpc.UsersService(
     URI_USERS,
-    grpc.credentials.createInsecure(),
+    grpc.credentials.createSsl()
 );
 
 export const notesClient = new proto.grpc.NotesService(
     URI_NOTES,
-    grpc.credentials.createInsecure()
+    grpc.credentials.createSsl()
 );
 
