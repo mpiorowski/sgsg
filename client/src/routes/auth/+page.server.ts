@@ -2,11 +2,10 @@ import type { Actions, PageServerLoad } from "./$types";
 import { error, redirect } from "@sveltejs/kit";
 import { apiRequest } from "$lib/api.util";
 
-export const load = (({ locals }) => {
-    if (locals.user?.id) {
-        throw redirect(303, "/");
+export const load = (async ({ locals }) => {
+    if (await locals.getSession()) {
+        console.info("User is authenticated");
     }
-    return { user: locals.user };
 }) satisfies PageServerLoad;
 
 export const actions = {

@@ -1,13 +1,9 @@
 import { apiRequest } from "$lib/api.util";
-import { error, redirect } from "@sveltejs/kit";
+import { error } from "@sveltejs/kit";
 import type { User } from "src/types/user.type";
 import type { PageServerLoad, Actions } from "./$types";
 
-export const load = (async ({ locals, cookies }) => {
-    if (!locals.user?.id) {
-        throw redirect(303, "/login");
-    }
-
+export const load = (async ({ cookies }) => {
     try {
         const users = await apiRequest<User[]>({
             url: "/users",
@@ -23,11 +19,7 @@ export const load = (async ({ locals, cookies }) => {
 }) satisfies PageServerLoad;
 
 export const actions = {
-    delete: async ({ locals, cookies, request }) => {
-        if (!locals.user?.id) {
-            throw redirect(303, "/login");
-        }
-
+    delete: async ({ cookies, request }) => {
         const form = await request.formData();
         const user = form.get("user");
 

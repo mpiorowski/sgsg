@@ -5,12 +5,8 @@
 declare namespace App {
     // interface Error {}
     interface Locals {
-        user: {
-            id: string;
-            email: string;
-            role: UserRole;
-            providerId: string;
-        } | null;
+        userId: string
+        role: string
     }
     // interface PageData {}
     // interface Platform {}

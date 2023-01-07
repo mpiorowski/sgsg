@@ -1,33 +1,42 @@
-import { apiRequest } from "$lib/api.util";
-import { error, redirect } from "@sveltejs/kit";
-import type { Note } from "src/types/note.type";
+import { error } from "@sveltejs/kit";
 import type { PageServerLoad, Actions } from "./$types";
+import { notesClient, type Note, type UserId } from "src/grpc";
+import type { NoteId } from "../../../../grpc/grpc/NoteId";
+import type { Note__Output } from "../../../../grpc/grpc/Note";
 
-export const load = (async ({ locals, cookies }) => {
-    if (!locals.user?.id) {
-        throw redirect(303, "/login");
-    }
-
+export const load = (async ({ locals }) => {
     try {
-        const notes = await apiRequest<Note[]>({
-            url: "/notes",
-            method: "GET",
-            cookies
+        const request: UserId = { userId: locals.userId };
+        const stream = notesClient.getNotes(request);
+        const notes: Note__Output[] = [];
+
+        const promise = new Promise<Note__Output[]>((resolve, reject) => {
+            stream.on("data", (note) => {
+                notes.push(note);
+            });
+
+            stream.on("end", () => {
+                resolve(notes);
+            });
+
+            stream.on("error", (err: unknown) => {
+                reject(err);
+            });
         });
-        return { notes: notes || [] };
-    }
-    catch (err) {
+
+        const data = await promise;
+
+        return {
+            notes: data,
+        };
+    } catch (err) {
         console.error(err);
         throw error(500, "Could not load notes");
     }
 }) satisfies PageServerLoad;
 
 export const actions = {
-    create: async ({ locals, cookies, request }) => {
-        if (!locals.user?.id) {
-            throw redirect(303, "/login");
-        }
-
+    create: async ({ locals, request }) => {
         const form = await request.formData();
         const title = form.get("title");
         const content = form.get("content");
@@ -37,25 +46,25 @@ export const actions = {
         }
 
         try {
-            const response = await apiRequest<Note>({
-                url: "/notes",
-                method: "POST",
-                body: JSON.stringify({ title, content }),
-                cookies,
+            const note: Note = {
+                title: title as string,
+                content: content as string,
+                userId: locals.userId,
+            };
+
+            const promise = new Promise<Note__Output>((resolve, reject) => {
+                notesClient.createNote(note, (err, response) => ((err || !response) ? reject(err) : resolve(response)));
             });
+
             return {
-                note: response,
-            }
+                note: await promise,
+            };
         } catch (err) {
             console.error(err);
             throw error(500, "Could not create note");
         }
     },
-    delete: async ({ locals, cookies, request }) => {
-        if (!locals.user?.id) {
-            throw redirect(303, "/login");
-        }
-
+    delete: async ({ locals, request }) => {
         const form = await request.formData();
         const id = form.get("id");
 
@@ -64,17 +73,18 @@ export const actions = {
         }
 
         try {
-            const response = await apiRequest<Note>({
-                url: "/notes/" + id,
-                method: "DELETE",
-                cookies,
+            const request: NoteId = { noteId: id as string, userId: locals.userId };
+
+            const promise = new Promise<Note__Output>((resolve, reject) => {
+                notesClient.deleteNote(request, (err, response) => ((err || !response) ? reject(err) : resolve(response)));
             });
+
             return {
-                note: response,
-            }
+                note: await promise,
+            };
         } catch (err) {
             console.error(err);
             throw error(500, "Failed to delete note");
         }
-    }
+    },
 } satisfies Actions;
