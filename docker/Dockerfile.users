@@ -8,7 +8,7 @@ COPY ./grpc ./grpc
 COPY ./server/service-users ./server/service-users
 
 RUN go mod tidy
-RUN go build -v -o /usr/local/bin/app ./sever/service-users/...
+RUN go build -v -o /usr/local/bin/app ./server/service-users/...
 COPY ./server/service-users/migrations /migrations
 
 CMD ["app"]
