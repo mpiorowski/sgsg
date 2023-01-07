@@ -4,7 +4,7 @@ import { apiRequest } from "$lib/api.util";
 
 export const load = (async ({ locals }) => {
     if (await locals.getSession()) {
-        throw redirect(303, "/");
+        console.info("User is authenticated");
     }
 }) satisfies PageServerLoad;
 

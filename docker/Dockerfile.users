@@ -2,10 +2,10 @@ FROM golang:1.19
 
 WORKDIR /usr/src
 
-COPY ./server/go.sum ./
-COPY ./server/go.mod ./
-COPY ./server/grpc ./grpc
-COPY ./server/service-users ./service-users
+COPY ./go.sum ./
+COPY ./go.mod ./
+COPY ./grpc ./grpc
+COPY ./server/service-users ./server/service-users
 
 RUN go mod tidy
 RUN go build -v -o /usr/local/bin/app ./service-users/...

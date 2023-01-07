@@ -10,6 +10,8 @@ import (
 )
 
 func (s *server) GetNotes(in *pb.UserId, stream pb.NotesService_GetNotesServer) error {
+    log.Println("GetNotes")
+
 	rows, err := db.Query(`select * from notes where "userId" = $1 and deleted is null`, in.UserId)
 	if err != nil {
 		log.Printf("db.Query: %v", err)
@@ -59,6 +61,8 @@ func (s *server) GetNotes(in *pb.UserId, stream pb.NotesService_GetNotesServer) 
 }
 
 func (s *server) CreateNote(ctx context.Context, in *pb.Note) (*pb.Note, error) {
+    log.Println("CreateNote")
+
     var row *sql.Row
     if in.Id == "" {
         row = db.QueryRow(`insert into notes ("userId", title, content) values ($1, $2, $3) returning *`, in.UserId, in.Title, in.Content)
@@ -74,6 +78,8 @@ func (s *server) CreateNote(ctx context.Context, in *pb.Note) (*pb.Note, error) 
 }
 
 func (s *server) DeleteNote(ctx context.Context, in *pb.NoteId) (*pb.Note, error) {
+    log.Println("DeleteNote")
+
 	row := db.QueryRow(`update notes set deleted = now() where id = $1 and "userId" = $2 returning *`, in.NoteId, in.UserId)
 	note, err := mapNote(nil, row)
 	if err != nil {

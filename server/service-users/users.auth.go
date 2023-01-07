@@ -14,6 +14,7 @@ import (
 * Check if user exists, if not create new user
  */
 func (s *server) Auth(ctx context.Context, in *pb.AuthRequest) (*pb.User, error) {
+    log.Println("Auth")
 
 	rules := map[string]string{
 		"Email":      "required,max=100,email",
@@ -26,7 +27,7 @@ func (s *server) Auth(ctx context.Context, in *pb.AuthRequest) (*pb.User, error)
 		return nil, status.Error(codes.InvalidArgument, "Invalid email or code")
 	}
 
-	row := db.QueryRow(`select * from users where email = $1 and "providerId" = $2`, in.Email, in.ProviderId)
+	row := db.QueryRow(`select * from users where email = $1`, in.Email)
 	user, err := mapUser(nil, row)
 	if err != nil && err != sql.ErrNoRows {
 		log.Printf("mapUser: %v", err)

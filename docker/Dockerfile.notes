@@ -2,9 +2,9 @@ FROM golang:1.19
 
 WORKDIR /usr/src
 
-COPY ./server/go.sum ./
-COPY ./server/go.mod ./
-COPY ./server/grpc ./grpc
+COPY ./go.sum ./
+COPY ./go.mod ./
+COPY ./grpc ./grpc
 COPY ./server/service-notes ./service-notes
 
 RUN go mod tidy
