@@ -20,6 +20,7 @@
   - Adding / deleteing notes as Unary flow, send request, get response
   - Get notes works on stream, gateway starts a stream with notes service
   - Note service get a list of notes, and for each notes, via another stream, ask users service for user data
+  - Single combined note is sent to gateway as soon as it's ready
   - When all of the notes are gatehered on gateway, it return it to frontend
 
 ## Demo page
