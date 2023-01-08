@@ -45,8 +45,12 @@ func init() {
 	log.Println("Connected to database")
 
 	// Migrations
+    var migrationsDir = "./migrations"
+    if ENV == "production" {
+        migrationsDir = "/migrations"
+    }
 	migrations := &migrate.FileMigrationSource{
-		Dir: "./migrations",
+		Dir: migrationsDir,
 	}
 	n, err := migrate.Exec(db, "postgres", migrations, migrate.Up)
 	if err != nil {
