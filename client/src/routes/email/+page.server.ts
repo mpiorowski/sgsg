@@ -16,9 +16,10 @@ export const actions = {
         const email = form.get("email") as string;
         const message = form.get("message") as string;
 
+        // TODO - email tempalte
         const data = {
             to: email,
-            type: "CONTACT",
+            type: "MESSAGE",
             html: [message]
         };
         const dataBuffer = Buffer.from(JSON.stringify(data));
