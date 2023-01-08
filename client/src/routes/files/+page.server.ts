@@ -34,7 +34,7 @@ export const load = (async ({ locals }) => {
 }) satisfies PageServerLoad;
 
 export const actions = {
-    file: async ({ request, locals }) => {
+    createFile: async ({ request, locals }) => {
         try {
             const form = await request.formData();
             const file = form.get("file") as Blob;

@@ -14,7 +14,7 @@
     <a href={file.url}>Download</a>
 {/each}
 
-<form action="?/file" method="post" id="file" use:enhance>
+<form action="?/createFile" method="post" id="file" use:enhance>
     <input type="file" name="file" />
-    <input type="submit" value="Upload" form="file" />
+    <button type="submit" form="file">Upload</button>
 </form>
