@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -55,8 +56,8 @@ func GetPubSubEmail(c *gin.Context) {
 
 	subject, body := getTemplate(email.Template, email.Html)
     if subject == "" || body == "" {
-        log.Printf("getTemplate: %v", "template not found")
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        log.Printf("getTemplate: %v", errors.New("invalid template"))
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Template not found"})
         return
     }
 
