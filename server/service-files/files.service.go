@@ -50,8 +50,12 @@ func (s *server) CreateFile(ctx context.Context, in *pb.File) (*pb.File, error) 
 		"Data":     "required",
 	}
 	validate.RegisterStructValidationMapRules(rules, pb.File{})
+    err := validate.Struct(in)
+    if err != nil {
+        log.Printf("validate.Struct: %v", err)
+        return nil, err
+    }
 
-	var err error
 	var row *sql.Row
 
 	path := in.TargetId + "/" + in.Name
