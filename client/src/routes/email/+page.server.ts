@@ -16,10 +16,10 @@ export const actions = {
         const email = form.get("email") as string;
         const message = form.get("message") as string;
 
-        // TODO - email tempalte
+        // TODO - email tempalte as enum
         const data = {
             to: email,
-            template: "MESSAGEE",
+            template: "MESSAGE",
             html: [message]
         };
         const dataBuffer = Buffer.from(JSON.stringify(data));

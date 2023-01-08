@@ -56,8 +56,9 @@ func GetPubSubEmail(c *gin.Context) {
 
 	subject, body := getTemplate(email.Template, email.Html)
     if subject == "" || body == "" {
-        log.Printf("getTemplate: %v", errors.New("invalid template"))
-        c.JSON(http.StatusBadRequest, gin.H{"error": "Template not found"})
+        err = errors.New("invalid template")
+        log.Printf("getTemplate: %v", err)
+        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
         return
     }
 
