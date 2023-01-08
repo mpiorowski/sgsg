@@ -3,7 +3,7 @@ import grpc from '@grpc/grpc-js';
 import type { ProtoGrpcType } from "../../proto/main";
 import type { UserId } from "../../proto/proto/UserId";
 import type { Note } from "../../proto/proto/Note";
-import { URI_USERS, URI_NOTES, NODE_ENV } from "$env/static/private";
+import { URI_USERS, URI_NOTES, NODE_ENV, URI_FILES } from "$env/static/private";
 
 export { UserId, Note };
 
@@ -58,6 +58,11 @@ export const usersClient = new proto.proto.UsersService(
 
 export const notesClient = new proto.proto.NotesService(
     URI_NOTES,
+    NODE_ENV === 'production' ? grpc.credentials.createSsl() : grpc.credentials.createInsecure()
+);
+
+export const filesClient = new proto.proto.FilesService(
+    URI_FILES,
     NODE_ENV === 'production' ? grpc.credentials.createSsl() : grpc.credentials.createInsecure()
 );
 

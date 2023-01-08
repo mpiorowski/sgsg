@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc"
 
 	utils "github.com/mpiorowski/golang"
-	pb "go-svelte-grpc/server/grpc"
+	pb "go-svelte-grpc/proto"
 )
 
 var db *sql.DB
@@ -52,7 +52,7 @@ func init() {
 	if err != nil {
 		log.Fatalf("Migrations failed: %v", err)
 	}
-	log.Printf("Applied %d migrations", n)
+	log.Printf("Applied migrations: %d", n)
 }
 
 func main() {
@@ -63,7 +63,7 @@ func main() {
 	}
 	s := grpc.NewServer()
 	pb.RegisterFilesServiceServer(s, &server{})
-	log.Printf("Server listening at %v", lis.Addr())
+	log.Printf("Server listening at: %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("Failed to serve: %v", err)
 	}

@@ -70,8 +70,8 @@ func main() {
 	}
 	s := grpc.NewServer()
 	pb.RegisterNotesServiceServer(s, &server{})
+	log.Printf("Server listening at: %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("Failed to serve: %v", err)
 	}
-	log.Printf("Server listening at: %v", lis.Addr())
 }

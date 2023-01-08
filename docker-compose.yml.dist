@@ -6,80 +6,26 @@ services:
     working_dir: /client
     volumes:
       - ./client:/client
+      - ./proto:/proto
     command: npm run dev
     environment:
-      API_URL: http://gateway:7000
-    ports: 
-      - 3000:3000
-
-  gateway:
-    container_name: grpc-gateway
-    image: golang:1.19
-    working_dir: /server/gateway
-    volumes:
-      - ./server:/server
-      - ./serviceAccount.json:/serviceAccount.json
-    command: sh -c "go mod tidy && go run ."
-    environment:
-      PORT: 7000
-      ENV: development
-      DOMAIN: http://localhost:3000
-      PROJECT_ID: grpc
       URI_USERS: service-users
       URI_NOTES: service-notes
-      URI_FILES: service-files
+      GOOGLE_ID: xxxx
+      GOOGLE_SECRET: xxxx
+      AUTH_SECRET: xxxx
+      AUTH_TRUST_HOST: true
     ports: 
-      - 7000:7000
-
-  service-email:
-    container_name: grpc-service-email
-    image: golang:1.19
-    working_dir: /server/service-email
-    volumes:
-      - ./server:/server
-    command: sh -c "go mod tidy && go run ."
-    environment:
-      PORT: 3000
-      ENV: development
-      CLIENT_URL: http://localhost:3000
-      EMAIL_API_KEY: xxxx
-      EMAIL_FROM: xxxx
-      EMAIL_NAME: xxxx
-
-  service-files:
-    container_name: grpc-service-files
-    image: golang:1.19
-    depends_on:
-      - db-files
-    working_dir: /server/service-files
-    volumes:
-      - ./server:/server
-    command: sh -c "go mod tidy && go run ."
-    environment:
-      ENV: development
-      PORT: 443
-      BUCKET: xxxx
-      DB_USER: postgres
-      DB_PASS: 12345
-      DB_HOST: db-files
-      DB_NAME: files
-
-  db-files:
-    container_name: grpc-db-files
-    image: postgres:14.1
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 12345
-      POSTGRES_DB: files
+      - 3000:3000
 
   service-users:
     container_name: grpc-service-users
     image: golang:1.19
     depends_on:
       - db-users
-    working_dir: /server/service-users
+    working_dir: /app/server/service-users
     volumes:
-      - ./server:/server
+      - .:/app
     command: sh -c "go mod tidy && go run ."
     environment:
       ENV: development
@@ -102,9 +48,9 @@ services:
     image: golang:1.19
     depends_on:
       - db-notes
-    working_dir: /server/service-notes
+    working_dir: /app/server/service-notes
     volumes:
-      - ./server:/server
+      - .:/app
     command: sh -c "go mod tidy && go run ."
     environment:
       ENV: development
