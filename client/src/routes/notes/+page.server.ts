@@ -12,7 +12,7 @@ export const load = (async ({ locals }) => {
         const stream = notesClient.getNotes(request, metadata);
         const notes: Note__Output[] = [];
 
-        const promise = new Promise<Note__Output[]>((resolve, reject) => {
+        await new Promise<Note__Output[]>((resolve, reject) => {
             stream.on("data", (note) => {
                 notes.push(note);
             });
@@ -26,10 +26,8 @@ export const load = (async ({ locals }) => {
             });
         });
 
-        const data = await promise;
-
         return {
-            notes: data,
+            notes: notes,
         };
     } catch (err) {
         console.error(err);

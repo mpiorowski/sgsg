@@ -9,6 +9,17 @@ import (
 )
 
 func (s *server) GetFiles(in *pb.TargetId, stream pb.FilesService_GetFilesServer) error {
+
+	rules := map[string]string{
+		"TargetId": "required,max=100,uuid",
+	}
+	validate.RegisterStructValidationMapRules(rules, pb.TargetId{})
+	err := validate.Struct(in)
+	if err != nil {
+		log.Printf("validate.Struct: %v", err)
+		return err
+	}
+
 	rows, err := db.Query(`select * from files where "targetId" = $1`, in.TargetId)
 	if err != nil {
 		log.Printf("db.Query: %v", err)
@@ -49,11 +60,11 @@ func (s *server) CreateFile(ctx context.Context, in *pb.File) (*pb.File, error) 
 		"Data":     "required",
 	}
 	validate.RegisterStructValidationMapRules(rules, pb.File{})
-    err := validate.Struct(in)
-    if err != nil {
-        log.Printf("validate.Struct: %v", err)
-        return nil, err
-    }
+	err := validate.Struct(in)
+	if err != nil {
+		log.Printf("validate.Struct: %v", err)
+		return nil, err
+	}
 
 	var row *sql.Row
 
@@ -88,10 +99,7 @@ func (s *server) CreateFile(ctx context.Context, in *pb.File) (*pb.File, error) 
 
 func (s *server) DeleteFile(ctx context.Context, in *pb.FileId) (*pb.File, error) {
 
-	row := db.QueryRow(`delete from files where "id" = $1 and "targetId" = $2 returning *`,
-		in.FileId,
-		in.TargetId,
-	)
+	row := db.QueryRow(`update files set "deleted" = now() where "id" = $1 and "targetId" = $2 returning *`, in.FileId, in.TargetId)
 
 	file, err := mapFile(nil, row)
 	if err != nil {
