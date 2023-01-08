@@ -19,7 +19,7 @@ export const actions = {
         // TODO - email tempalte
         const data = {
             to: email,
-            template: "MESSAGE",
+            template: "MESSAGEE",
             html: [message]
         };
         const dataBuffer = Buffer.from(JSON.stringify(data));

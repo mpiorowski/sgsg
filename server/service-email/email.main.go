@@ -54,6 +54,11 @@ func GetPubSubEmail(c *gin.Context) {
 	to := mail.NewEmail(email.To, email.To)
 
 	subject, body := getTemplate(email.Template, email.Html)
+    if subject == "" || body == "" {
+        log.Printf("getTemplate: %v", "template not found")
+        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        return
+    }
 
 	msg := mail.NewSingleEmail(from, subject, to, "", body)
 	client := sendgrid.NewSendClient(EMAIL_API_KEY)
