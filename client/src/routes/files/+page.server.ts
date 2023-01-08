@@ -3,6 +3,7 @@ import { error, type Actions } from "@sveltejs/kit";
 import { fetchToken, filesClient } from "src/grpc";
 import type { PageServerLoad } from "../$types";
 import type { File__Output, File } from "../../../../proto/proto/File";
+import type { FileId } from "../../../../proto/proto/FileId";
 import type { TargetId } from "../../../../proto/proto/TargetId";
 
 export const load = (async ({ locals }) => {
@@ -60,6 +61,33 @@ export const actions = {
         } catch (err) {
             console.error(err);
             throw error(409, "Error creating file");
+        }
+    },
+    deleteFile: async ({ request }) => {
+        try {
+            const form = await request.formData();
+            const fileId = form.get("fileId") as string;
+            const targetId = form.get("targetId") as string;
+
+            const data: FileId = {
+                fileId: fileId,
+                targetId: targetId,
+            };
+
+            const metadata = await fetchToken(URI_FILES);
+            const promise = new Promise<File__Output>((resolve, reject) => {
+                filesClient.DeleteFile(data, metadata, (err, res) =>
+                    err || !res ? reject(err) : resolve(res),
+                );
+            });
+
+            return {
+                file: await promise,
+            };
+        }
+        catch (err) {
+            console.error(err);
+            throw error(409, "Error deleting file");
         }
     },
 } satisfies Actions;

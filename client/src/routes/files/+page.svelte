@@ -10,6 +10,11 @@
 
 {#each data.files as file}
     <pre>{JSON.stringify(file, null, 2)}</pre>
+    <form action="?/deleteFile" method="post" id={file.id} use:enhance>
+        <input type="hidden" name="fileId" value={file.id} />
+        <input type="hidden" name="targetId" value={file.targetId} />
+        <Button type="error" form={file.id}>Delete</Button>
+    </form>
     <Button
         on:click={() => {
             window.open(file.url, "_blank");

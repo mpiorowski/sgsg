@@ -20,7 +20,7 @@ func (s *server) GetFiles(in *pb.TargetId, stream pb.FilesService_GetFilesServer
 		return err
 	}
 
-	rows, err := db.Query(`select * from files where "targetId" = $1`, in.TargetId)
+	rows, err := db.Query(`select * from files where "targetId" = $1 and deleted is null`, in.TargetId)
 	if err != nil {
 		log.Printf("db.Query: %v", err)
 		return err
@@ -40,8 +40,8 @@ func (s *server) GetFiles(in *pb.TargetId, stream pb.FilesService_GetFilesServer
 				return err
 			}
 		} else {
-            file.Url = ""
-        }
+			file.Url = ""
+		}
 		err = stream.Send(file)
 		if err != nil {
 			log.Printf("stream.Send: %v", err)
@@ -82,20 +82,20 @@ func (s *server) CreateFile(ctx context.Context, in *pb.File) (*pb.File, error) 
 	// check if file exists
 	var exists bool
 	var row *sql.Row
-	err = db.QueryRow(`select exists(select 1 from files where "targetId" = $1 and "name" = $2)`, in.TargetId, in.Name).Scan(&exists)
+	err = db.QueryRow(`select exists(select 1 from files where "targetId" = $1 and "name" = $2 and deleted is null)`, in.TargetId, in.Name).Scan(&exists)
 	if err != nil {
 		log.Printf("db.QueryRow: %v", err)
 		return nil, err
 	}
 
 	if exists {
-		row = db.QueryRow(`update files set type = $1 where "targetId" = $2 and "name" = $3 returning *`,
+		row = db.QueryRow(`update files set type = $1 where "targetId" = $2 and "name" = $3 and deleted is null returning *`,
 			in.Type,
 			in.TargetId,
 			in.Name,
 		)
 	} else if in.Id != "" {
-		row = db.QueryRow(`update files set "name" = $1, "type" = $2 where "id" = $3 and "targetId" = $4 returning *`,
+		row = db.QueryRow(`update files set "name" = $1, "type" = $2 where "id" = $3 and "targetId" = $4 and deleted is null returning *`,
 			in.Name,
 			in.Type,
 			in.Id,
