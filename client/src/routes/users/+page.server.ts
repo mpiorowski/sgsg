@@ -2,6 +2,7 @@ import { URI_USERS } from "$env/static/private";
 import { error, redirect } from "@sveltejs/kit";
 import { fetchToken, usersClient } from "src/grpc";
 import type { User__Output } from "../../../../proto/proto/User";
+import type { Empty } from "../../../../proto/proto/Empty";
 import { UserRole } from "../../../../proto/proto/UserRole";
 import type { PageServerLoad } from "./$types";
 
@@ -11,7 +12,8 @@ export const load = (async ({ locals }) => {
     }
     try {
         const metadata = await fetchToken(URI_USERS);
-        const stream = usersClient.getUsers(metadata);
+        const request: Empty = {};
+        const stream = usersClient.GetUsers(request, metadata);
         const users: User__Output[] = [];
 
         const promise = new Promise<User__Output[]>((resolve, reject) => {
