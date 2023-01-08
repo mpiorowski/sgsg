@@ -1,7 +1,7 @@
 # Go with SvelteKit using gRPC template
 
 ## Architecture
-![Screenshot from 2023-01-07 20-55-32](https://user-images.githubusercontent.com/26543876/211168251-5dab78ef-1b20-4a13-9588-6f8400dd110c.png)
+![Screenshot from 2023-01-08 23-48-07](https://user-images.githubusercontent.com/26543876/211222907-97adcd78-2b81-4978-91eb-72e69c7674fc.png)
 
 - SvelteKit for frontend and for gRPC gateway using nodejs
 - Go for microservices
