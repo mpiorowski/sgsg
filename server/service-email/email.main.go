@@ -16,7 +16,6 @@ var (
 	ENV           = utils.MustGetenv("ENV")
 	PORT          = utils.MustGetenv("PORT")
 	EMAIL_API_KEY = utils.MustGetenv("EMAIL_API_KEY")
-	CLIENT_URL    = utils.MustGetenv("CLIENT_URL")
 	EMAIL_FROM    = utils.MustGetenv("EMAIL_FROM")
 	EMAIL_NAME    = utils.MustGetenv("EMAIL_NAME")
 )
