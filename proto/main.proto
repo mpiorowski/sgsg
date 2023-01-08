@@ -49,7 +49,7 @@ message File {
     string id = 1;
     string created = 2;
     string updated = 3;
-    bool deleted = 4;
+    optional string deleted = 4;
 
     string targetId = 5;
     string name = 6;

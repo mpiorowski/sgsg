@@ -31,7 +31,7 @@ export const actions = {
             };
         } catch (err) {
             console.error(err);
-            throw error(401, { message: "Error logging in" });
+            throw error(409, "Error creating file");
         }
     },
 } satisfies Actions;
