@@ -11,6 +11,7 @@ services:
     environment:
       URI_USERS: service-users
       URI_NOTES: service-notes
+      URI_FILES: service-files
       GOOGLE_ID: xxxx
       GOOGLE_SECRET: xxxx
       AUTH_SECRET: xxxx
@@ -68,3 +69,29 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 12345
       POSTGRES_DB: notes
+
+  service-files:
+    container_name: grpc-service-files
+    image: golang:1.19
+    depends_on:
+      - db-files
+    working_dir: /app/server/service-files
+    volumes:
+      - .:/app
+    command: sh -c "go mod tidy && go run ."
+    environment:
+      ENV: development
+      PORT: 443
+      BUCKET: bucket
+      DB_USER: postgres
+      DB_PASS: 12345
+      DB_HOST: db-files
+      DB_NAME: files
+
+  db-files:
+    container_name: grpc-db-files
+    image: postgres:14.1
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: files

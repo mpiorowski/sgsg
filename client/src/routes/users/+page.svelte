@@ -5,7 +5,7 @@
 </script>
 
 <section>
-    <h2>Users</h2>
+    <h1>Users</h1>
     <ul>
         {#each data.users as user}
             <li>

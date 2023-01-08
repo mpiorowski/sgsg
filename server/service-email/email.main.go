@@ -25,23 +25,23 @@ func main() {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	router := gin.Default()
-	router.POST("/pubsub", getPubSubEmail)
+	router.POST("/email", GetPubSubEmail)
 	err := router.Run(fmt.Sprintf("0.0.0.0:%v", PORT))
 	if err != nil {
 		panic(err)
 	}
 }
 
-func getPubSubEmail(c *gin.Context) {
-
+func GetPubSubEmail(c *gin.Context) {
+    log.Println("GetPubSubEmail")
 	message, err := utils.SubscribePubSub(c)
 	if err != nil {
 		log.Printf("utils.SubscribePubSub: %v", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
 	var email utils.Email
+    // TODO - change html to data
 	err = json.Unmarshal(message.Message.Data, &email)
 	if err != nil {
 		log.Printf("json.Unmarshal: %v", err)

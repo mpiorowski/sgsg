@@ -1,10 +1,10 @@
 import { URI_FILES } from "$env/static/private";
-import { error, type Actions } from "@sveltejs/kit";
+import { error } from "@sveltejs/kit";
 import { fetchToken, filesClient } from "src/grpc";
-import type { PageServerLoad } from "../$types";
 import type { File__Output, File } from "../../../../proto/proto/File";
 import type { FileId } from "../../../../proto/proto/FileId";
 import type { TargetId } from "../../../../proto/proto/TargetId";
+import type { Actions, PageServerLoad } from "./$types";
 
 export const load = (async ({ locals }) => {
     const { userId } = locals;
