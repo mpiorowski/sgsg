@@ -41,6 +41,16 @@ func (s *server) GetFiles(in *pb.TargetId, stream pb.FilesService_GetFilesServer
 }
 
 func (s *server) CreateFile(ctx context.Context, in *pb.File) (*pb.File, error) {
+
+	rules := map[string]string{
+		"Id":       "max=100,uuid",
+		"TargetId": "required,max=100,uuid",
+		"Name":     "required,max=100",
+		"Type":     "required,max=100",
+		"Data":     "required",
+	}
+	validate.RegisterStructValidationMapRules(rules, pb.File{})
+
 	var err error
 	var row *sql.Row
 

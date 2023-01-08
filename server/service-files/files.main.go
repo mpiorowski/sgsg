@@ -6,12 +6,14 @@ import (
 	"log"
 	"net"
 
+	"github.com/go-playground/validator/v10"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	migrate "github.com/rubenv/sql-migrate"
 	"google.golang.org/grpc"
 
-	utils "github.com/mpiorowski/golang"
 	pb "go-svelte-grpc/proto"
+
+	utils "github.com/mpiorowski/golang"
 )
 
 var db *sql.DB
@@ -29,6 +31,8 @@ var (
 	DB_HOST = utils.MustGetenv("DB_HOST")
 	DB_NAME = utils.MustGetenv("DB_NAME")
 )
+
+var validate = validator.New()
 
 func init() {
 	// Db connection
