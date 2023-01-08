@@ -2,6 +2,8 @@
     import { UserRole } from "../../../proto/proto/UserRole";
     import type { LayoutData } from "./$types";
     import "./app.css";
+    import { navigating } from "$app/stores";
+    import { Spinner } from "@mpiorowski/svelte-init";
 
     export let data: LayoutData;
 </script>
@@ -28,6 +30,12 @@
             Notes
         </a>
         <a
+            href="/email"
+            class="text-gray-400 hover:text-green-700 border border-gray-400 px-2 rounded"
+        >
+            Email
+        </a>
+        <a
             href="/files"
             class="text-gray-400 hover:text-green-700 border border-gray-400 px-2 rounded"
         >
@@ -44,6 +52,11 @@
     </header>
 
     <main class="max-w-xl m-auto h-full w-full">
+        {#if $navigating}
+            <div class="absolute top-0 left-0 w-screen h-screen bg-gray-700/30 ">
+                <Spinner center />
+            </div>
+        {/if}
         <slot />
     </main>
 

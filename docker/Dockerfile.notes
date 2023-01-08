@@ -5,10 +5,10 @@ WORKDIR /usr/src
 COPY ./go.sum ./
 COPY ./go.mod ./
 COPY ./proto ./proto
-COPY ./server/service-notes ./service-notes
+COPY ./server/service-notes ./server/service-notes
 
 RUN go mod tidy
-RUN go build -v -o /usr/local/bin/app ./service-notes/...
+RUN go build -v -o /usr/local/bin/app ./server/service-notes/...
 COPY ./server/service-notes/migrations /migrations
 
 CMD ["app"]

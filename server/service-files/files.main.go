@@ -6,12 +6,14 @@ import (
 	"log"
 	"net"
 
+	"github.com/go-playground/validator/v10"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	migrate "github.com/rubenv/sql-migrate"
 	"google.golang.org/grpc"
 
-	utils "github.com/mpiorowski/golang"
 	pb "go-svelte-grpc/proto"
+
+	utils "github.com/mpiorowski/golang"
 )
 
 var db *sql.DB
@@ -30,6 +32,8 @@ var (
 	DB_NAME = utils.MustGetenv("DB_NAME")
 )
 
+var validate = validator.New()
+
 func init() {
 	// Db connection
 	var err error
@@ -45,8 +49,12 @@ func init() {
 	log.Println("Connected to database")
 
 	// Migrations
+    var migrationsDir = "./migrations"
+    if ENV == "production" {
+        migrationsDir = "/migrations"
+    }
 	migrations := &migrate.FileMigrationSource{
-		Dir: "./migrations",
+		Dir: migrationsDir,
 	}
 	n, err := migrate.Exec(db, "postgres", migrations, migrate.Up)
 	if err != nil {

@@ -2,8 +2,19 @@ package main
 
 import "fmt"
 
+// TODO - email template as proto enum
 func getTemplate(template string, html []string) (subject string, body string) {
-	if template == "CONTACT" {
+	if template == "welcome" {
+		subject = "Welcome to our site!"
+		body = fmt.Sprintf(`
+            <html>
+                <body>
+                    <h1>Welcome to our site!</h1>
+                    <p>Thanks for signing up!</p>
+                </body>
+            </html>
+        `)
+	} else if template == "CONTACT" {
 		subject = "Contact"
 		body = fmt.Sprintf(
 			`
