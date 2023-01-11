@@ -27,3 +27,9 @@
 
 ## Demo page
 https://client-dz5ydq3n2q-lz.a.run.app/
+
+## Dev deployment
+```
+cp docker-compose.yml.dist docker-compose.yml
+docker-compose up
+```
