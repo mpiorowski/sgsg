@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -34,6 +35,7 @@ func main() {
 
 func GetPubSubEmail(c *gin.Context) {
 	log.Println("GetPubSubEmail")
+    // TODO - remove log from lib
 	message, err := utils.SubscribePubSub(c)
 	if err != nil {
 		log.Printf("utils.SubscribePubSub: %v", err)
@@ -53,6 +55,12 @@ func GetPubSubEmail(c *gin.Context) {
 	to := mail.NewEmail(email.To, email.To)
 
 	subject, body := getTemplate(email.Template, email.Html)
+    if subject == "" || body == "" {
+        err = errors.New("invalid template")
+        log.Printf("getTemplate: %v", err)
+        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        return
+    }
 
 	msg := mail.NewSingleEmail(from, subject, to, "", body)
 	client := sendgrid.NewSendClient(EMAIL_API_KEY)
@@ -63,6 +71,6 @@ func GetPubSubEmail(c *gin.Context) {
 		return
 	}
 
-	log.Printf("Email send: %v", response.Headers)
+	log.Printf("Email send: %v", response.Body)
 	c.JSON(http.StatusOK, gin.H{"message": "email send"})
 }
