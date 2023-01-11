@@ -95,3 +95,17 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 12345
       POSTGRES_DB: files
+
+  service-email:
+    container_name: grpc-service-email
+    image: golang:1.19
+    working_dir: /app/server/service-email
+    volumes:
+      - .:/app
+    command: sh -c "go mod tidy && go run ."
+    environment:
+      ENV: development
+      PORT: 443
+      EMAIL_API_KEY: xxxx
+      EMAIL_FROM: xxxx
+      EMAIL_NAME: xxxx
