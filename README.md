@@ -33,3 +33,11 @@ https://client-dz5ydq3n2q-lz.a.run.app/
 cp docker-compose.yml.dist docker-compose.yml
 docker-compose up
 ```
+
+Missing variables for working application:
+- GOOGLE_ID - google id for oauth
+- GOOGLE_CLIENT - google client for oauth
+- AUTH_SECRET - secret for Auth.js
+- EMAIL_API_KEY - sendgrid api key
+- EMAIL_FROM - address for email (must be verified by sendgrid)
+- EMAIL_NAME - email FROM name, can be whatever You like :)
