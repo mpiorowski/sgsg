@@ -33,7 +33,7 @@ func main() {
 }
 
 func GetPubSubEmail(c *gin.Context) {
-    log.Println("GetPubSubEmail")
+	log.Println("GetPubSubEmail")
 	message, err := utils.SubscribePubSub(c)
 	if err != nil {
 		log.Printf("utils.SubscribePubSub: %v", err)
@@ -41,7 +41,7 @@ func GetPubSubEmail(c *gin.Context) {
 		return
 	}
 	var email utils.Email
-    // TODO - change html to data
+	// TODO - change html to data
 	err = json.Unmarshal(message.Message.Data, &email)
 	if err != nil {
 		log.Printf("json.Unmarshal: %v", err)
