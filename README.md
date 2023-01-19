@@ -28,16 +28,25 @@
 ## Demo page
 https://client-dz5ydq3n2q-lz.a.run.app/
 
-## Dev deployment
+## Fast dev deployment (wtihout files and email)
 ```
+npm i --prefix client/
 cp docker-compose.yml.dist docker-compose.yml
+```
+Fill this docker variables:
+- GOOGLE_ID - google id for oauth
+- GOOGLE_CLIENT - google client for oauth
+- AUTH_SECRET - secret for Auth.js (https://generate-secret.vercel.app/32)
+```
 docker-compose up
 ```
 
+## For working email and files, You need a working GCP deployment
+
+Topic for pubsub is called "email" pointing to "/email" service POST as push PUBSUB.
+
 Missing variables for working application:
-- GOOGLE_ID - google id for oauth
-- GOOGLE_CLIENT - google client for oauth
-- AUTH_SECRET - secret for Auth.js
 - EMAIL_API_KEY - sendgrid api key
 - EMAIL_FROM - address for email (must be verified by sendgrid)
 - EMAIL_NAME - email FROM name, can be whatever You like :)
+- BUCKET - name of the GCP bucket
