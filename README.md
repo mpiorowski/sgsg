@@ -1,4 +1,5 @@
 # Go with SvelteKit using gRPC template
+If You have any questions, feel free to ask them in Discussions or Issues. I hope this will be helpful :).
 
 ## Architecture
 ![Screenshot from 2023-01-08 23-48-07](https://user-images.githubusercontent.com/26543876/211222907-97adcd78-2b81-4978-91eb-72e69c7674fc.png)
@@ -28,16 +29,28 @@
 ## Demo page
 https://client-dz5ydq3n2q-lz.a.run.app/
 
-## Dev deployment
+## Fast dev deployment (without files and email)
 ```
+npm i --prefix client/
 cp docker-compose.yml.dist docker-compose.yml
+```
+Fill this docker variables:
+- GOOGLE_ID - google id for oauth
+- GOOGLE_CLIENT - google client for oauth
+- AUTH_SECRET - secret for Auth.js (https://generate-secret.vercel.app/32)
+```
 docker-compose up
 ```
 
+## For working email and files, You need a working GCP deployment
+
+Topic for pubsub is called "email" pointing to "/email" service POST as push PUBSUB.
+
 Missing variables for working application:
-- GOOGLE_ID - google id for oauth
-- GOOGLE_CLIENT - google client for oauth
-- AUTH_SECRET - secret for Auth.js
 - EMAIL_API_KEY - sendgrid api key
 - EMAIL_FROM - address for email (must be verified by sendgrid)
 - EMAIL_NAME - email FROM name, can be whatever You like :)
+- BUCKET - name of the GCP bucket
+
+## GCP IAM overview
+![image](https://user-images.githubusercontent.com/26543876/213539599-0a4c5035-3a19-4f30-b657-a7e01ea5fcea.png)
