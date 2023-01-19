@@ -46,7 +46,7 @@ export const fetchToken = async (serviceUrl: string) => {
     return metadata;
 };
 
-export const packageDefinition = protoLoader.loadSync('../../proto/main.proto');
+export const packageDefinition = protoLoader.loadSync('../proto/main.proto');
 export const proto = grpc.loadPackageDefinition(
     packageDefinition
 ) as unknown as ProtoGrpcType;
