@@ -26,9 +26,6 @@ If You have any questions, feel free to ask them in Discussions or Issues. I hop
   - Single combined note is sent to gateway as soon as it's ready
   - When all of the notes are gatehered on gateway, it return it to frontend
 
-## Demo page
-https://client-dz5ydq3n2q-lz.a.run.app/
-
 ## Fast dev deployment (without files and email)
 ```
 npm i --prefix client/
