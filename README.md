@@ -14,7 +14,7 @@ If You have any questions, feel free to ask them in Discussions or Issues. I hop
 - Everything is deployed using Google Cloud Run
 - Authorization using Auth.js (experimental version for svelte)
 
-Check my others similar projects:
+Check my other similar projects:
 - [Rust with SvelteKit using gRPC](https://github.com/mpiorowski/rust-grpc)
 - [NodeJs with SvelteKit using GraphQL](https://github.com/mpiorowski/microservices-ts-fastify-svelte)
 
