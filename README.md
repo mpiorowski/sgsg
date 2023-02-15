@@ -8,7 +8,7 @@ If You have any questions, feel free to ask them in Discussions or Issues. I hop
 - Go for microservices
 - SvelteKit server for page protection and data gateway, nothing is exposed to client, can work without any Javascript
 - Using GCP Bucket for files and Pub/Sub for emails
-- Gateway communicate with go backend using gRPC (nightmare to make it worke using Typescript...)
+- Gateway communicate with go backend using gRPC (nightmare to make it work using Typescript...)
 - Go microservices communicates with each other using also gRPC.
 - So yeah, everything works on gRPC, either as streams or unary, IT IS FAST (locally request can be as fast as 3-10 ms)
 - Everything is deployed using Google Cloud Run
