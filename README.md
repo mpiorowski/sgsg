@@ -15,7 +15,7 @@ If You have any questions, feel free to ask them in Discussions or Issues. I hop
 - Authorization using Auth.js (experimental version for svelte)
 
 Check my other similar projects:
-- [Rust with SvelteKit using gRPC](https://github.com/mpiorowski/rust-grpc)
+- [Rust with SvelteKit using gRPC](https://github.com/mpiorowski/rust-typescript-grpc)
 - [NodeJs with SvelteKit using GraphQL](https://github.com/mpiorowski/microservices-ts-fastify-svelte)
 
 ## Overview
