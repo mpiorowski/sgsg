@@ -1,6 +1,12 @@
 # Go with SvelteKit using gRPC template
 If You have any questions, feel free to ask them in Discussions or Issues. I hope this will be helpful :).
 
+Right now this is a finished template, i have moved from Go to Rust, and that one I will try to keep updated :). Fell free to check it out.
+
+Check my other similar projects:
+- [Rust with SvelteKit using gRPC](https://github.com/mpiorowski/rust-typescript-grpc)
+- [NodeJs with SvelteKit using GraphQL](https://github.com/mpiorowski/microservices-ts-fastify-svelte)
+
 ## Architecture
 ![Screenshot from 2023-01-08 23-48-07](https://user-images.githubusercontent.com/26543876/211222907-97adcd78-2b81-4978-91eb-72e69c7674fc.png)
 
@@ -13,10 +19,6 @@ If You have any questions, feel free to ask them in Discussions or Issues. I hop
 - So yeah, everything works on gRPC, either as streams or unary, IT IS FAST (locally request can be as fast as 3-10 ms)
 - Everything is deployed using Google Cloud Run
 - Authorization using Auth.js (experimental version for svelte)
-
-Check my other similar projects:
-- [Rust with SvelteKit using gRPC](https://github.com/mpiorowski/rust-typescript-grpc)
-- [NodeJs with SvelteKit using GraphQL](https://github.com/mpiorowski/microservices-ts-fastify-svelte)
 
 ## Overview
 - User can log in using google account via AuthJs
