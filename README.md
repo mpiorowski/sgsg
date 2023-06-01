@@ -1,11 +1,7 @@
 # Go with SvelteKit using gRPC template
 If You have any questions, feel free to ask them in Discussions or Issues. I hope this will be helpful :).
 
-Right now this is a finished template, i have moved from Go to Rust, and that one I will try to keep updated :). Fell free to check it out.
-
-Check my other similar projects:
-- [Rust with SvelteKit using gRPC](https://github.com/mpiorowski/rust-typescript-grpc)
-- [NodeJs with SvelteKit using GraphQL](https://github.com/mpiorowski/microservices-ts-fastify-svelte)
+Right now this is a finished template. I run a bigger project, where I use both Go and Rust, and that one I will try to keep updated :). Fell free to check it out [Go and Rust with SvelteKit using gRPC](https://github.com/mpiorowski/rust-typescript-grpc)
 
 ## Architecture
 ![Screenshot from 2023-01-08 23-48-07](https://user-images.githubusercontent.com/26543876/211222907-97adcd78-2b81-4978-91eb-72e69c7674fc.png)
