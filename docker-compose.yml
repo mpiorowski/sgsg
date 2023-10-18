@@ -1,0 +1,46 @@
+version: "3"
+services:
+  client:
+    container_name: sgsg-client
+    working_dir: /client
+    build:
+      context: ./client
+      target: dev
+      args:
+        ENV: development
+        PUBLIC_SERVER_HTTP: http://127.0.0.1:8090
+        PUBLIC_SERVER_WS: ws://127.0.0.1:8090
+        SERVER_HTTP: http://server:8090
+        SERVER_GRPC: server:8091
+        COOKIE_DOMAIN: .127.0.0.1
+    volumes:
+      - ./client/src:/client/src
+      - ./client/.svelte-kit:/client/.svelte-kit
+    ports:
+      - 3000:3000
+    command: npm run dev
+
+  server:
+    container_name: sgsg-server
+    working_dir: /server
+    build:
+      context: ./server
+      target: dev
+    volumes:
+      - ./server:/server
+    ports:
+      - 8090:8090
+    environment:
+      - ENV=development
+      - HTTP_PORT=8090
+      - GRPC_PORT=8091
+      - CLIENT_URL=http://127.0.0.1:3000
+      - SERVER_HTTP=http://127.0.0.1:8090
+      - COOKIE_DOMAIN=.127.0.0.1
+      - CERT_PATH="cert"
+      - KEY_PATH="key"
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET} 
+      - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
+      - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+    command: sh -c "go run /server/."

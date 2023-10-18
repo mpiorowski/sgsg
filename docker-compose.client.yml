@@ -1,0 +1,26 @@
+version: "3"
+services:
+  client:
+    container_name: sgsg-client
+    working_dir: /client
+    build:
+      context: ./client
+      target: prod
+      args:
+        ENV: production
+        PUBLIC_SERVER_HTTP: https://api.sgsg.app
+        PUBLIC_SERVER_WS: wss://api.sgsg.app
+        SERVER_HTTP: https://api.sgsg.app
+        SERVER_GRPC: api.sgsg.app:8443
+        COOKIE_DOMAIN: .bearbyte.org
+
+  nginx:
+    container_name: sgsg-nginx
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - /etc/letsencrypt:/etc/letsencrypt
+    ports:
+      - 80:80
+      - 443:443
+    restart: unless-stopped
