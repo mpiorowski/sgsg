@@ -28,46 +28,43 @@
                         <div class="ml-10 flex items-baseline space-x-4">
                             <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
                             <a
-                                href="/measurements"
+                                href="/"
                                 class="rounded-md px-3 py-2 text-sm font-medium
                                 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-800
-                                {current.startsWith('/measurements')
+                                {current.startsWith('/')
                                     ? 'bg-gray-900 text-white'
                                     : 'text-gray-300 hover:bg-gray-700 hover:text-white'}"
-                                aria-current={current.startsWith(
-                                    "/measurements",
-                                )
+                                aria-current={current.startsWith("/")
                                     ? "page"
                                     : undefined}
                             >
-                                Measurements
-                            </a>
-
-                            <a
-                                href="/costs"
-                                class="rounded-md px-3 py-2 text-sm font-medium
-                                focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-800
-                                {current === '/costs'
-                                    ? 'bg-gray-900 text-white'
-                                    : 'text-gray-300 hover:bg-gray-700 hover:text-white'}"
-                                aria-current={current === "/costs"
-                                    ? "page"
-                                    : undefined}
-                            >
-                                Costs
+                                Home
                             </a>
                             <a
-                                href="/tariffs"
+                                href="/notes"
                                 class="rounded-md px-3 py-2 text-sm font-medium
                                 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-800
-                                {current.startsWith('/tariffs')
+                                {current.startsWith('/notes')
                                     ? 'bg-gray-900 text-white'
                                     : 'text-gray-300 hover:bg-gray-700 hover:text-white'}"
-                                aria-current={current.startsWith("/tariffs")
+                                aria-current={current.startsWith("/notes")
                                     ? "page"
                                     : undefined}
                             >
-                                Tariffs
+                                Notes
+                            </a>
+                            <a
+                                href="/zod"
+                                class="rounded-md px-3 py-2 text-sm font-medium
+                                focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-800
+                                {current.startsWith('/zod')
+                                    ? 'bg-gray-900 text-white'
+                                    : 'text-gray-300 hover:bg-gray-700 hover:text-white'}"
+                                aria-current={current.startsWith("/zod")
+                                    ? "page"
+                                    : undefined}
+                            >
+                                Zod
                             </a>
                         </div>
                     </div>

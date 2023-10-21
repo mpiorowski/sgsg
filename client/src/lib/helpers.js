@@ -21,10 +21,13 @@ export function checkElement(element) {
 }
 
 /**
- * @param {FormDataEntryValue | null} value
+ * Get the value of a form field
+ * @param {FormData} form
+ * @param {string} key
  * @returns {string}
  */
-export function getFormValue(value) {
+export function getFormValue(form, key) {
+    const value = form.get(key);
     if (!value || typeof value !== "string") {
         return "";
     }
