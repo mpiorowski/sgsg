@@ -10,7 +10,7 @@ func Migrations() error {
             updated timestamp not null default current_timestamp,
             deleted timestamp,
             email text unique not null,
-            role text not null,
+            role int not null,
             sub text unique not null,
             avatar text not null default '',
             subscription_id text not null default '',

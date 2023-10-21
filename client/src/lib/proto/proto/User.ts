@@ -1,5 +1,6 @@
 // Original file: ../proto/user.proto
 
+import type { UserRole as _proto_UserRole, UserRole__Output as _proto_UserRole__Output } from '../proto/UserRole';
 
 export interface User {
   'id'?: (string);
@@ -7,7 +8,7 @@ export interface User {
   'updated'?: (string);
   'deleted'?: (string);
   'email'?: (string);
-  'role'?: (string);
+  'role'?: (_proto_UserRole);
   'sub'?: (string);
   'avatar'?: (string);
   'subscriptionId'?: (string);
@@ -22,7 +23,7 @@ export interface User__Output {
   'updated': (string);
   'deleted'?: (string);
   'email': (string);
-  'role': (string);
+  'role': (_proto_UserRole__Output);
   'sub': (string);
   'avatar': (string);
   'subscriptionId': (string);

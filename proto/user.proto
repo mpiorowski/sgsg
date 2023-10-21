@@ -17,7 +17,7 @@ message User {
     optional string deleted = 4;
 
     string email = 5;
-    string role = 6;
+    UserRole role = 6;
     string sub = 7;
     string avatar = 8;
     string subscription_id = 9;
