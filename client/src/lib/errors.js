@@ -9,7 +9,7 @@ export function extractError(fields, field) {
         return "";
     }
     for (const { field: key, tag: value } of fields) {
-        if (key === field) {
+        if (key.toLowerCase() === field.toLowerCase()) {
             for (const [k, v] of Object.entries(errorMessages)) {
                 if (k === value) {
                     return v;

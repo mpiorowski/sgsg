@@ -31,10 +31,10 @@
                                 href="/"
                                 class="rounded-md px-3 py-2 text-sm font-medium
                                 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-800
-                                {current.startsWith('/')
+                                {current === '/'
                                     ? 'bg-gray-900 text-white'
                                     : 'text-gray-300 hover:bg-gray-700 hover:text-white'}"
-                                aria-current={current.startsWith("/")
+                                aria-current={current === "/"
                                     ? "page"
                                     : undefined}
                             >

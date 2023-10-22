@@ -8,7 +8,6 @@ export const packageDefinition = protoLoader.loadSync(
         keepCase: false,
         longs: String,
         defaults: true,
-        objects: true,
         oneofs: true,
         arrays: true,
     },

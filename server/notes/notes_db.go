@@ -19,7 +19,7 @@ func insertNote(note *pb.Note) (*pb.Note, error) {
 		return nil, fmt.Errorf("uuid.NewRandom: %w", err)
 	}
 	row := db.Db.QueryRow(
-		"insert into notes (id,user_id, title, content) values ($1, $2, $3, $4) returning *",
+		"insert into notes (id, user_id, title, content) values ($1, $2, $3, $4) returning *",
 		id,
 		note.UserId,
 		note.Title,
@@ -47,9 +47,9 @@ func updateNote(note *pb.Note) (*pb.Note, error) {
 }
 
 func deleteNoteById(id string) error {
-    _, err := db.Db.Exec("delete from notes where id = $1", id)
-    if err != nil {
-        return fmt.Errorf("db.Exec: %w", err)
-    }
-    return nil
+	_, err := db.Db.Exec("delete from notes where id = $1", id)
+	if err != nil {
+		return fmt.Errorf("db.Exec: %w", err)
+	}
+	return nil
 }

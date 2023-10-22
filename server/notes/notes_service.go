@@ -2,7 +2,6 @@ package notes
 
 import (
 	"fmt"
-	"log/slog"
 	pb "sgsg/proto"
 	"sgsg/utils"
 )
@@ -38,17 +37,16 @@ func CreateNote(in *pb.Note) (*pb.Note, error) {
 		"Title":   "required",
 		"Content": "required",
 	}
-	slog.Info("CreateNote", "in", in)
 	err := utils.ValidateStruct[pb.Note](rules, pb.Note{}, in)
 	if err != nil {
 		return nil, err
 	}
 
 	var note *pb.Note
-	if note.Id != "" {
-		note, err = updateNote(in)
-	} else {
+	if in.Id == "" {
 		note, err = insertNote(in)
+	} else {
+		note, err = updateNote(in)
 	}
 	if err != nil {
 		return nil, fmt.Errorf("createNote: %w", err)

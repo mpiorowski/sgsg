@@ -42,13 +42,16 @@ export const actions = {
             content: getFormValue(form, "content"),
         };
         const metadata = createMetadata(locals.token);
-        /** @type {import("$lib/safe").Safe<import("$lib/proto/proto/Note").Note>} */
+        /** @type {import("$lib/safe").Safe<import("$lib/proto/proto/Note").Note__Output>} */
         const req = await new Promise((r) => {
             server.CreateNote(data, metadata, grpcSafe(r));
         });
 
         if (req.error) {
-            return fail(400, { error: req.msg });
+            if (req.fields) {
+                return fail(400, { fields: req.fields });
+            }
+            return fail(500, { error: req.msg });
         }
 
         return { note: req.data };
