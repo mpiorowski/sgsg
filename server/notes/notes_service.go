@@ -2,6 +2,7 @@ package notes
 
 import (
 	"fmt"
+	"log/slog"
 	pb "sgsg/proto"
 	"sgsg/utils"
 )
@@ -33,20 +34,21 @@ func GetNotesStream(stream pb.Service_GetNotesServer, userId string) error {
 
 func CreateNote(in *pb.Note) (*pb.Note, error) {
 	rules := map[string]string{
-		"UserId": "required,uuid",
-		"Title":  "required",
-		"Body":   "required",
+		"UserId":  "required,uuid",
+		"Title":   "required",
+		"Content": "required",
 	}
+	slog.Info("CreateNote", "in", in)
 	err := utils.ValidateStruct[pb.Note](rules, pb.Note{}, in)
 	if err != nil {
 		return nil, err
 	}
 
 	var note *pb.Note
-	if note.Id == "" {
-		note, err = insertNote(in)
-	} else {
+	if note.Id != "" {
 		note, err = updateNote(in)
+	} else {
+		note, err = insertNote(in)
 	}
 	if err != nil {
 		return nil, fmt.Errorf("createNote: %w", err)
@@ -55,9 +57,9 @@ func CreateNote(in *pb.Note) (*pb.Note, error) {
 }
 
 func DeleteNote(id string) error {
-    err := deleteNoteById(id)
-    if err != nil {
-        return fmt.Errorf("deleteNoteById: %w", err)
-    }
-    return nil
+	err := deleteNoteById(id)
+	if err != nil {
+		return fmt.Errorf("deleteNoteById: %w", err)
+	}
+	return nil
 }

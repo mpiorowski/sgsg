@@ -52,6 +52,7 @@ func (s *server) CreateNote(ctx context.Context, in *pb.Note) (*pb.Note, error) 
 		slog.Error("Error authorizing user", "userAuth", err)
 		return nil, status.Error(codes.Unauthenticated, "Unauthenticated")
 	}
+
 	in.UserId = userId
 	note, err := notes.CreateNote(in)
 	if err != nil {

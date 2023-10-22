@@ -11,7 +11,7 @@ export async function load({ locals }) {
     const metadata = createMetadata(locals.token);
     const notesStream = server.GetNotes({}, metadata);
     const req = await safe(
-        /** @type {Promise<void>} */(
+        /** @type {Promise<void>} */ (
             new Promise((res, rej) => {
                 notesStream.on("data", (data) => notes.push(data));
                 notesStream.on("error", (err) => rej(err));
@@ -20,23 +20,24 @@ export async function load({ locals }) {
         ),
     );
     if (req.error) {
-        return fail(400, {
-            ...req,
+        return {
+            error: req.msg,
             notes: [],
-        });
+        };
     }
     return {
-        note: req.data,
+        notes: notes,
     };
 }
 
 /** @type {import('./$types').Actions} */
 export const actions = {
-    default: async ({ locals, request }) => {
+    create: async ({ locals, request }) => {
         const form = await request.formData();
 
         /** @type {import("$lib/proto/proto/Note").Note} */
         const data = {
+            id: getFormValue(form, "id"),
             title: getFormValue(form, "title"),
             content: getFormValue(form, "content"),
         };
@@ -47,9 +48,27 @@ export const actions = {
         });
 
         if (req.error) {
-            return fail(400, req);
+            return fail(400, { error: req.msg });
         }
 
         return { note: req.data };
+    },
+    delete: async ({ locals, request }) => {
+        const form = await request.formData();
+        /** @type {import("$lib/proto/proto/Id").Id} */
+        const data = {
+            id: getFormValue(form, "id"),
+        };
+        const metadata = createMetadata(locals.token);
+        /** @type {import("$lib/safe").Safe<import("$lib/proto/proto/Empty").Empty>} */
+        const req = await new Promise((r) => {
+            server.DeleteNote(data, metadata, grpcSafe(r));
+        });
+
+        if (req.error) {
+            return fail(400, { error: req.msg });
+        }
+
+        return { success: true };
     },
 };
