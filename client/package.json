@@ -39,9 +39,9 @@
     "dependencies": {
         "@grpc/grpc-js": "^1.9.0",
         "@grpc/proto-loader": "^0.7.8",
-        "dayjs": "^1.11.10",
         "jsonwebtoken": "^9.0.1",
         "pino": "^8.15.1",
-        "pino-pretty": "^10.2.0"
+        "pino-pretty": "^10.2.0",
+        "zod": "^3.22.4"
     }
 }
