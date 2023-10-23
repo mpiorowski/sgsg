@@ -1,5 +1,6 @@
 <script>
     import { enhance } from "$app/forms";
+    import { goto } from "$app/navigation";
     import { extractError } from "$lib/errors";
     import Button from "$lib/form/Button.svelte";
     import Input from "$lib/form/Input.svelte";
@@ -46,11 +47,11 @@
     action="?/delete"
     method="post"
     use:enhance={() => {
-        return async ({ result, update }) => {
+        return async ({ result }) => {
             if (result.type === "success") {
                 toast.warning("Success", "Note deleted");
+                await goto("/notes");
             }
-            await update();
         };
     }}
 >

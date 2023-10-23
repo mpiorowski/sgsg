@@ -1,4 +1,4 @@
-import { error, fail, redirect } from "@sveltejs/kit";
+import { error, fail } from "@sveltejs/kit";
 import { getFormValue } from "$lib/helpers";
 import { createMetadata } from "$lib/server/metadata";
 import { server } from "$lib/server/grpc";
@@ -69,6 +69,9 @@ export const actions = {
             return fail(400, { error: req.msg });
         }
 
-        throw redirect(302, "/notes");
+        // throw redirect(302, "/notes");
+        return {
+            success: true,
+        };
     },
 };
