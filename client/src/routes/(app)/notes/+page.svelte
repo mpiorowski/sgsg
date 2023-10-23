@@ -22,7 +22,7 @@
 <h1>Notes</h1>
 
 <form
-    action="?/create"
+    action="?/insert"
     method="post"
     use:enhance={() => {
         return async ({ result, update }) => {
@@ -45,52 +45,13 @@
         bind:value={content}
         error={extractError(form?.fields, "content")}
     />
-    <Button>Create</Button>
+    <Button class="w-20">Create</Button>
 </form>
 
 {#each data.notes as note}
-    <div class="mt-4 rounded border p-2">
-        <form
-            action="?/create"
-            method="post"
-            use:enhance={() => {
-                return async ({ result, update }) => {
-                    if (result.type === "success") {
-                        toast.success("Success", "Note updated");
-                    }
-                    await update({ reset: false });
-                };
-            }}
-        >
-            <input type="hidden" name="id" value={note.id} />
-            <Input
-                name="title"
-                label="Title"
-                bind:value={note.title}
-                error={extractError(form?.fields, "title")}
-            />
-            <Input
-                name="content"
-                label="Content"
-                bind:value={note.content}
-                error={extractError(form?.fields, "content")}
-            />
-            <Button>Update</Button>
-        </form>
-        <form
-            action="?/delete"
-            method="post"
-            use:enhance={() => {
-                return async ({ result, update }) => {
-                    if (result.type === "success") {
-                        toast.warning("Success", "Note deleted");
-                    }
-                    await update();
-                };
-            }}
-        >
-            <input type="hidden" name="id" value={note.id} />
-            <Button variant="danger">Delete</Button>
-        </form>
+    <div class="mt-4 flex gap-4 rounded flex-col border p-2">
+        <h2 class="text-xl font-bold">{note.title}</h2>
+        <p>{note.content}</p>
+        <Button class="w-20" href="/notes/{note.id}">Edit</Button>
     </div>
 {/each}

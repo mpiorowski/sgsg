@@ -11,7 +11,7 @@ export async function load({ locals }) {
     const metadata = createMetadata(locals.token);
     const notesStream = server.GetNotes({}, metadata);
     const req = await safe(
-        /** @type {Promise<void>} */ (
+        /** @type {Promise<void>} */(
             new Promise((res, rej) => {
                 notesStream.on("data", (data) => notes.push(data));
                 notesStream.on("error", (err) => rej(err));
@@ -32,12 +32,11 @@ export async function load({ locals }) {
 
 /** @type {import('./$types').Actions} */
 export const actions = {
-    create: async ({ locals, request }) => {
+    insert: async ({ locals, request }) => {
         const form = await request.formData();
 
         /** @type {import("$lib/proto/proto/Note").Note} */
         const data = {
-            id: getFormValue(form, "id"),
             title: getFormValue(form, "title"),
             content: getFormValue(form, "content"),
         };
@@ -55,23 +54,5 @@ export const actions = {
         }
 
         return { note: req.data };
-    },
-    delete: async ({ locals, request }) => {
-        const form = await request.formData();
-        /** @type {import("$lib/proto/proto/Id").Id} */
-        const data = {
-            id: getFormValue(form, "id"),
-        };
-        const metadata = createMetadata(locals.token);
-        /** @type {import("$lib/safe").Safe<import("$lib/proto/proto/Empty").Empty>} */
-        const req = await new Promise((r) => {
-            server.DeleteNote(data, metadata, grpcSafe(r));
-        });
-
-        if (req.error) {
-            return fail(400, { error: req.msg });
-        }
-
-        return { success: true };
     },
 };

@@ -31,6 +31,14 @@ func GetNotesStream(stream pb.Service_GetNotesServer, userId string) error {
 	return nil
 }
 
+func GetNoteById(id string, userId string) (*pb.Note, error) {
+    note, err := selectNoteById(id, userId)
+    if err != nil {
+        return nil, fmt.Errorf("getNoteById: %w", err)
+    }
+    return note, nil
+}
+
 func CreateNote(in *pb.Note) (*pb.Note, error) {
 	rules := map[string]string{
 		"UserId":  "required,uuid",

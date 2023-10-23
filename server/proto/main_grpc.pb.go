@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type ServiceClient interface {
 	Auth(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*AuthResponse, error)
 	GetNotes(ctx context.Context, in *Empty, opts ...grpc.CallOption) (Service_GetNotesClient, error)
+	GetNoteById(ctx context.Context, in *Id, opts ...grpc.CallOption) (*Note, error)
 	CreateNote(ctx context.Context, in *Note, opts ...grpc.CallOption) (*Note, error)
 	DeleteNote(ctx context.Context, in *Id, opts ...grpc.CallOption) (*Empty, error)
 }
@@ -77,6 +78,15 @@ func (x *serviceGetNotesClient) Recv() (*Note, error) {
 	return m, nil
 }
 
+func (c *serviceClient) GetNoteById(ctx context.Context, in *Id, opts ...grpc.CallOption) (*Note, error) {
+	out := new(Note)
+	err := c.cc.Invoke(ctx, "/proto.Service/GetNoteById", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *serviceClient) CreateNote(ctx context.Context, in *Note, opts ...grpc.CallOption) (*Note, error) {
 	out := new(Note)
 	err := c.cc.Invoke(ctx, "/proto.Service/CreateNote", in, out, opts...)
@@ -101,6 +111,7 @@ func (c *serviceClient) DeleteNote(ctx context.Context, in *Id, opts ...grpc.Cal
 type ServiceServer interface {
 	Auth(context.Context, *Empty) (*AuthResponse, error)
 	GetNotes(*Empty, Service_GetNotesServer) error
+	GetNoteById(context.Context, *Id) (*Note, error)
 	CreateNote(context.Context, *Note) (*Note, error)
 	DeleteNote(context.Context, *Id) (*Empty, error)
 	mustEmbedUnimplementedServiceServer()
@@ -115,6 +126,9 @@ func (UnimplementedServiceServer) Auth(context.Context, *Empty) (*AuthResponse, 
 }
 func (UnimplementedServiceServer) GetNotes(*Empty, Service_GetNotesServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetNotes not implemented")
+}
+func (UnimplementedServiceServer) GetNoteById(context.Context, *Id) (*Note, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetNoteById not implemented")
 }
 func (UnimplementedServiceServer) CreateNote(context.Context, *Note) (*Note, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateNote not implemented")
@@ -174,6 +188,24 @@ func (x *serviceGetNotesServer) Send(m *Note) error {
 	return x.ServerStream.SendMsg(m)
 }
 
+func _Service_GetNoteById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Id)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).GetNoteById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.Service/GetNoteById",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).GetNoteById(ctx, req.(*Id))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Service_CreateNote_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Note)
 	if err := dec(in); err != nil {
@@ -220,6 +252,10 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Auth",
 			Handler:    _Service_Auth_Handler,
+		},
+		{
+			MethodName: "GetNoteById",
+			Handler:    _Service_GetNoteById_Handler,
 		},
 		{
 			MethodName: "CreateNote",
