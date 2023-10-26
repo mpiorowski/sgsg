@@ -42,8 +42,8 @@ func GetNoteById(id string, userId string) (*pb.Note, error) {
 func CreateNote(in *pb.Note) (*pb.Note, error) {
 	rules := map[string]string{
 		"UserId":  "required,uuid",
-		"Title":   "required",
-		"Content": "required",
+		"Title":   "required,max=100",
+		"Content": "required,max=1000",
 	}
 	err := utils.ValidateStruct[pb.Note](rules, pb.Note{}, in)
 	if err != nil {
