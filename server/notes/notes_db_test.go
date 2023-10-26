@@ -81,6 +81,22 @@ func TestErrorUpdateNote(t *testing.T) {
 	}
 }
 
+func TestDeleteNoteById(t *testing.T) {
+    setup()
+    note, err := insertNote(&notes[0])
+    if err != nil {
+        t.Errorf("insertNote error: %v", err)
+    }
+    err = deleteNoteById(note.Id)
+    if err != nil {
+        t.Errorf("deleteNoteById error: %v", err)
+    }
+    _, err = selectNoteById(note.Id, note.UserId)
+    if err == nil {
+        t.Errorf("selectNoteById error: %v", err)
+    }
+}
+
 func TestSelectNotes(t *testing.T) {
 	setup()
 	_, _ = insertNote(&notes[0])
