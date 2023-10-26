@@ -22,7 +22,7 @@ func selectNoteById(id string, userId string) (*pb.Note, error) {
     return note, nil
 }
 
-func insertNote(note *pb.Note) (*pb.Note, error) {
+func insertNote(in *pb.Note) (*pb.Note, error) {
 	id, err := uuid.NewRandom()
 	if err != nil {
 		return nil, fmt.Errorf("uuid.NewRandom: %w", err)
@@ -30,24 +30,24 @@ func insertNote(note *pb.Note) (*pb.Note, error) {
 	row := db.Db.QueryRow(
 		"insert into notes (id, user_id, title, content) values ($1, $2, $3, $4) returning *",
 		id,
-		note.UserId,
-		note.Title,
-		note.Content,
+		in.UserId,
+		in.Title,
+		in.Content,
 	)
-	note, err = scanNote(nil, row)
+    note, err := scanNote(nil, row)
 	if err != nil {
 		return nil, fmt.Errorf("scanNote: %w", err)
 	}
 	return note, nil
 }
 
-func updateNote(note *pb.Note) (*pb.Note, error) {
+func updateNote(in *pb.Note) (*pb.Note, error) {
 	row := db.Db.QueryRow(
 		"update notes set title = $1, content = $2 where id = $3 and user_id = $4 returning *",
-		note.Title,
-		note.Content,
-		note.Id,
-        note.UserId,
+		in.Title,
+		in.Content,
+		in.Id,
+        in.UserId,
 	)
 	note, err := scanNote(nil, row)
 	if err != nil {

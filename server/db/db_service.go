@@ -16,3 +16,12 @@ func Connect() error {
 	}
 	return nil
 }
+
+func ConnectTest() error {
+	var err error
+	Db, err = sql.Open("sqlite3", ":memory:?cache=shared&mode=rwc&_journal_mode=WAL&busy_timeout=10000")
+	if err != nil {
+		return err
+	}
+	return nil
+}

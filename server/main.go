@@ -22,6 +22,8 @@ type server struct {
 }
 
 func main() {
+    utils.SetupEnv()
+
 	err := db.Connect()
 	if err != nil {
 		slog.Error("Error opening database", "db.Connect", err)
