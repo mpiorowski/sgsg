@@ -1,6 +1,7 @@
 package users
 
 import (
+	"database/sql"
 	"fmt"
 	"sgsg/db"
 	"sgsg/utils"
@@ -18,6 +19,22 @@ type Token struct {
 	RefreshToken string     `json:"refresh_token"`
 	TokenType    string     `json:"token_type"`
 	Expires      time.Time  `json:"expires"`
+}
+
+func scanToken(rows *sql.Rows, row *sql.Row) (*Token, error) {
+	token := &Token{}
+	if rows != nil {
+		err := rows.Scan(&token.Id, &token.Created, &token.Updated, &token.Deleted, &token.UserId, &token.Provider, &token.AccessToken, &token.RefreshToken, &token.TokenType, &token.Expires)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		err := row.Scan(&token.Id, &token.Created, &token.Updated, &token.Deleted, &token.UserId, &token.Provider, &token.AccessToken, &token.RefreshToken, &token.TokenType, &token.Expires)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return token, nil
 }
 
 func selectToken(id string) (*Token, error) {

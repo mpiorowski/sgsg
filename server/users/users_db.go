@@ -1,6 +1,7 @@
 package users
 
 import (
+	"database/sql"
 	"fmt"
 	"sgsg/db"
 
@@ -8,6 +9,22 @@ import (
 
 	"github.com/google/uuid"
 )
+
+func scanUser(rows *sql.Rows, row *sql.Row) (*pb.User, error) {
+	user := pb.User{}
+	if rows != nil {
+		err := rows.Scan(&user.Id, &user.Created, &user.Updated, &user.Deleted, &user.Email, &user.Role, &user.Sub, &user.Avatar, &user.SubscriptionId, &user.SubscriptionEnd)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		err := row.Scan(&user.Id, &user.Created, &user.Updated, &user.Deleted, &user.Email, &user.Role, &user.Sub, &user.Avatar, &user.SubscriptionId, &user.SubscriptionEnd)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return &user, nil
+}
 
 func selectUserById(id string) (*pb.User, error) {
 	row := db.Db.QueryRow("update users set updated = current_timestamp where id = $1 returning *", id)
