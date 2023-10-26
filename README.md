@@ -1,4 +1,8 @@
-# Go with SvelteKit using gRPC template
+# SGSG - Svelte + Go + SQLite + gRPC
+
+**Big update is comming, docs need update, wait for new release**
+
+
 If You have any questions, feel free to ask them in Discussions or Issues. I hope this will be helpful :).
 
 Right now this is a finished template. I run a bigger project, where I use both Go and Rust, and that one I will try to keep updated :). Fell free to check it out [Go and Rust with SvelteKit using gRPC](https://github.com/mpiorowski/rust-typescript-grpc)

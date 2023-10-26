@@ -9,7 +9,7 @@ import (
 func GetNotesStream(stream pb.Service_GetNotesServer, userId string) error {
 	notes, err := selectNotesStream(userId)
 	if err != nil {
-		return fmt.Errorf("getNotesStream: %w", err)
+		return fmt.Errorf("selectNotesStream: %w", err)
 	}
 	defer notes.Close()
 
@@ -34,7 +34,7 @@ func GetNotesStream(stream pb.Service_GetNotesServer, userId string) error {
 func GetNoteById(id string, userId string) (*pb.Note, error) {
     note, err := selectNoteById(id, userId)
     if err != nil {
-        return nil, fmt.Errorf("getNoteById: %w", err)
+        return nil, fmt.Errorf("selectNoteById: %w", err)
     }
     return note, nil
 }

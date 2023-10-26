@@ -20,7 +20,7 @@ type Token struct {
 	Expires      time.Time  `json:"expires"`
 }
 
-func getToken(id string) (*Token, error) {
+func selectToken(id string) (*Token, error) {
 	row := db.Db.QueryRow("select * from tokens where id = $1", id)
 	token, err := scanToken(nil, row)
 	if err != nil {
@@ -29,14 +29,7 @@ func getToken(id string) (*Token, error) {
 	return token, nil
 }
 
-func createToken(t Token) (*Token, error) {
-	// delete old tokens
-	_, err := db.Db.Exec("delete from tokens where user_id = $1", t.UserId)
-	if err != nil {
-		return nil, fmt.Errorf("Db.Exec: %w", err)
-	}
-
-	// create new token
+func insertToken(t Token) (*Token, error) {
 	id, err := utils.GenerateRandomString(32)
 	if err != nil {
 		return nil, fmt.Errorf("GenerateRandomString: %w", err)
@@ -48,4 +41,12 @@ func createToken(t Token) (*Token, error) {
 		return nil, fmt.Errorf("scanToken: %w", err)
 	}
 	return token, nil
+}
+
+func deleteTokensByUserId(userId string) error {
+	_, err := db.Db.Exec("delete from tokens where user_id = $1", userId)
+	if err != nil {
+		return fmt.Errorf("Db.Exec: %w", err)
+	}
+	return nil
 }
