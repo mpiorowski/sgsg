@@ -3,6 +3,7 @@ package notes
 import (
 	"sgsg/db"
 	pb "sgsg/proto"
+	"strings"
 	"testing"
 )
 
@@ -82,19 +83,19 @@ func TestErrorUpdateNote(t *testing.T) {
 }
 
 func TestDeleteNoteById(t *testing.T) {
-    setup()
-    note, err := insertNote(&notes[0])
-    if err != nil {
-        t.Errorf("insertNote error: %v", err)
-    }
-    err = deleteNoteById(note.Id)
-    if err != nil {
-        t.Errorf("deleteNoteById error: %v", err)
-    }
-    _, err = selectNoteById(note.Id, note.UserId)
-    if err == nil {
-        t.Errorf("selectNoteById error: %v", err)
-    }
+	setup()
+	note, err := insertNote(&notes[0])
+	if err != nil {
+		t.Errorf("insertNote error: %v", err)
+	}
+	err = deleteNoteById(note.Id)
+	if err != nil {
+		t.Errorf("deleteNoteById error: %v", err)
+	}
+	_, err = selectNoteById(note.Id, note.UserId)
+	if err == nil {
+		t.Errorf("selectNoteById error: %v", err)
+	}
 }
 
 func TestSelectNotes(t *testing.T) {
@@ -122,21 +123,51 @@ func TestSelectNotes(t *testing.T) {
 		if note.Content != notes[count].Content {
 			t.Errorf("scanNote error: content not equal")
 		}
-        count++
+		count++
 	}
-    if count != 3 {
-        t.Errorf("scanNote error: count not equal")
-    }
+	if count != 3 {
+		t.Errorf("scanNote error: count not equal")
+	}
 }
 
 func TestSelectNoteyId(t *testing.T) {
-    setup()
-    newNote, _ := insertNote(&notes[2])
-    note, err := selectNoteById(newNote.Id, newNote.UserId)
-    if err != nil {
-        t.Errorf("selectNoteId error: %v", err)
-    }
-    if note.Id != newNote.Id {
-        t.Errorf("selectNoteId error: id not equal")
-    }
+	setup()
+	newNote, _ := insertNote(&notes[2])
+	note, err := selectNoteById(newNote.Id, newNote.UserId)
+	if err != nil {
+		t.Errorf("selectNoteId error: %v", err)
+	}
+	if note.Id != newNote.Id {
+		t.Errorf("selectNoteId error: id not equal")
+	}
+}
+
+func TestCreateNote(t *testing.T) {
+	setup()
+	_, err := CreateNote(&notes[0])
+	if err == nil {
+		t.Errorf("updateNoteTitle error: %v", err)
+	}
+}
+
+func TestValidation(t *testing.T) {
+	setup()
+	notes[0].Title = ""
+	notes[0].Content = ""
+	_, err := CreateNote(&notes[0])
+	containsTitle := strings.Contains(err.Error(), "Title") && strings.Contains(err.Error(), "required")
+	containsContent := strings.Contains(err.Error(), "Content") && strings.Contains(err.Error(), "required")
+	if !containsTitle || !containsContent {
+		t.Errorf("validation error: %v", err)
+	}
+
+	// gen 101 chars
+	notes[0].Title = strings.Repeat("a", 101)
+	notes[0].Content = strings.Repeat("a", 1001)
+	_, err = CreateNote(&notes[0])
+	containsTitle = strings.Contains(err.Error(), "Title") && strings.Contains(err.Error(), "max")
+	containsContent = strings.Contains(err.Error(), "Content") && strings.Contains(err.Error(), "max")
+	if !containsTitle || !containsContent {
+		t.Errorf("validation error: %v", err)
+	}
 }
