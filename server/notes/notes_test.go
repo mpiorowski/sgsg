@@ -23,6 +23,10 @@ var notes = []pb.Note{
 		Title:   "Test note 3",
 		Content: "Test note content 3",
 	},
+	{
+		Title:   "Test note 4",
+		Content: "Test note content 4",
+	},
 }
 
 func setup() {
@@ -36,8 +40,20 @@ func setup() {
 	}
 }
 
-func TestInsertNote(t *testing.T) {
+func cleanup() {
+	_, err := db.Db.Exec("delete from notes")
+	if err != nil {
+		panic(err)
+	}
+}
+
+func TestMain(m *testing.M) {
 	setup()
+	m.Run()
+}
+
+func TestInsertNote(t *testing.T) {
+	// Test case 1: Insert a valid note
 	note, err := insertNote(&notes[0])
 	if err != nil {
 		t.Errorf("insertNote error: %v", err)
@@ -48,10 +64,19 @@ func TestInsertNote(t *testing.T) {
 	if note.Content != notes[0].Content {
 		t.Errorf("insertNote error: content not equal")
 	}
+
+	// Test case 2: Insert a second valid note
+	note, err = insertNote(&notes[1])
+	if err != nil {
+		t.Errorf("insertNote error: %v", err)
+	}
+	if note.Title != notes[1].Title {
+		t.Errorf("insertNote error: title not equal")
+	}
 }
 
-func TestUpdateNoteTitle(t *testing.T) {
-	setup()
+func TestUpdateNote(t *testing.T) {
+	// Test case 1: Update a valid note
 	note, err := insertNote(&notes[0])
 	if err != nil {
 		t.Errorf("insertNote error: %v", err)
@@ -69,21 +94,19 @@ func TestUpdateNoteTitle(t *testing.T) {
 	if note.Title != "New title" {
 		t.Errorf("updateNoteTitle error: title not equal")
 	}
-}
 
-func TestErrorUpdateNote(t *testing.T) {
-	setup()
-	newNote := pb.Note{
+	// Test case 2: Update a note that does not exist
+	newNote = pb.Note{
 		Id: "not_exist",
 	}
-	_, err := updateNote(&newNote)
+	_, err = updateNote(&newNote)
 	if err == nil {
 		t.Errorf("updateNoteTitle error: %v", err)
 	}
 }
 
 func TestDeleteNoteById(t *testing.T) {
-	setup()
+	// Test case 1: Delete a note
 	note, err := insertNote(&notes[0])
 	if err != nil {
 		t.Errorf("insertNote error: %v", err)
@@ -96,10 +119,17 @@ func TestDeleteNoteById(t *testing.T) {
 	if err == nil {
 		t.Errorf("selectNoteById error: %v", err)
 	}
+
+	// Test case 2: Delete a note that does not exist
+	err = deleteNoteById("not_exist")
+	if err == nil {
+		t.Errorf("deleteNoteById error: %v", err)
+	}
 }
 
 func TestSelectNotes(t *testing.T) {
-	setup()
+	// Test case 1: Select notes using stream
+	cleanup()
 	_, _ = insertNote(&notes[0])
 	_, _ = insertNote(&notes[1])
 	_, _ = insertNote(&notes[2])
@@ -131,7 +161,7 @@ func TestSelectNotes(t *testing.T) {
 }
 
 func TestSelectNoteyId(t *testing.T) {
-	setup()
+	// Test case 1: Select a note by id
 	newNote, _ := insertNote(&notes[2])
 	note, err := selectNoteById(newNote.Id, newNote.UserId)
 	if err != nil {
@@ -142,16 +172,7 @@ func TestSelectNoteyId(t *testing.T) {
 	}
 }
 
-func TestCreateNote(t *testing.T) {
-	setup()
-	_, err := CreateNote(&notes[0])
-	if err == nil {
-		t.Errorf("updateNoteTitle error: %v", err)
-	}
-}
-
-func TestValidation(t *testing.T) {
-	setup()
+func TestNoteValidation(t *testing.T) {
 	notes[0].Title = ""
 	notes[0].Content = ""
 	_, err := CreateNote(&notes[0])
@@ -169,5 +190,78 @@ func TestValidation(t *testing.T) {
 	containsContent = strings.Contains(err.Error(), "Content") && strings.Contains(err.Error(), "max")
 	if !containsTitle || !containsContent {
 		t.Errorf("validation error: %v", err)
+	}
+}
+
+func TestConcurrency(t *testing.T) {
+	newNotes := make([]*pb.Note, 0)
+	// Test case 1: Insert a note concurrently
+	notesChanel := make(chan *pb.Note)
+	gooroutines := 10
+	for i := 0; i < gooroutines; i++ {
+		go func() {
+			newNote, err := insertNote(&notes[0])
+			if err != nil {
+				t.Errorf("insertNote error: %v", err)
+			}
+			notesChanel <- newNote
+		}()
+	}
+
+	for i := 0; i < gooroutines; i++ {
+		n := <-notesChanel
+		newNotes = append(newNotes, n)
+	}
+
+	// Test case 2: Update a note concurrently
+	done := make(chan bool)
+	for i := 0; i < gooroutines; i++ {
+		go func(i int) {
+			note := newNotes[i]
+			note.Title = "New title"
+			_, err := updateNote(note)
+			if err != nil {
+				t.Errorf("updateNoteTitle error: %v", err)
+			}
+			done <- true
+		}(i)
+	}
+
+	for i := 0; i < gooroutines; i++ {
+		<-done
+	}
+
+	// Test case 4: Select note by id concurrently
+	done = make(chan bool)
+	for i := 0; i < gooroutines; i++ {
+		go func(i int) {
+			note := newNotes[i]
+			_, err := selectNoteById(note.Id, note.UserId)
+			if err != nil {
+				t.Errorf("selectNotes error: %v", err)
+			}
+			done <- true
+		}(i)
+	}
+
+    for i := 0; i < gooroutines; i++ {
+        <-done
+    }
+
+	// Test case 3: Delete a note concurrently
+	done = make(chan bool)
+	for i := 0; i < gooroutines; i++ {
+		go func(i int) {
+			note := newNotes[i]
+			err := deleteNoteById(note.Id)
+			if err != nil {
+				t.Errorf("deleteNoteById error: %v", err)
+			}
+			done <- true
+		}(i)
+	}
+
+	for i := 0; i < gooroutines; i++ {
+		<-done
 	}
 }

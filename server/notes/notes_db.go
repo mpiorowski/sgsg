@@ -30,12 +30,12 @@ func selectNotesStream(userId string) (*sql.Rows, error) {
 }
 
 func selectNoteById(id string, userId string) (*pb.Note, error) {
-    row := db.Db.QueryRow("select * from notes where id = $1 and user_id = $2", id, userId)
-    note, err := scanNote(nil, row)
-    if err != nil {
-        return nil, fmt.Errorf("scanNote: %w", err)
-    }
-    return note, nil
+	row := db.Db.QueryRow("select * from notes where id = $1 and user_id = $2", id, userId)
+	note, err := scanNote(nil, row)
+	if err != nil {
+		return nil, fmt.Errorf("scanNote: %w", err)
+	}
+	return note, nil
 }
 
 func insertNote(in *pb.Note) (*pb.Note, error) {
@@ -50,7 +50,7 @@ func insertNote(in *pb.Note) (*pb.Note, error) {
 		in.Title,
 		in.Content,
 	)
-    note, err := scanNote(nil, row)
+	note, err := scanNote(nil, row)
 	if err != nil {
 		return nil, fmt.Errorf("scanNote: %w", err)
 	}
@@ -63,7 +63,7 @@ func updateNote(in *pb.Note) (*pb.Note, error) {
 		in.Title,
 		in.Content,
 		in.Id,
-        in.UserId,
+		in.UserId,
 	)
 	note, err := scanNote(nil, row)
 	if err != nil {
@@ -73,7 +73,7 @@ func updateNote(in *pb.Note) (*pb.Note, error) {
 }
 
 func deleteNoteById(id string) error {
-	_, err := db.Db.Exec("delete from notes where id = $1", id)
+	err := db.Db.QueryRow("delete from notes where id = $1 returning id", id).Scan(&id)
 	if err != nil {
 		return fmt.Errorf("db.Exec: %w", err)
 	}

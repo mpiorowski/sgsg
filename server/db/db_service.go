@@ -19,7 +19,8 @@ func Connect() error {
 
 func ConnectTest() error {
 	var err error
-	Db, err = sql.Open("sqlite3", ":memory:?cache=shared&mode=rwc&_journal_mode=WAL&busy_timeout=10000")
+    Db, err = sql.Open("sqlite3", "file::memory:?cache=shared&mode=rwc&_journal_mode=WAL&busy_timeout=10000")
+    Db.SetMaxOpenConns(1)
 	if err != nil {
 		return err
 	}

@@ -45,7 +45,7 @@ func Migrations() error {
             created timestamp not null default current_timestamp,
             updated timestamp not null default current_timestamp,
             deleted timestamp,
-            user_id text not null default '',
+            user_id text not null,
             title text not null default '',
             content text not null default ''
         )`)
