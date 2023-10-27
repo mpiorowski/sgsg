@@ -23,10 +23,6 @@ var notes = []pb.Note{
 		Title:   "Test note 3",
 		Content: "Test note content 3",
 	},
-	{
-		Title:   "Test note 4",
-		Content: "Test note content 4",
-	},
 }
 
 func setup() {
