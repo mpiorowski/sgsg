@@ -46,7 +46,7 @@ func TestSelectToken(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	selectedToken, err := selectToken(newToken.Id)
+	selectedToken, err := selectTokenById(newToken.Id)
 	if err != nil {
 		t.Error(err)
 	}
@@ -68,11 +68,11 @@ func TestDeleteTokensByUserId(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	_, err = selectToken(token1.Id)
+	_, err = selectTokenById(token1.Id)
     if err == nil {
         t.Error("token1 is not deleted")
     }
-    _, err = selectToken(token2.Id)
+    _, err = selectTokenById(token2.Id)
     if err == nil {
         t.Error("token2 is not deleted")
     }

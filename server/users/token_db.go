@@ -37,7 +37,7 @@ func scanToken(rows *sql.Rows, row *sql.Row) (*Token, error) {
 	return token, nil
 }
 
-func selectToken(id string) (*Token, error) {
+func selectTokenById(id string) (*Token, error) {
 	row := db.Db.QueryRow("select * from tokens where id = $1", id)
 	token, err := scanToken(nil, row)
 	if err != nil {

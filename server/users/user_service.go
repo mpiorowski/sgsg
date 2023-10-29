@@ -141,9 +141,9 @@ func UserAuth(ctx context.Context) (*pb.User, string, error) {
 	}
 
 	// get oauth token from database
-	token, err := selectToken(claims.TokenId)
+	token, err := selectTokenById(claims.TokenId)
 	if err != nil {
-		return nil, "", fmt.Errorf("selectToken: %w", err)
+		return nil, "", fmt.Errorf("selectTokenById: %w", err)
 	}
 
 	// check if oauth token is expired
@@ -188,9 +188,9 @@ func UserCheck(ctx context.Context) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	token, err := selectToken(claims.TokenId)
+	token, err := selectTokenById(claims.TokenId)
 	if err != nil {
-		return "", fmt.Errorf("selectToken: %w", err)
+		return "", fmt.Errorf("selectTokenById: %w", err)
 	}
 	user, err := selectUserById(token.UserId)
 	if err != nil {

@@ -13,6 +13,7 @@ export interface ProtoGrpcType {
     Empty: MessageTypeDefinition
     Id: MessageTypeDefinition
     Note: MessageTypeDefinition
+    Profile: MessageTypeDefinition
     Service: SubtypeConstructor<typeof grpc.Client, _proto_ServiceClient> & { service: _proto_ServiceDefinition }
     User: MessageTypeDefinition
     UserRole: EnumTypeDefinition

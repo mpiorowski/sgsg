@@ -5,6 +5,7 @@ package proto;
 option go_package = "sgsg/proto";
 
 import "user.proto";
+import "profile.proto";
 import "note.proto";
 
 message Empty {}
@@ -20,6 +21,10 @@ message AuthResponse {
 
 service Service {
     rpc Auth(Empty) returns (AuthResponse) {}
+
+    rpc GetProfile(Empty) returns (Profile) {}
+    rpc CreateProfile(Profile) returns (Profile) {}
+    rpc DeleteProfile(Id) returns (Empty) {}
 
     rpc GetNotes(Empty) returns (stream Note) {}
     rpc GetNoteById(Id) returns (Note) {}

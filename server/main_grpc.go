@@ -5,7 +5,8 @@ import (
 	"log/slog"
 	"time"
 
-	"sgsg/notes"
+	"sgsg/profiles"
+    "sgsg/notes"
 	pb "sgsg/proto"
 	"sgsg/users"
 
@@ -26,6 +27,57 @@ func (s *server) Auth(ctx context.Context, in *pb.Empty) (*pb.AuthResponse, erro
 		TokenId: tokenId,
 		User:    user,
 	}, nil
+}
+
+func (s *server) GetProfile(ctx context.Context, in *pb.Empty) (*pb.Profile, error) {
+    start := time.Now()
+    userId, err := users.UserCheck(ctx)
+    if err != nil {
+        slog.Error("Error authorizing user", "users.UserCheck", err)
+        return nil, status.Error(codes.Unauthenticated, "Unauthenticated")
+    }
+    profile, err := profiles.GetProfileByUserId(userId)
+    if err != nil {
+        slog.Error("Error getting profile", "profiles.GetProfileByUserId", err)
+        return nil, err
+    }
+    slog.Info("GetProfileByUserId", "time", time.Since(start))
+    return profile, nil
+}
+
+func (s *server) CreateProfile(ctx context.Context, in *pb.Profile) (*pb.Profile, error) {
+	start := time.Now()
+	userId, err := users.UserCheck(ctx)
+	if err != nil {
+		slog.Error("Error authorizing user", "users.UserCheck", err)
+		return nil, status.Error(codes.Unauthenticated, "Unauthenticated")
+	}
+
+	in.UserId = userId
+	profile, err := profiles.CreateProfile(in)
+	if err != nil {
+		slog.Error("Error creating profile", "profiles.CreateProfile", err)
+		return nil, err
+	}
+	slog.Info("CreateProfile", "time", time.Since(start))
+	return profile, nil
+}
+
+func (s *server) DeleteProfile(ctx context.Context, in *pb.Id) (*pb.Empty, error) {
+	start := time.Now()
+	_, err := users.UserCheck(ctx)
+	if err != nil {
+		slog.Error("Error authorizing user", "users.UserCheck", err)
+		return nil, status.Error(codes.Unauthenticated, "Unauthenticated")
+	}
+	err = profiles.DeleteProfile(in.Id)
+	if err != nil {
+		slog.Error("Error deleting profile", "profiles.DeleteProfile", err)
+		return nil, err
+	}
+
+	slog.Info("DeleteProfile", "time", time.Since(start))
+	return &pb.Empty{}, nil
 }
 
 func (s *server) GetNotes(in *pb.Empty, stream pb.Service_GetNotesServer) error {

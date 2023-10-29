@@ -38,6 +38,28 @@ func Migrations() error {
 		return err
 	}
 
+	// Create profile table
+	_, err = Db.Exec(`
+        create table if not exists profiles (
+            id text primary key not null,
+            created timestamp not null default current_timestamp,
+            updated timestamp not null default current_timestamp,
+            deleted timestamp,
+            user_id text not null,
+            username text not null,
+            about text not null,
+            resume text not null,
+            cover text not null
+        )`)
+	if err != nil {
+		return err
+	}
+	// Create index for user_id
+	_, err = Db.Exec(`create index if not exists user_id on profiles (user_id)`)
+	if err != nil {
+		return err
+	}
+
 	// Create notes table
 	_, err = Db.Exec(`
         create table if not exists notes (
@@ -46,14 +68,14 @@ func Migrations() error {
             updated timestamp not null default current_timestamp,
             deleted timestamp,
             user_id text not null,
-            title text not null default '',
-            content text not null default ''
+            title text not null,
+            content text not null
         )`)
 	if err != nil {
 		return err
 	}
 	// Create index for user_id
-	_, err = Db.Exec(`create index if not exists notes_user_id_idx on notes (user_id)`)
+	_, err = Db.Exec(`create index if not exists user_id on notes (user_id)`)
 	if err != nil {
 		return err
 	}
