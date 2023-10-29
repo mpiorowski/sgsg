@@ -1,7 +1,6 @@
 package users
 
 import (
-	"sgsg/db"
 	"testing"
 	"time"
 )
@@ -25,19 +24,8 @@ var tokens = []Token{
 	},
 }
 
-func setup() {
-	err := db.ConnectTest()
-	if err != nil {
-		panic(err)
-	}
-	err = db.Migrations()
-	if err != nil {
-		panic(err)
-	}
-}
 
 func TestInsertToken(t *testing.T) {
-	setup()
 	newToken, err := insertToken(tokens[0])
 	if err != nil {
 		t.Error(err)
@@ -54,7 +42,6 @@ func TestInsertToken(t *testing.T) {
 }
 
 func TestSelectToken(t *testing.T) {
-	setup()
 	newToken, err := insertToken(tokens[0])
 	if err != nil {
 		t.Error(err)
@@ -75,7 +62,6 @@ func TestSelectToken(t *testing.T) {
 }
 
 func TestDeleteTokensByUserId(t *testing.T) {
-	setup()
 	token1, _ := insertToken(tokens[0])
     token2, _ := insertToken(tokens[1])
     err := deleteTokensByUserId(token1.UserId)

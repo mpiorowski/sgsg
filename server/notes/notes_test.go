@@ -25,17 +25,6 @@ var notes = []pb.Note{
 	},
 }
 
-func setup() {
-	err := db.ConnectTest()
-	if err != nil {
-		panic(err)
-	}
-	err = db.Migrations()
-	if err != nil {
-		panic(err)
-	}
-}
-
 func cleanup() {
 	_, err := db.Db.Exec("delete from notes")
 	if err != nil {
@@ -44,7 +33,14 @@ func cleanup() {
 }
 
 func TestMain(m *testing.M) {
-	setup()
+	err := db.ConnectTest()
+	if err != nil {
+		panic(err)
+	}
+	err = db.Migrations()
+	if err != nil {
+		panic(err)
+	}
 	m.Run()
 }
 
@@ -240,9 +236,9 @@ func TestConcurrency(t *testing.T) {
 		}(i)
 	}
 
-    for i := 0; i < gooroutines; i++ {
-        <-done
-    }
+	for i := 0; i < gooroutines; i++ {
+		<-done
+	}
 
 	// Test case 3: Delete a note concurrently
 	done = make(chan bool)

@@ -51,8 +51,8 @@ func insertUser(email string, sub string, avatar string) (*pb.User, error) {
 	if err != nil {
 		return nil, fmt.Errorf("uuid.NewRandom: %w", err)
 	}
-	row := db.Db.QueryRow("insert into users (id, email, sub, role, avatar, subscription_id, subscription_end) values ($1, $2, $3, $4, $5, $6, $7) returning *",
-		id, email, sub, pb.UserRole_ROLE_USER, avatar, "", nil)
+	row := db.Db.QueryRow("insert into users (id, email, sub, role, avatar) values ($1, $2, $3, $4, $5) returning *",
+		id, email, sub, pb.UserRole_ROLE_USER, avatar)
 	user, err := scanUser(nil, row)
 	if err != nil {
 		return nil, fmt.Errorf("scanUser: %w", err)
