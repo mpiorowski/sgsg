@@ -19,6 +19,7 @@ RUN echo "PUBLIC_SERVER_WS=${PUBLIC_SERVER_WS}" >> .env
 RUN echo "SERVER_HTTP=${SERVER_HTTP}" >> .env
 RUN echo "SERVER_GRPC=${SERVER_GRPC}" >> .env
 RUN echo "COOKIE_DOMAIN=${COOKIE_DOMAIN}" >> .env
+RUN echo "UPSEND_KEY=${UPSEND_KEY}" >> .env
 
 RUN npm install
 
@@ -43,6 +44,7 @@ RUN echo "PUBLIC_SERVER_WS=${PUBLIC_SERVER_WS}" >> .env
 RUN echo "SERVER_HTTP=${SERVER_HTTP}" >> .env
 RUN echo "SERVER_GRPC=${SERVER_GRPC}" >> .env
 RUN echo "COOKIE_DOMAIN=${COOKIE_DOMAIN}" >> .env
+RUN echo "UPSEND_KEY=${UPSEND_KEY}" >> .env
 
 RUN npm install
 COPY . .

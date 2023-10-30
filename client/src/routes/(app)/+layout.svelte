@@ -1,19 +1,11 @@
 <script>
-    import Breadcrumbs from "$lib/overlay/Breadcrumbs.svelte";
+    import Breadcrumbs from "./Breadcrumbs.svelte";
     import Nav from "./Nav.svelte";
 
-    /** @type {import("./$types").PageData}*/
+    /** @type {import("./$types").PageData} */
     export let data;
 </script>
 
-<!--
-  This example requires updating your template:
-
-  ```
-  <html class="h-full bg-gray-100">
-  <body class="h-full">
-  ```
--->
 <div id="scroll" class="min-h-full bg-gray-100">
     <div class="bg-gray-800 pb-32">
         <Nav {data} />

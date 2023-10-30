@@ -6,7 +6,6 @@
 
 <slot />
 
-<!-- Global notification live region, render this permanently at the end of the document -->
 <div
     aria-live="assertive"
     class="pointer-events-none fixed inset-0 z-20 flex items-end px-4 py-6 sm:items-start sm:p-6"

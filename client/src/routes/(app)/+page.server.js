@@ -23,6 +23,29 @@ export const actions = {
     createProfile: async ({ locals, request }) => {
         const form = await request.formData();
 
+        const resume = form.get("resume");
+        if (!(resume instanceof File) || resume.size <= 0) {
+            return fail(400, { error: "Resume is required" });
+        }
+        if (resume.size > 5 * 1024 * 1024) {
+            return fail(400, { error: "Resume must be less than 5MB" });
+        }
+        if (!resume.name.endsWith(".pdf")) {
+            return fail(400, { error: "Resume must be a PDF" });
+        }
+
+        const cover = form.get("cover");
+        if (!(cover instanceof File) || cover.size <= 0) {
+            return fail(400, { error: "Cover is required" });
+        }
+        if (cover.size > 5 * 1024 * 1024) {
+            return fail(400, { error: "Cover must be less than 5MB" });
+        }
+        const extensions = [".png", ".jpg", ".jpeg", ".gif", ".svg"];
+        if (!extensions.some((ext) => cover.name.endsWith(ext))) {
+            return fail(400, { error: "Cover must be an image" });
+        }
+
         /** @type {import('$lib/proto/proto/Profile').Profile} */
         const data = {
             id: getFormValue(form, "id"),

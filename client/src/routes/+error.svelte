@@ -3,14 +3,6 @@
     import Button from "$lib/form/Button.svelte";
 </script>
 
-<!--
-  This example requires updating your template:
-
-  ```
-  <html class="h-full">
-  <body class="h-full">
-  ```
--->
 <main
     class="grid h-screen place-items-center bg-gray-800 px-6 py-24 sm:py-32 lg:px-8"
 >

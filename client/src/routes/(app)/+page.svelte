@@ -11,7 +11,10 @@
     export let data;
 
     /** @type {import("./$types").ActionData} */
-    // export let form;
+    export let form;
+    $: if (form?.error) {
+        toast.error("Error", form?.error || "Unknown error");
+    }
 
     /** @type {File} */
     let resume = new File([""], "resume.pdf", { type: "application/pdf" });
@@ -82,7 +85,7 @@
                     name="cover"
                     label="Cover photo"
                     bind:file={cover}
-                    description="SVG, PNG, JPG, GIF up to 10MB"
+                    description="SVG, PNG, JPG, GIF up to 5MB"
                     accept="image/*"
                 />
             </div>
