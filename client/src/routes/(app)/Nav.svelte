@@ -38,7 +38,7 @@
                                     ? "page"
                                     : undefined}
                             >
-                                Home
+                                Profile
                             </a>
                             <a
                                 href="/notes"
