@@ -12,12 +12,12 @@ import (
 func scanProfile(rows *sql.Rows, row *sql.Row) (*pb.Profile, error) {
 	profile := pb.Profile{}
 	if rows != nil {
-		err := rows.Scan(&profile.Id, &profile.Created, &profile.Updated, &profile.Deleted, &profile.UserId, &profile.Username, &profile.About, &profile.Resume, &profile.Cover)
+		err := rows.Scan(&profile.Id, &profile.Created, &profile.Updated, &profile.Deleted, &profile.UserId, &profile.Username, &profile.About, &profile.ResumeId, &profile.CoverUrl)
 		if err != nil {
 			return nil, err
 		}
 	} else {
-		err := row.Scan(&profile.Id, &profile.Created, &profile.Updated, &profile.Deleted, &profile.UserId, &profile.Username, &profile.About, &profile.Resume, &profile.Cover)
+		err := row.Scan(&profile.Id, &profile.Created, &profile.Updated, &profile.Deleted, &profile.UserId, &profile.Username, &profile.About, &profile.ResumeId, &profile.CoverUrl)
 		if err != nil {
 			return nil, err
 		}
@@ -43,13 +43,13 @@ func insertProfile(in *pb.Profile) (*pb.Profile, error) {
 		return nil, fmt.Errorf("uuid.NewRandom: %w", err)
 	}
 	row := db.Db.QueryRow(
-		"insert into profiles (id, user_id, username, about, resume, cover) values ($1, $2, $3, $4, $5, $6) returning *",
+		"insert into profiles (id, user_id, username, about, resume_id, cover_url) values ($1, $2, $3, $4, $5, $6) returning *",
 		id,
 		in.UserId,
         in.Username,
         in.About,
-        in.Resume,
-        in.Cover,
+        in.ResumeId,
+        in.CoverUrl,
 	)
 	profile, err := scanProfile(nil, row)
 	if err != nil {
@@ -60,11 +60,11 @@ func insertProfile(in *pb.Profile) (*pb.Profile, error) {
 
 func updateProfile(in *pb.Profile) (*pb.Profile, error) {
 	row := db.Db.QueryRow(
-		"update profiles set username = $1, about = $2, resume = $3, cover = $4 where id = $5 and user_id = $6 returning *",
+		"update profiles set username = $1, about = $2, resume_id = $3, cover_url = $4 where id = $5 and user_id = $6 returning *",
         in.Username,
         in.About,
-        in.Resume,
-        in.Cover,
+        in.ResumeId,
+        in.CoverUrl,
         in.Id,
         in.UserId,
 	)

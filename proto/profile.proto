@@ -13,6 +13,6 @@ message Profile {
     string user_id = 5;
     string username = 6;
     string about = 7;
-    string resume = 8;
-    string cover = 9;
+    string resume_id = 8;
+    string cover_url = 9;
 }

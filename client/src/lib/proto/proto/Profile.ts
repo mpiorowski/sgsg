@@ -9,8 +9,8 @@ export interface Profile {
   'userId'?: (string);
   'username'?: (string);
   'about'?: (string);
-  'resume'?: (string);
-  'cover'?: (string);
+  'resumeId'?: (string);
+  'coverUrl'?: (string);
   '_deleted'?: "deleted";
 }
 
@@ -22,7 +22,7 @@ export interface Profile__Output {
   'userId': (string);
   'username': (string);
   'about': (string);
-  'resume': (string);
-  'cover': (string);
+  'resumeId': (string);
+  'coverUrl': (string);
   '_deleted': "deleted";
 }

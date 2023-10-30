@@ -12,22 +12,22 @@ var profiles = []pb.Profile{
 		UserId:   "test",
 		Username: "test username 1",
 		About:    "test about 1",
-		Resume:   "test resume 1",
-		Cover:    "test cover 1",
+		ResumeId:   "test resume 1",
+		CoverUrl:    "test cover 1",
 	},
 	{
 		UserId:   "test",
 		Username: "test username 2",
 		About:    "test about 2",
-		Resume:   "test resume 2",
-		Cover:    "test cover 2",
+		ResumeId:   "test resume 2",
+		CoverUrl:    "test cover 2",
 	},
 	{
 		UserId:   "test",
 		Username: "test username 3",
 		About:    "test about 3",
-		Resume:   "test resume 3",
-		Cover:    "test cover 3",
+		ResumeId:   "test resume 3",
+		CoverUrl:    "test cover 3",
 	},
 }
 
@@ -43,6 +43,13 @@ func TestMain(m *testing.M) {
 	m.Run()
 }
 
+func clearProfiles() {
+    _, err := db.Db.Exec("delete from profiles")
+    if err != nil {
+        panic(err)
+    }
+}
+
 func TestInsertProfile(t *testing.T) {
 	// Test case 1: Insert a valid profile
 	profile, err := insertProfile(&profiles[0])
@@ -51,8 +58,8 @@ func TestInsertProfile(t *testing.T) {
 	}
 	equal := profile.Username == profiles[0].Username &&
 		profile.About == profiles[0].About &&
-		profile.Resume == profiles[0].Resume &&
-		profile.Cover == profiles[0].Cover
+		profile.ResumeId == profiles[0].ResumeId &&
+		profile.CoverUrl == profiles[0].CoverUrl
 
 	if !equal {
 		t.Errorf("insertProfile error: not equal")
@@ -79,8 +86,8 @@ func TestUpdateProfile(t *testing.T) {
 		UserId:   profile.UserId,
 		Username: "New username",
 		About:    "New about",
-		Resume:   "New resume",
-		Cover:    "New cover",
+		ResumeId:   "New resume",
+		CoverUrl:    "New cover",
 	}
 	profile, err = updateProfile(&newProfile)
 	if err != nil {
@@ -101,6 +108,7 @@ func TestUpdateProfile(t *testing.T) {
 }
 
 func TestDeleteProfileById(t *testing.T) {
+    clearProfiles()
 	// Test case 1: Delete a profile
 	profile, err := insertProfile(&profiles[0])
 	if err != nil {
@@ -110,9 +118,9 @@ func TestDeleteProfileById(t *testing.T) {
 	if err != nil {
 		t.Errorf("deleteProfileById error: %v", err)
 	}
-	_, err = selectProfileByUserId(profile.UserId)
-	if err == nil {
-		t.Errorf("selectProfileById error: %v", err)
+	profile, err = selectProfileByUserId(profile.UserId)
+	if profile.Id != "" || err != nil {
+		t.Errorf("selectProfileByUserId error: %v", err)
 	}
 
 	// Test case 2: Delete a profile that does not exist
@@ -123,15 +131,22 @@ func TestDeleteProfileById(t *testing.T) {
 }
 
 func TestSelectProfileyId(t *testing.T) {
+    clearProfiles()
 	// Test case 1: Select a profile by id
 	newProfile, _ := insertProfile(&profiles[2])
 	profile, err := selectProfileByUserId(newProfile.UserId)
 	if err != nil {
-		t.Errorf("selectProfileId error: %v", err)
+		t.Errorf("selectProfileByUserId error: %v", err)
 	}
 	if profile.Id != newProfile.Id {
-		t.Errorf("selectProfileId error: id not equal")
+		t.Errorf("selectProfileByUserId error: not equal")
 	}
+
+    // Test case 2: Select a profile by id that does not exist
+    profile, err = selectProfileByUserId("not_exist")
+    if err != nil && profile.Id != "" {
+        t.Errorf("selectProfileByUserId error: %v", err)
+    }
 }
 
 func TestProfileValidation(t *testing.T) {

@@ -1,4 +1,4 @@
-import { SERVER_HTTP } from "$env/static/private";
+import { SERVER_HTTP, UPSEND_KEY } from "$env/static/private";
 import { logger } from "./logger";
 
 /**
@@ -7,21 +7,16 @@ import { logger } from "./logger";
  *  method?: "GET" | "POST" | "PUT" | "DELETE",
  *  url: string,
  *  body?: object,
- *  token?: string
- *  apikey?: string
+ *  token: string
  * }} options
- * @returns {Promise<import("$lib/safe").Safe<T> & { response: Response | undefined }>}
+ * @returns {Promise<import("$lib/safe").Safe<T>>}
  * @template T
  */
-export async function api({ method = "GET", url, body, token, apikey }) {
+export async function api({ method = "GET", url, body, token }) {
     try {
         const headers = new Headers();
         headers.append("Content-Type", "application/json");
-        if (token) {
-            headers.append("Authorization", `Bearer ${token}`);
-        } else if (apikey) {
-            headers.append("X-API-KEY", apikey);
-        }
+        headers.append("Authorization", `Bearer ${token}`);
 
         const response = await fetch(`${SERVER_HTTP}${url}`, {
             method,
@@ -29,14 +24,52 @@ export async function api({ method = "GET", url, body, token, apikey }) {
             body: JSON.stringify(body),
         });
         if (!response.ok) {
-            logger.error(response.statusText);
-            return { error: true, msg: response.statusText, response };
+            throw new Error(await response.text());
         }
         const data = await response.json();
 
-        return { error: false, data, response };
+        return { error: false, data };
     } catch (error) {
         logger.error(error);
-        return { error: true, msg: "Error during fetch", response: undefined };
+        return { error: true, msg: "Error during fetch" };
+    }
+}
+
+/**
+ * Upsend API
+ * @param {{
+ *  method?: "GET" | "POST",
+ *  url: string,
+ *  file?: File,
+ * }} options
+ * @returns {Promise<import("$lib/safe").Safe<T>>}
+ * @template T
+ */
+export async function upsendApi({ method = "GET", url, file }) {
+    try {
+        const headers = new Headers();
+        headers.append("Authorization", `Bearer ${UPSEND_KEY}`);
+
+        const formData = new FormData();
+        if (file) {
+            formData.append("file", file);
+        }
+        const response = await fetch("https://api.upsend.app" + url, {
+            method,
+            headers,
+            body: formData,
+        });
+        if (!response.ok) {
+            throw new Error(await response.text());
+        }
+        const data = await response.json();
+
+        return { error: false, data };
+    } catch (error) {
+        logger.error(error);
+        return {
+            error: true,
+            msg: "Error using Upsend API",
+        };
     }
 }

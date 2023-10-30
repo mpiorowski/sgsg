@@ -28,13 +28,13 @@
                         <div class="ml-10 flex items-baseline space-x-4">
                             <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
                             <a
-                                href="/"
+                                href="/profile"
                                 class="rounded-md px-3 py-2 text-sm font-medium
                                 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-800
-                                {current === '/'
+                                {current.startsWith('/profile')
                                     ? 'bg-gray-900 text-white'
                                     : 'text-gray-300 hover:bg-gray-700 hover:text-white'}"
-                                aria-current={current === "/"
+                                aria-current={current.startsWith("/profile")
                                     ? "page"
                                     : undefined}
                             >

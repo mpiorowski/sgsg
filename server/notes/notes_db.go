@@ -32,9 +32,12 @@ func selectNotesStream(userId string) (*sql.Rows, error) {
 func selectNoteById(id string, userId string) (*pb.Note, error) {
 	row := db.Db.QueryRow("select * from notes where id = $1 and user_id = $2", id, userId)
 	note, err := scanNote(nil, row)
-	if err != nil {
+	if err != nil && err != sql.ErrNoRows {
 		return nil, fmt.Errorf("scanNote: %w", err)
 	}
+    if err == sql.ErrNoRows {
+        return &pb.Note{}, nil
+    }
 	return note, nil
 }
 

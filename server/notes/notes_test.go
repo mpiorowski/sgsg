@@ -25,7 +25,7 @@ var notes = []pb.Note{
 	},
 }
 
-func cleanup() {
+func clearNotes() {
 	_, err := db.Db.Exec("delete from notes")
 	if err != nil {
 		panic(err)
@@ -107,8 +107,8 @@ func TestDeleteNoteById(t *testing.T) {
 	if err != nil {
 		t.Errorf("deleteNoteById error: %v", err)
 	}
-	_, err = selectNoteById(note.Id, note.UserId)
-	if err == nil {
+	note, err = selectNoteById(note.Id, note.UserId)
+	if note.Id != "" || err != nil {
 		t.Errorf("selectNoteById error: %v", err)
 	}
 
@@ -118,10 +118,29 @@ func TestDeleteNoteById(t *testing.T) {
 		t.Errorf("deleteNoteById error: %v", err)
 	}
 }
+func TestSelectNoteyId(t *testing.T) {
+	clearNotes()
+	// Test case 1: Select a note by id
+	newNote, _ := insertNote(&notes[2])
+	note, err := selectNoteById(newNote.Id, newNote.UserId)
+	if err != nil {
+		t.Errorf("selectNoteId error: %v", err)
+	}
+	if note.Id != newNote.Id {
+		t.Errorf("selectNoteId error: id not equal")
+	}
+
+    // Test case 2: Select a note by id that does not exist
+    note, err = selectNoteById("not_exist", "not_exist")
+    if err != nil && note.Id != "" {
+        t.Errorf("selectNoteId error: %v", err)
+    }
+}
+
 
 func TestSelectNotes(t *testing.T) {
+	clearNotes()
 	// Test case 1: Select notes using stream
-	cleanup()
 	_, _ = insertNote(&notes[0])
 	_, _ = insertNote(&notes[1])
 	_, _ = insertNote(&notes[2])
@@ -149,18 +168,6 @@ func TestSelectNotes(t *testing.T) {
 	}
 	if count != 3 {
 		t.Errorf("scanNote error: count not equal")
-	}
-}
-
-func TestSelectNoteyId(t *testing.T) {
-	// Test case 1: Select a note by id
-	newNote, _ := insertNote(&notes[2])
-	note, err := selectNoteById(newNote.Id, newNote.UserId)
-	if err != nil {
-		t.Errorf("selectNoteId error: %v", err)
-	}
-	if note.Id != newNote.Id {
-		t.Errorf("selectNoteId error: id not equal")
 	}
 }
 

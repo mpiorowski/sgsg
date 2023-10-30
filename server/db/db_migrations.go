@@ -48,8 +48,8 @@ func Migrations() error {
             user_id text not null,
             username text not null,
             about text not null,
-            resume text not null,
-            cover text not null
+            resume_id text not null,
+            cover_url text not null
         )`)
 	if err != nil {
 		return err
