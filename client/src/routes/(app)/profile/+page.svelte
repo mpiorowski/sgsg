@@ -147,15 +147,17 @@
             <div class="col-span-full mt-6">
                 <input
                     type="hidden"
-                    name="coverUrl"
-                    bind:value={data.profile.coverUrl}
+                    name="coverId"
+                    bind:value={data.profile.coverId}
                 />
                 <Dropzone
                     name="cover"
                     label="Cover photo"
                     bind:file={cover}
                     description="SVG, PNG, JPG, GIF up to 5MB"
-                    url={data.profile.coverUrl + "/?h=200"}
+                    url={data.profile.coverUrl
+                        ? data.profile.coverUrl + "h=400"
+                        : ""}
                     accept="image/*"
                 />
             </div>

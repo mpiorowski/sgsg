@@ -30,9 +30,9 @@
 </script>
 
 <div>
-    <div class="block text-sm font-medium leading-6 text-gray-900">
+    <label for={name} class="block text-sm font-medium leading-6 text-gray-900">
         {label}
-    </div>
+    </label>
     <label
         id={label}
         for={name}

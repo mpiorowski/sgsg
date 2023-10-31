@@ -49,6 +49,18 @@ body {
     @apply h-full font-poppins;
 }
 
+h1 {
+    @apply text-3xl font-semibold font-poppins;
+}
+
+h2 {
+    @apply text-2xl font-semibold font-poppins;
+}
+
+h3 {
+    @apply text-xl font-semibold font-poppins;
+}
+
 :focus {
     outline: none;
 }
