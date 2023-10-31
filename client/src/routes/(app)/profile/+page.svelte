@@ -17,22 +17,54 @@
         toast.error("Error", form?.error || "Unknown error");
     }
 
+    /** @type {boolean} */
+    let loading = false;
+
     /** @type {File} */
     let resume = new File([""], "resume.pdf", { type: "application/pdf" });
 
     /** @type {File} */
     let cover = new File([""], "cover.png", { type: "image/png" });
+
+    /**
+     * Download a base64 encoded file
+     * @param {string} base64
+     * @param {string} name
+     * @param {string} mimeType
+     * @returns {Promise<void>}
+     */
+    async function download(base64, name, mimeType) {
+        try {
+            const response = await fetch(`data:${mimeType};base64,${base64}`);
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = name;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (e) {
+            console.error(e);
+        }
+    }
 </script>
 
 <form
     class="m-auto max-w-2xl p-10"
     method="post"
     action="?/createProfile"
+    enctype="multipart/form-data"
     use:enhance={() => {
+        const timeout = setTimeout(() => {
+            loading = true;
+        }, 100);
         return async ({ result, update }) => {
             if (result.type === "success") {
                 toast.success("Success", "Your profile has been updated.");
             }
+            clearTimeout(timeout);
+            loading = false;
             await update({
                 reset: false,
             });
@@ -75,30 +107,64 @@
             </div>
 
             <div class="col-span-full">
-                <input type="hidden" name="resumeId" bind:value={data.profile.resumeId} />
+                <input
+                    type="hidden"
+                    name="resumeId"
+                    bind:value={data.profile.resumeId}
+                />
                 <FileInput
                     name="resume"
                     label="Resume"
                     bind:file={resume}
                     helper="PDF up to 5MB"
                 />
-                {data.profile.resumeId}
+                {#if data.profile.resumeId}
+                    {#await data.stream.resume}
+                        <div class="mt-2">
+                            <span class="text-sm text-gray-600">
+                                Loading...
+                            </span>
+                        </div>
+                    {:then r}
+                        <div class="mt-2">
+                            <button
+                                class="text-sm text-blue-600 hover:text-blue-500"
+                                type="button"
+                                on:click={() =>
+                                    download(r.base64, r.name, r.mimeType)}
+                            >
+                                Download {r.name}
+                            </button>
+                        </div>
+                    {:catch error}
+                        <div class="mt-2 text-sm text-red-600">
+                            {error.message}
+                        </div>
+                    {/await}
+                {/if}
             </div>
 
             <div class="col-span-full mt-6">
-                <input type="hidden" name="coverUrl" bind:value={data.profile.coverUrl} />
+                <input
+                    type="hidden"
+                    name="coverUrl"
+                    bind:value={data.profile.coverUrl}
+                />
                 <Dropzone
                     name="cover"
                     label="Cover photo"
                     bind:file={cover}
                     description="SVG, PNG, JPG, GIF up to 5MB"
+                    url={data.profile.coverUrl + "/?h=200"}
                     accept="image/*"
                 />
             </div>
         </div>
         <div class="flex justify-end">
-            <Button type="submit">
-                <SaveIcon />
+            <Button type="submit" {loading}>
+                <svelte:fragment slot="icon">
+                    <SaveIcon />
+                </svelte:fragment>
                 Save
             </Button>
         </div>

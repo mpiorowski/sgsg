@@ -10,6 +10,7 @@ export interface Profile {
   'username'?: (string);
   'about'?: (string);
   'resumeId'?: (string);
+  'coverId'?: (string);
   'coverUrl'?: (string);
   '_deleted'?: "deleted";
 }
@@ -23,6 +24,7 @@ export interface Profile__Output {
   'username': (string);
   'about': (string);
   'resumeId': (string);
+  'coverId': (string);
   'coverUrl': (string);
   '_deleted': "deleted";
 }

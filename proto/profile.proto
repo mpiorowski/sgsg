@@ -14,5 +14,6 @@ message Profile {
     string username = 6;
     string about = 7;
     string resume_id = 8;
-    string cover_url = 9;
+    string cover_id = 9;
+    string cover_url = 10;
 }

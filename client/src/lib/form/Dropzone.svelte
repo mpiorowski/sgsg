@@ -23,11 +23,9 @@
     }
 
     /** @type {string} */
-    let url;
+    export let url = "";
     $: if (file && file?.size > 0) {
         url = URL.createObjectURL(file);
-    } else {
-        url = "";
     }
 </script>
 

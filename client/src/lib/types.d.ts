@@ -19,7 +19,7 @@ export type UpsendFile = {
     name: string;
     size: string;
     mime_type: string;
-    buffer: string[];
+    buffer: Buffer;
     base64: string;
 };
 
@@ -34,5 +34,5 @@ export type UpsendImage = {
     mime_type: string;
     target_id: string;
     url: string;
-    buffer: string[];
+    buffer: Buffer;
 };

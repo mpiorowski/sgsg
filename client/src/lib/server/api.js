@@ -38,7 +38,7 @@ export async function api({ method = "GET", url, body, token }) {
 /**
  * Upsend API
  * @param {{
- *  method?: "GET" | "POST",
+ *  method?: "GET" | "POST" | "DELETE",
  *  url: string,
  *  file?: File,
  * }} options
@@ -50,8 +50,9 @@ export async function upsendApi({ method = "GET", url, file }) {
         const headers = new Headers();
         headers.append("Authorization", `Bearer ${UPSEND_KEY}`);
 
-        const formData = new FormData();
+        let formData = null;
         if (file) {
+            formData = new FormData();
             formData.append("file", file);
         }
         const response = await fetch("https://api.upsend.app" + url, {
@@ -61,6 +62,10 @@ export async function upsendApi({ method = "GET", url, file }) {
         });
         if (!response.ok) {
             throw new Error(await response.text());
+        }
+        if (response.status === 204) {
+            const empty = /** @type {T} */ ("");
+            return { error: false, data: empty };
         }
         const data = await response.json();
 

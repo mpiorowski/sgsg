@@ -7,15 +7,55 @@ import { error, fail } from "@sveltejs/kit";
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ locals }) {
+    /**
+     * We return the profile data immediately, and then fetch the resume and stream it to the client as it loads.
+     */
+
     /** @type {import('$lib/safe').Safe<import('$lib/proto/proto/Profile').Profile__Output>} */
-    const res = await new Promise((r) => {
+    const profile = await new Promise((r) => {
         server.GetProfile({}, createMetadata(locals.token), grpcSafe(r));
     });
-    if (res.error) {
-        throw error(500, res.msg);
+    if (profile.error) {
+        throw error(500, profile.msg);
     }
+
+    /** @type {Promise<{
+     *  name: string;
+     *  base64: string;
+     *  mimeType: string;
+     * }>}
+     */
+    const resumePromise = new Promise((resolve, reject) => {
+        let resume = {
+            name: "",
+            base64: "",
+            mimeType: "",
+        };
+        if (profile.data.resumeId) {
+            /** @type {import("$lib/safe").Safe<import("$lib/types").UpsendFile>} */
+            upsendApi({
+                url: `/files/server/${profile.data.resumeId}`,
+                method: "GET",
+            }).then((res) => {
+                if (res.error) {
+                    reject(res.msg);
+                } else {
+                    resume = {
+                        name: res.data.name,
+                        base64: Buffer.from(res.data.buffer).toString("base64"),
+                        mimeType: res.data.mime_type,
+                    };
+                    resolve(resume);
+                }
+            });
+        } else {
+            resolve(resume);
+        }
+    });
+
     return {
-        profile: res.data,
+        profile: profile.data,
+        stream: { resume: resumePromise },
     };
 }
 
@@ -36,6 +76,8 @@ export const actions = {
             if (!resume.name.endsWith(".pdf")) {
                 return fail(400, { error: "Resume must be a PDF" });
             }
+
+            // Upload new resume
             /** @type {import("$lib/safe").Safe<import("$lib/types").UpsendFile>} */
             const file = await upsendApi({
                 url: "/files",
@@ -45,10 +87,22 @@ export const actions = {
             if (file.error) {
                 return fail(400, { error: file.msg });
             }
+
+            // Delete old resume
+            if (resumeId) {
+                const resDel = await upsendApi({
+                    url: `/files/${resumeId}`,
+                    method: "DELETE",
+                });
+                if (resDel.error) {
+                    return fail(400, { error: resDel.msg });
+                }
+            }
             resumeId = file.data.id;
         }
 
-        let coverUrl = getFormValue(form, "coverUrl");
+        let coverId = getFormValue(form, "coverId");
+        let coverUrl = "";
         const cover = form.get("cover");
         if (!(cover instanceof File)) {
             return fail(400, { error: "Cover must be an image" });
@@ -61,6 +115,8 @@ export const actions = {
             if (!extensions.some((ext) => cover.name.endsWith(ext))) {
                 return fail(400, { error: "Cover must be an image" });
             }
+
+            // Upload new cover
             /** @type {import("$lib/safe").Safe<import("$lib/types").UpsendImage>} */
             const file = await upsendApi({
                 url: "/images",
@@ -70,6 +126,18 @@ export const actions = {
             if (file.error) {
                 return fail(400, { error: file.msg });
             }
+
+            // Delete old cover
+            if (coverId) {
+                const resDel = await upsendApi({
+                    url: `/images/${coverId}`,
+                    method: "DELETE",
+                });
+                if (resDel.error) {
+                    return fail(400, { error: resDel.msg });
+                }
+            }
+            coverId = file.data.id;
             coverUrl = file.data.url;
         }
 
@@ -79,6 +147,7 @@ export const actions = {
             username: getFormValue(form, "username"),
             about: getFormValue(form, "about"),
             resumeId: resumeId,
+            coverId: coverId,
             coverUrl: coverUrl,
         };
 
