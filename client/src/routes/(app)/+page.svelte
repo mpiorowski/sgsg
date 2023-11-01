@@ -28,9 +28,9 @@
     ];
 </script>
 
-<div class="flex flex-col items-center justify-center gap-4 p-10 text-gray-900">
+<div class="flex flex-col items-center justify-center gap-4 md:p-10 text-gray-900">
     <h1>SGSG</h1>
-    <h2>Svelte + Go + SQLite + gRPC</h2>
+    <h2 class="text-center">Svelte + Go + SQLite + gRPC</h2>
     <dl class="max-w-xl">
         {#each dl as { title, description }}
             <div class="relative mt-6 pl-9">

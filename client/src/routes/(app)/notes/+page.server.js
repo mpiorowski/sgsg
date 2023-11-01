@@ -10,18 +10,18 @@ export async function load({ locals }) {
     const notes = [];
     const metadata = createMetadata(locals.token);
     const notesStream = server.GetNotes({}, metadata);
-    const req = await safe(
-        /** @type {Promise<void>} */(
-            new Promise((res, rej) => {
-                notesStream.on("data", (data) => notes.push(data));
-                notesStream.on("error", (err) => rej(err));
-                notesStream.on("end", () => res());
-            })
-        ),
-    );
-    if (req.error) {
+
+    /** @type {Promise<void>} */
+    const p = new Promise((res, rej) => {
+        notesStream.on("data", (data) => notes.push(data));
+        notesStream.on("error", (err) => rej(err));
+        notesStream.on("end", () => res());
+    });
+    const r = await safe(p);
+
+    if (r.error) {
         return {
-            error: req.msg,
+            error: r.msg,
             notes: [],
         };
     }

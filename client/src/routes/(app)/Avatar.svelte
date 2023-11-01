@@ -145,27 +145,28 @@
                         on:mouseover={() => (active = 0)}
                         on:focus={() => (active = 0)}
                         on:click={() => open = false}
-                        href="/settings"
+                        href="https://github.com/mpiorowski/sgsg"
+                        target="_blank"
                         class="block px-4 py-2 text-sm text-gray-700
                     {active === 0 ? 'bg-gray-100 text-gray-900' : ''}"
                         role="menuitem"
                         tabindex="-1"
                         id="menu-item-0"
                     >
-                        Settings
+                        GitHub
                     </a>
                     <a
                         on:mouseover={() => (active = 1)}
                         on:focus={() => (active = 1)}
                         on:click={() => open = false}
-                        href="/support"
+                        href="https://www.upsend.app/"
                         class="block px-4 py-2 text-sm text-gray-700
                     {active === 1 ? 'bg-gray-100 text-gray-900' : ''}"
                         role="menuitem"
                         tabindex="-1"
                         id="menu-item-1"
                     >
-                        Support
+                        UpSend
                     </a>
                 </div>
                 <div class="py-1" role="none">
