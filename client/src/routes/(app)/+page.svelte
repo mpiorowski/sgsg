@@ -1,7 +1,7 @@
 <script>
     const dl = [
         {
-            title: "Efficient and Lightweight Stack",
+            title: "Easy and Lightweight Stack",
             description:
                 "Utilizes Svelte for the front end, Golang for the back end, and SQLite for a lightweight, self-contained database.",
         },
@@ -25,10 +25,17 @@
             description:
                 "Svelte and Golang's simplicity and efficiency make the stack easy to learn, develop, and maintain while delivering high performance.",
         },
+        {
+            title: "Production Ready",
+            description:
+                "Includes a fully working setup utilizing Docker and Docker Compose for easy deployment.",
+        },
     ];
 </script>
 
-<div class="flex flex-col items-center justify-center gap-4 md:p-10 text-gray-900">
+<div
+    class="flex flex-col items-center justify-center gap-4 text-gray-900 md:p-10"
+>
     <h1>SGSG</h1>
     <h2 class="text-center">Svelte + Go + SQLite + gRPC</h2>
     <dl class="max-w-xl">
