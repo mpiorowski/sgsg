@@ -2,6 +2,7 @@
     import { slide } from "svelte/transition";
     import Avatar from "./Avatar.svelte";
     import { page } from "$app/stores";
+    import LogoIcon from "$lib/icons/LogoIcon.svelte";
 
     /** @type {import("./$types").PageData} */
     export let data;
@@ -17,11 +18,9 @@
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
                         <a href="/">
-                            <img
-                                class="h-8 w-8"
-                                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                                alt="Your Company"
-                            />
+                            <div class="h-8 w-8 text-indigo-600">
+                                <LogoIcon />
+                            </div>
                         </a>
                     </div>
                     <div class="hidden md:block">

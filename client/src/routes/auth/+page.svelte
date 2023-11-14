@@ -2,6 +2,7 @@
     import { page } from "$app/stores";
     import { PUBLIC_SERVER_HTTP } from "$env/static/public";
     import Button from "$lib/form/Button.svelte";
+    import LogoIcon from "$lib/icons/LogoIcon.svelte";
     import { toast } from "$lib/overlay/toast";
 
     const error = $page.url.searchParams.get("error");
@@ -42,11 +43,9 @@
     class="flex min-h-full flex-col justify-center bg-gray-900 px-6 py-12 lg:px-8"
 >
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img
-            class="mx-auto h-10 w-auto"
-            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-            alt="Your Company"
-        />
+        <div class="mx-auto h-10 w-10 text-indigo-600">
+            <LogoIcon />
+        </div>
         <h2
             class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-white"
         >

@@ -1,39 +1,5 @@
-import { SERVER_HTTP, UPSEND_KEY } from "$env/static/private";
+import { UPSEND_KEY } from "$env/static/private";
 import { logger } from "./logger";
-
-/**
- * Fetch data from API
- * @param {{
- *  method?: "GET" | "POST" | "PUT" | "DELETE",
- *  url: string,
- *  body?: object,
- *  token: string
- * }} options
- * @returns {Promise<import("$lib/safe").Safe<T>>}
- * @template T
- */
-export async function api({ method = "GET", url, body, token }) {
-    try {
-        const headers = new Headers();
-        headers.append("Content-Type", "application/json");
-        headers.append("Authorization", `Bearer ${token}`);
-
-        const response = await fetch(`${SERVER_HTTP}${url}`, {
-            method,
-            headers,
-            body: JSON.stringify(body),
-        });
-        if (!response.ok) {
-            throw new Error(await response.text());
-        }
-        const data = await response.json();
-
-        return { error: false, data };
-    } catch (error) {
-        logger.error(error);
-        return { error: true, msg: "Error during fetch" };
-    }
-}
 
 /**
  * Upsend API
