@@ -150,6 +150,11 @@
                     name="coverId"
                     bind:value={data.profile.coverId}
                 />
+                <input
+                    type="hidden"
+                    name="coverUrl"
+                    bind:value={data.profile.coverUrl}
+                />
                 <Dropzone
                     name="cover"
                     label="Cover photo"

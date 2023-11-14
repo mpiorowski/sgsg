@@ -102,7 +102,7 @@ export const actions = {
         }
 
         let coverId = getFormValue(form, "coverId");
-        let coverUrl = "";
+        let coverUrl = getFormValue(form, "coverUrl");
         const cover = form.get("cover");
         if (!(cover instanceof File)) {
             return fail(400, { error: "Cover must be an image" });
