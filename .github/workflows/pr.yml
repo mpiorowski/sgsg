@@ -1,0 +1,18 @@
+name: Pull Request
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  id-token: write
+  checks: write
+
+jobs:
+  lint-client:
+    uses: ./.github/workflows/lint-client.yml
+  lint-server:
+    uses: ./.github/workflows/lint-server.yml

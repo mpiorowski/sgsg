@@ -1,0 +1,24 @@
+name: Deploy
+on:
+  push:
+    branches:
+      - release
+
+jobs:
+  lint-client:
+    uses: ./.github/workflows/lint-client.yml
+  deploy-client:
+    needs:
+      - lint-client
+    uses: ./.github/workflows/deploy-client.yml
+    secrets:
+      SSH_KEY: ${{ secrets.SSH_KEY }}
+  lint-server:
+    uses: ./.github/workflows/lint-server.yml
+  deploy-server:
+    needs:
+      - lint-server
+      - deploy-client
+    uses: ./.github/workflows/deploy-server.yml
+    secrets:
+      SSH_KEY: ${{ secrets.SSH_KEY }}

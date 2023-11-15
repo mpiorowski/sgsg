@@ -1,0 +1,27 @@
+name: Deploy Client
+
+on:
+  workflow_call:
+    secrets:
+      SSH_KEY:
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: 37.27.1.83
+          username: mat
+          key: ${{ secrets.SSH_KEY }}
+          script_stop: true
+          command_timeout: 60m
+          script: |
+            whoami
+            cd /home/mat/powerit
+            git checkout release
+            git pull
+            docker compose -f docker-compose.client.yml up -d --build
+            docker system prune -f
