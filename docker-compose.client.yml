@@ -8,9 +8,9 @@ services:
       target: prod
       args:
         - ENV=production
-        - PUBLIC_SERVER_HTTP=https://api.sgsg.app
-        - SERVER_HTTP=https://api.sgsg.app
-        - SERVER_GRPC=api.sgsg.app:8443
+        - PUBLIC_SERVER_HTTP=https://api.bearbyte.org
+        - SERVER_HTTP=https://api.bearbyte.org
+        - SERVER_GRPC=api.bearbyte.org:8443
         - COOKIE_DOMAIN=.bearbyte.org
         - UPSEND_KEY=${UPSEND_KEY}
     restart: unless-stopped
