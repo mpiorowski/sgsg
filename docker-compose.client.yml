@@ -13,6 +13,7 @@ services:
         - SERVER_GRPC=api.sgsg.app:8443
         - COOKIE_DOMAIN=.bearbyte.org
         - UPSEND_KEY=${UPSEND_KEY}
+    restart: unless-stopped
 
   nginx:
     container_name: sgsg-nginx
