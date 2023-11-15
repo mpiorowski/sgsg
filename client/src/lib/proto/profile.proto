@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "sgsg/proto";
+
+message Profile {
+    string id = 1;
+    string created = 2;
+    string updated = 3;
+    optional string deleted = 4;
+
+    string user_id = 5;
+    string username = 6;
+    string about = 7;
+    string resume_id = 8;
+    string cover_id = 9;
+    string cover_url = 10;
+}

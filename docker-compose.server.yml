@@ -1,0 +1,22 @@
+version: "3"
+services:
+  server:
+    container_name: sgsg-server
+    working_dir: /server
+    build:
+      context: ./server
+      target: prod
+    volumes:
+      - ./server:/server
+      - /etc/letsencrypt:/etc/letsencrypt
+    environment:
+      - ENV=production
+      - HTTP_PORT=8090
+      - GRPC_PORT=8091
+      - CLIENT_URL=https://sgsg.app
+      - SERVER_HTTP=https://api.sgsg.app
+      - COOKIE_DOMAIN=.sgsg.app
+    ports:
+      - 443:8090
+      - 8443:8091
+    restart: unless-stopped

@@ -1,13 +1,18 @@
 // See https://kit.svelte.dev/docs/types#app
-// for information about these interfaces
 
-// and what to do when importing types
-declare namespace App {
-    // interface Error {}
-    interface Locals {
-        userId: string
-        role: string
+import type { User__Output } from "$lib/proto/proto/User";
+
+// for information about these interfaces
+declare global {
+    namespace App {
+        // interface Error {}
+        interface Locals {
+            user: User__Output;
+            token: string;
+        }
+        // interface PageData {}
+        // interface Platform {}
     }
-    // interface PageData {}
-    // interface Platform {}
 }
+
+export { };

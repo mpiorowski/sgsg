@@ -1,0 +1,39 @@
+{
+    "extends": "./.svelte-kit/tsconfig.json",
+    "include": ["src/**/*", ".svelte-kit/**/*.d.ts", "tests/**/*"],
+    "exclude": ["node_modules/*", "src/lib/proto/*"],
+    "compilerOptions": {
+        "allowJs": true,
+        "checkJs": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "sourceMap": true,
+        "strict": true,
+
+        /* Type Checking */
+        "noImplicitAny": true /* Enable error reporting for expressions and declarations with an implied `any` type.. */,
+        "strictNullChecks": true /* When type checking, take into account `null` and `undefined`. */,
+        "strictFunctionTypes": true /* When assigning functions, check to ensure parameters and the return values are subtype-compatible. */,
+        "strictBindCallApply": true /* Check that the arguments for `bind`, `call`, and `apply` methods match the original function. */,
+        "strictPropertyInitialization": true /* Check for class properties that are declared but not set in the constructor. */,
+        "noImplicitThis": true /* Enable error reporting when `this` is given the type `any`. */,
+        "useUnknownInCatchVariables": true /* Type catch clause variables as 'unknown' instead of 'any'. */,
+        "alwaysStrict": true /* Ensure 'use strict' is always emitted. */,
+        "noUnusedLocals": true /* Enable error reporting when a local variables aren't read. */,
+        "noUnusedParameters": true /* Raise an error when a function parameter isn't read */,
+        "noImplicitReturns": true /* Enable error reporting for codepaths that do not explicitly return in a function. */,
+        "noFallthroughCasesInSwitch": true /* Enable error reporting for fallthrough cases in switch statements. */,
+        "noUncheckedIndexedAccess": true /* Include 'undefined' in index signature results */,
+        "noImplicitOverride": true /* Ensure overriding members in derived classes are marked with an override modifier. */,
+        "exactOptionalPropertyTypes": true /* Interpret optional property types as written, rather than adding 'undefined'. */,
+        "noPropertyAccessFromIndexSignature": true /* Enforces using indexed accessors for keys declared using an indexed type */,
+        "allowUnusedLabels": false /* Disable error reporting for unused labels. */,
+        "allowUnreachableCode": false /* Disable error reporting for unreachable code. */
+    }
+    // Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias and https://kit.svelte.dev/docs/configuration#files
+    //
+    // If you want to overwrite includes/excludes, make sure to copy over the relevant includes/excludes
+    // from the referenced tsconfig.json - TypeScript does not merge them in
+}

@@ -1,4 +1,5 @@
-# Go with SvelteKit using gRPC template
+# SGSG - Svelte + Go + SQLite + gRPC
+
 **Big update is comming, docs need update, wait for new release**
 
 If You have any questions, feel free to ask them in Discussions or Issues. I hope this will be helpful :).

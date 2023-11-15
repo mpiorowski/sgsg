@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    @font-face {
+        font-family: Poppins;
+        font-weight: 300;
+        src: url(/fonts/Poppins-Light.ttf);
+        font-display: swap;
+    }
+    @font-face {
+        font-family: Poppins;
+        font-weight: 400;
+        src: url(/fonts/Poppins-Regular.ttf);
+        font-display: swap;
+    }
+    @font-face {
+        font-family: Poppins;
+        font-weight: 500;
+        src: url(/fonts/Poppins-Medium.ttf);
+        font-display: swap;
+    }
+    @font-face {
+        font-family: Poppins;
+        font-weight: 600;
+        src: url(/fonts/Poppins-SemiBold.ttf);
+        font-display: swap;
+    }
+    @font-face {
+        font-family: Poppins;
+        font-weight: 700;
+        src: url(/fonts/Poppins-Bold.ttf);
+        font-display: swap;
+    }
+    @font-face {
+        font-family: Poppins;
+        font-weight: 800;
+        src: url(/fonts/Poppins-ExtraBold.ttf);
+        font-display: swap;
+    }
+}
+
+html {
+    @apply h-full antialiased;
+}
+
+body {
+    @apply h-full font-poppins;
+}
+
+h1 {
+    @apply text-3xl font-semibold font-poppins;
+}
+
+h2 {
+    @apply text-2xl font-semibold font-poppins;
+}
+
+h3 {
+    @apply text-xl font-semibold font-poppins;
+}
+
+:focus {
+    outline: none;
+}
+
+.no-scroll {
+    overflow: hidden;
+}
+.scroll {
+    overflow-y: scroll;
+}
