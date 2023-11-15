@@ -14,7 +14,6 @@ import { logger } from "./logger";
 export async function upsendApi({ method = "GET", url, file }) {
     try {
         const headers = new Headers();
-        console.log(UPSEND_KEY);
         headers.append("Authorization", `Bearer ${UPSEND_KEY}`);
 
         let formData = null;
