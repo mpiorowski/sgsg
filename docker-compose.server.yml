@@ -16,8 +16,8 @@ services:
       - CLIENT_URL=https://sgsg.bearbyte.org
       - SERVER_HTTP=https://api-sgsg.bearbyte.org
       - COOKIE_DOMAIN=.bearbyte.org
-      - CERT_PATH="/etc/letsencrypt/live/api-sgsg.bearbyte.org/fullchain.pem"
-      - KEY_PATH="/etc/letsencrypt/live/api-sgsg.bearbyte.org/privkey.pem"
+      - CERT_PATH=/etc/letsencrypt/live/api-sgsg.bearbyte.org/fullchain.pem
+      - KEY_PATH=/etc/letsencrypt/live/api-sgsg.bearbyte.org/privkey.pem
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET} 
       - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
