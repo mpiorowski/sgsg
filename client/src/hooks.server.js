@@ -15,7 +15,7 @@ export async function handle({ event, resolve }) {
         deleted: "",
         email: "",
         avatar: "",
-        role: "",
+        role: 0,
         sub: "",
         subscriptionId: "",
         subscriptionEnd: "",
