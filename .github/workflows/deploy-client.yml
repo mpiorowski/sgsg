@@ -24,7 +24,7 @@ jobs:
             StrictHostKeyChecking no
           END
       - name: Stop the server
-        run: ssh prod 'cd /home/mat/sgsg/ && docker compose stop'
+        run: ssh prod 'cd /home/mat/sgsg/ && docker compose -f docker-compose.client.yml stop'
 
       - name: Check out the source
         run: ssh prod 'cd /home/mat/sgsg/ && git checkout release && git pull'
