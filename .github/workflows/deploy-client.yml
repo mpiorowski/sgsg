@@ -20,7 +20,7 @@ jobs:
           command_timeout: 60m
           script: |
             whoami
-            cd /home/mat/powerit
+            cd /home/mat/sgsg
             git checkout release
             git pull
             docker compose -f docker-compose.client.yml up -d --build
