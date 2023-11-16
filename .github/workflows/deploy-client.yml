@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: appleboy/ssh-action@v0.1.10
         with:
-          host: 37.27.1.83
+          host: 37.27.12.85
           username: mat
           key: ${{ secrets.SSH_KEY }}
           script_stop: true
