@@ -11,17 +11,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: appleboy/ssh-action@v0.1.10
-        with:
-          host: 37.27.12.85
-          username: mat
-          key: ${{ secrets.SSH_KEY }}
-          script_stop: true
-          command_timeout: 60m
-          script: |
-            whoami
-            cd /home/mat/sgsg
-            git checkout release
-            git pull
-            docker compose -f docker-compose.client.yml up -d --build
-            docker system prune -f
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/key
+          chmod 600 ~/.ssh/key
+          cat >>~/.ssh/config <<END
+          Host prod
+            HostName 37.27.12.85
+            User mat
+            IdentityFile ~/.ssh/key
+            StrictHostKeyChecking no
+          END
+      - name: Stop the server
+        run: ssh prod 'cd /home/mat/sgsg/ && docker compose stop'
+
+      - name: Check out the source
+        run: ssh prod 'cd /home/mat/sgsg/ && git checkout release && git pull'
+
+      - name: Start the server
+        run: ssh prod 'cd /home/mat/sgsg/ && docker compose -f docker-compose.client.yml up -d --build'
