@@ -2,11 +2,13 @@ import { getFormValue } from "$lib/helpers";
 import { grpcSafe } from "$lib/safe";
 import { upsendApi } from "$lib/server/api";
 import { server } from "$lib/server/grpc";
+import { perf } from "$lib/server/logger";
 import { createMetadata } from "$lib/server/metadata";
 import { error, fail } from "@sveltejs/kit";
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ locals }) {
+    const end = perf("Load profile");
     /**
      * We return the profile data immediately, and then fetch the resume and stream it to the client as it loads.
      */
@@ -53,6 +55,7 @@ export async function load({ locals }) {
         }
     });
 
+    end();
     return {
         profile: profile.data,
         stream: { resume: resumePromise },
