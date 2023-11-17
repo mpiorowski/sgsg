@@ -28,7 +28,7 @@ services:
     logging:
       driver: loki
       options:
-        - loki-url=${LOKI_URL}
-        - loki-retries=5
-        - loki-batch-size=400
+        loki-url: ${LOKI_URL}
+        loki-retries: "5"
+        loki-batch-size: "400"
     restart: unless-stopped
