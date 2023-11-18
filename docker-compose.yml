@@ -7,13 +7,11 @@ services:
       context: ./client
       target: dev
       args:
-        - ENV=development
-        - PUBLIC_SERVER_HTTP=http://127.0.0.1:8090
-        - PUBLIC_SERVER_WS=ws://127.0.0.1:8090
-        - SERVER_HTTP=http://server:8090
-        - SERVER_GRPC=server:8091
-        - COOKIE_DOMAIN=.127.0.0.1
-        - UPSEND_KEY=${UPSEND_KEY}
+        ENV: development
+        PUBLIC_SERVER_HTTP: http://127.0.0.1:8090
+        SERVER_GRPC: server:8091
+        COOKIE_DOMAIN: .127.0.0.1
+        UPSEND_KEY: ${UPSEND_KEY}
     volumes:
       - ./client/src:/client/src
       - ./client/.svelte-kit:/client/.svelte-kit
@@ -31,17 +29,18 @@ services:
       - ./server:/server
     ports:
       - 8090:8090
+      - 8091:8091
     environment:
-      - ENV=development
-      - HTTP_PORT=8090
-      - GRPC_PORT=8091
-      - CLIENT_URL=http://127.0.0.1:3000
-      - SERVER_HTTP=http://127.0.0.1:8090
-      - COOKIE_DOMAIN=.127.0.0.1
-      - CERT_PATH=/etc/letsencrypt/live/example.com/fullchain.pem
-      - KEY_PATH=/etc/letsencrypt/live/example.com/privkey.pem
-      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
-      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET} 
-      - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
-      - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+      ENV: development
+      HTTP_PORT: 8090
+      GRPC_PORT: 8091
+      CLIENT_URL: http://127.0.0.1:3000
+      SERVER_HTTP: http://127.0.0.1:8090
+      COOKIE_DOMAIN: .127.0.0.1
+      CERT_PATH: /etc/letsencrypt/live/example.com/fullchain.pem
+      KEY_PATH: /etc/letsencrypt/live/example.com/privkey.pem
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET} 
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
     command: sh -c "go run /server/."

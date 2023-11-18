@@ -99,6 +99,7 @@
                 <Input
                     name="about"
                     label="About"
+                    autocomplete="on"
                     bind:value={data.profile.about}
                     rows={3}
                     error={extractError(form?.fields, "about")}
