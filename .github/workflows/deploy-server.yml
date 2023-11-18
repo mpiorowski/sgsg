@@ -5,6 +5,8 @@ on:
     secrets:
       SSH_KEY:
         required: true
+      SERVER_IP: 
+        required: true
 
 jobs:
   deploy:
@@ -18,7 +20,7 @@ jobs:
           chmod 600 ~/.ssh/key
           cat >>~/.ssh/config <<END
           Host prod
-            HostName 65.108.61.163
+            HostName ${{ secrets.SERVER_IP }}
             User mat
             IdentityFile ~/.ssh/key
             StrictHostKeyChecking no

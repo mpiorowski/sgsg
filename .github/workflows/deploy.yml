@@ -13,6 +13,7 @@ jobs:
     uses: ./.github/workflows/deploy-client.yml
     secrets:
       SSH_KEY: ${{ secrets.SSH_KEY }}
+      CLIENT_IP: ${{ secrets.CLIENT_IP }}
   lint-server:
     uses: ./.github/workflows/lint-server.yml
   deploy-server:
@@ -22,3 +23,5 @@ jobs:
     uses: ./.github/workflows/deploy-server.yml
     secrets:
       SSH_KEY: ${{ secrets.SSH_KEY }}
+      SERVER_IP: ${{ secrets.SERVER_IP }}
+ 
