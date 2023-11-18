@@ -52,5 +52,56 @@ UPSEND_KEY=UPSEND_KEY \
 docker compose up --build
 ```
 
-### Production
-In progress...
+### Production (or how to set up a production application for less than 10 euros per month)
+
+Let's embark on the full journey:
+
+1. Generate new RSA keys and push them to your repository:
+```
+openssl genpkey -algorithm RSA -out private.key -pkeyopt rsa_keygen_bits:2048
+openssl rsa -pubout -in private.key -out public.key
+
+mv private.key ./client/src/lib/server/private.key
+mv public.key ./server/public.key
+```
+2. Purchase two servers (Hetzner CPX11 costs 5 euros/month each), one for the client and one for the server, with SSH key authorization.
+3. Add three repository secrets to GitHub:
+   - SSH_KEY: private version of the SSH key used for logging into servers
+   - CLIENT_IP: client IP
+   - SERVER_IP: server IP
+4. Connect your domain to the servers, e.g., example.com -> client, api.example.com -> server. Also, remember to enable gRPC proxy for some providers like Cloudflare.
+
+From here, you need to follow these instructions on both servers:
+
+5. Log in and create a new SSH key:
+```
+ssh-keygen -t ed25519 -C your_email@gmail.com
+```
+6. Add the `.pub` version as the deployment key in your repository settings.
+7. Download the repository into server.
+8. Finish setting up environment variables:
+    - Change domains in `docker-compose.client.yml` / `docker-compose.server.yml` 
+    - Add environment variables to your system, e.g., using Fish: `set -Ux GOOGLE_CLIENT_ID 123456789`.
+    - You can find all needed environment variables in `docker-compose.client.yml` / `docker-compose.server.yml`. Don't miss out on the `LOKI_URL` one — you can find it on the Grafana Cloud Portal -> Loki Details.
+9. Generate certificates for your domain:
+```
+sudo apt-get install certbot python3-certbot-nginx
+sudo certbot certonly --nginx -d example.com
+sudo certbot renew --dry-run
+sudo systemctl disable nginx
+```
+10. Install the Grafana Loki plugin for Docker:
+```
+docker plugin install grafana/loki-docker-driver:2.8.2 --alias loki --grant-all-permissions
+```
+11. Restart server.
+12. Log in and run the app for the first time to ensure everything is correct:
+```
+cd you-repo
+git checkout release
+docker compose -f docker-compose.client/server.yml up -d --build
+```
+
+That's all! From now on, every push to the `release` branch will automatically pull new changes to your servers and rerun the application. You will be able to see the deployments using GitHub Actions.
+
+Enjoy!
