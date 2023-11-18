@@ -5,11 +5,11 @@
 It is an open-source full-stack application with two main principles in mind: **PERFORMANCE** and **SIMPLICITY**. 
 The idea is that you can take this template and use it to build almost anything you need, and it will scale very well.
 
-Also, this is not the next **dev** template. It has everything you need to push it to production: Nginx configuration, Docker deployments, GitHub Actions, Grafana logging, etc."
+Also, this is not the next **dev** template. It has everything you need to push it to production: Nginx configuration, Docker deployments, GitHub Actions, Grafana logging, etc.
 
 ## Architecture
 As the name suggests, the app contains four main components:
-- **[SvelteKit](https://kit.svelte.dev/)** - Svelte is what I believe is currently the best frontend framework. If you've never worked with it, don't worry; it's super easy to pick up.
+- **[SvelteKit](https://kit.svelte.dev/)** - Svelte currently is what I believe the best frontend framework. If you've never worked with it, don't worry; it's super easy to pick up.
 As an example, developers from my team who were familiar with NextJS were able to grasp it in just one week and start coding web apps. Trust me, once you try it, it's hard to go back to anything else.
 - **[Go](https://go.dev/)** - The easiest backend on the market. Don't confuse simplicity with inefficiency; it's almost impossible to build a bad server using it.
 - **[SQLite](https://www.sqlite.org/index.html)** - The most used database in the world. You might be skeptical about using SQLite for production, but trust me, unless you're building the next Netflix, this is all you need.
@@ -32,8 +32,25 @@ It supports features like Enums, as const, and even Zod's z.infer<typeof User>, 
 - **Docker for Seamless Deployment** - Leverage Docker for consistent deployment across both development and production environments. Streamline server deployment by encapsulating the application and its dependencies in containers, ensuring easy setup and scalability while maintaining environment consistency.
 - **GitHub Actions for Automated Workflow** - Implement GitHub Actions to automate linting, code checks, and seamless deployments to the server. Streamline the development pipeline by integrating these actions, ensuring code quality and facilitating efficient, automatic updates to the production environment.
 - **Client side streaming** - Thanks to SvelteKit's newest feature, we can load and render crucial data first. Subsequently, all remaining data is returned as promises and rendered when they resolve.
+- **Files, Images and Emails** - A little bit of self promotion, this application is using my another dead simple service (free) for managing files, images and emails - [UpSend](https://www.upsend.app)
 
 Thx ChatGPT for these bullet points :).
 
-## Fast dev deployment 
-In progress
+## Deployment
+
+The only prerequisites are `Docker` and `Docker Compose`. 
+
+Afterward, the only task remaining is to configure environment variables according to the deployment. No need for .env files or tedious copy/pasting — just straightforward environment variables, either configured on the system or written inline.
+
+### Development
+```
+GOOGLE_CLIENT_ID=GOOGLE_CLIENT_ID \
+GOOGLE_CLIENT_SECRET=GOOGLE_CLIENT_SECRET \
+GITHUB_CLIENT_ID=GITHUB_CLIENT_ID \
+GITHUB_CLIENT_SECRET=GITHUB_CLIENT_SECRET \
+UPSEND_KEY=UPSEND_KEY \
+docker compose up --build
+```
+
+### Production
+In progress...
