@@ -5,6 +5,8 @@
 It is an open-source full-stack application with two main principles in mind: **PERFORMANCE** and **SIMPLICITY**. 
 The idea is that you can take this template and use it to build almost anything you need, and it will scale very well.
 
+Also, this is not the next **dev** template. It has everything you need to push it to production: Nginx configuration, Docker deployments, GitHub Actions, Grafana logging, etc."
+
 ## Architecture
 As the name suggests, the app contains four main components:
 - **[SvelteKit](https://kit.svelte.dev/)** - Svelte is what I believe is currently the best frontend framework. If you've never worked with it, don't worry; it's super easy to pick up.
@@ -29,6 +31,7 @@ It supports features like Enums, as const, and even Zod's z.infer<typeof User>, 
 - **Performance and Error Logging with Grafana Integration** - Efficiently log performance metrics and errors within the application, consolidating data for streamlined analysis. Utilize Grafana integration to visualize and monitor performance calls and errors, facilitating proactive management and optimization.
 - **Docker for Seamless Deployment** - Leverage Docker for consistent deployment across both development and production environments. Streamline server deployment by encapsulating the application and its dependencies in containers, ensuring easy setup and scalability while maintaining environment consistency.
 - **GitHub Actions for Automated Workflow** - Implement GitHub Actions to automate linting, code checks, and seamless deployments to the server. Streamline the development pipeline by integrating these actions, ensuring code quality and facilitating efficient, automatic updates to the production environment.
+- **Client side streaming** - Thanks to SvelteKit's newest feature, we can load and render crucial data first. Subsequently, all remaining data is returned as promises and rendered when they resolve.
 
 Thx ChatGPT for these bullet points :).
 
