@@ -9,7 +9,7 @@ Also, this is not the next **dev** template. It has everything you need to push 
 
 ## Architecture
 As the name suggests, the app contains four main components:
-- **[SvelteKit](https://kit.svelte.dev/)** - Svelte is what I believe is currently the best frontend framework. If you've never worked with it, don't worry; it's super easy to pick up.
+- **[SvelteKit](https://kit.svelte.dev/)** - Svelte currently is what I believe the best frontend framework. If you've never worked with it, don't worry; it's super easy to pick up.
 As an example, developers from my team who were familiar with NextJS were able to grasp it in just one week and start coding web apps. Trust me, once you try it, it's hard to go back to anything else.
 - **[Go](https://go.dev/)** - The easiest backend on the market. Don't confuse simplicity with inefficiency; it's almost impossible to build a bad server using it.
 - **[SQLite](https://www.sqlite.org/index.html)** - The most used database in the world. You might be skeptical about using SQLite for production, but trust me, unless you're building the next Netflix, this is all you need.
