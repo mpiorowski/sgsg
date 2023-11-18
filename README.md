@@ -32,8 +32,25 @@ It supports features like Enums, as const, and even Zod's z.infer<typeof User>, 
 - **Docker for Seamless Deployment** - Leverage Docker for consistent deployment across both development and production environments. Streamline server deployment by encapsulating the application and its dependencies in containers, ensuring easy setup and scalability while maintaining environment consistency.
 - **GitHub Actions for Automated Workflow** - Implement GitHub Actions to automate linting, code checks, and seamless deployments to the server. Streamline the development pipeline by integrating these actions, ensuring code quality and facilitating efficient, automatic updates to the production environment.
 - **Client side streaming** - Thanks to SvelteKit's newest feature, we can load and render crucial data first. Subsequently, all remaining data is returned as promises and rendered when they resolve.
+- **Files, Images and Emails** - A little bit of self promotion, this application is using my another dead simple service (free) for managing files, images and emails - [UpSend](https://www.upsend.app)
 
 Thx ChatGPT for these bullet points :).
 
-## Fast dev deployment 
-In progress
+## Deployment
+
+The only prerequisites are `Docker` and `Docker Compose`. 
+
+Afterward, the only task remaining is to configure environment variables according to the deployment. No need for .env files or tedious copy/pasting — just straightforward environment variables, either configured on the system or written inline.
+
+### Development
+```
+GOOGLE_CLIENT_ID=GOOGLE_CLIENT_ID \
+GOOGLE_CLIENT_SECRET=GOOGLE_CLIENT_SECRET \
+GITHUB_CLIENT_ID=GITHUB_CLIENT_ID \
+GITHUB_CLIENT_SECRET=GITHUB_CLIENT_SECRET \
+UPSEND_KEY=UPSEND_KEY \
+docker compose up --build
+```
+
+### Production
+In progress...
