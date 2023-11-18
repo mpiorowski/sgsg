@@ -24,4 +24,10 @@ services:
     ports:
       - 80:80
       - 443:443
+    logging:
+      driver: loki
+      options:
+        loki-url: ${LOKI_URL}
+        loki-retries: "5"
+        loki-batch-size: "400"
     restart: unless-stopped
