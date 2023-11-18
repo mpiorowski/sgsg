@@ -5,7 +5,7 @@
 It is an open-source full-stack application with two main principles in mind: **PERFORMANCE** and **SIMPLICITY**. 
 The idea is that you can take this template and use it to build almost anything you need, and it will scale very well.
 
-Also, this is not the next **dev** template. It has everything you need to push it to production: Nginx configuration, Docker deployments, GitHub Actions, Grafana logging, etc."
+Also, this is not the next **dev** template. It has everything you need to push it to production: Nginx configuration, Docker deployments, GitHub Actions, Grafana logging, etc.
 
 ## Architecture
 As the name suggests, the app contains four main components:
