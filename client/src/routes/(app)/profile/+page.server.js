@@ -1,4 +1,5 @@
 import { getFormValue } from "$lib/helpers";
+import { safe } from "$lib/safe";
 import { grpcSafe } from "$lib/safe";
 import { upsendApi } from "$lib/server/api";
 import { server } from "$lib/server/grpc";
@@ -80,18 +81,9 @@ export const actions = {
                 return fail(400, { error: "Resume must be a PDF" });
             }
 
-            // Upload new resume
-            /** @type {import("$lib/safe").Safe<import("$lib/types").UpsendFile>} */
-            const file = await upsendApi({
-                url: "/files",
-                method: "POST",
-                file: resume,
-            });
-            if (file.error) {
-                return fail(400, { error: file.msg });
-            }
-
-            // Delete old resume
+            /**
+             * Delete old resume
+             */
             if (resumeId) {
                 const resDel = await upsendApi({
                     url: `/files/${resumeId}`,
@@ -101,6 +93,20 @@ export const actions = {
                     return fail(400, { error: resDel.msg });
                 }
             }
+
+            /**
+             * Upload new resume
+             * @type {import("$lib/safe").Safe<import("$lib/types").UpsendFile>}
+             */
+            const file = await upsendApi({
+                url: "/files",
+                method: "POST",
+                file: resume,
+            });
+            if (file.error) {
+                return fail(400, { error: file.msg });
+            }
+
             resumeId = file.data.id;
         }
 
@@ -119,18 +125,9 @@ export const actions = {
                 return fail(400, { error: "Cover must be an image" });
             }
 
-            // Upload new cover
-            /** @type {import("$lib/safe").Safe<import("$lib/types").UpsendImage>} */
-            const file = await upsendApi({
-                url: "/images",
-                method: "POST",
-                file: cover,
-            });
-            if (file.error) {
-                return fail(400, { error: file.msg });
-            }
-
-            // Delete old cover
+            /**
+             * Delete old cover
+             */
             if (coverId) {
                 const resDel = await upsendApi({
                     url: `/images/${coverId}`,
@@ -140,6 +137,20 @@ export const actions = {
                     return fail(400, { error: resDel.msg });
                 }
             }
+
+            /**
+             * Upload new cover
+             * @type {import("$lib/safe").Safe<import("$lib/types").UpsendImage>}
+             */
+            const file = await upsendApi({
+                url: "/images",
+                method: "POST",
+                file: cover,
+            });
+            if (file.error) {
+                return fail(400, { error: file.msg });
+            }
+
             coverId = file.data.id;
             coverUrl = file.data.url;
         }
@@ -169,6 +180,26 @@ export const actions = {
             }
             return fail(400, { error: res.msg });
         }
+
+        /**
+         * Send email with the data to the user
+         */
+        await safe(
+            upsendApi({
+                url: "/emails",
+                method: "POST",
+                email: {
+                    email_to: locals.user.email,
+                    email_name: res.data.username,
+                    email_subject: "You've updated your profile",
+                    email_html: `
+                <p>Hi ${res.data.username},</p>
+                <p>You've updated your profile. You can view it <a href="https://sgsg.bearbyte.org/profile">here</a>.</p>
+                <p>Thanks!</p>
+                `,
+                },
+            }),
+        );
 
         return {
             profile: res.data,

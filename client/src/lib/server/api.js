@@ -7,29 +7,33 @@ import { logger } from "./logger";
  *  method?: "GET" | "POST" | "DELETE",
  *  url: string,
  *  file?: File,
+ *  email?: import("$lib/types").UpsendEmail,
  * }} options
  * @returns {Promise<import("$lib/safe").Safe<T>>}
  * @template T
  */
-export async function upsendApi({ method = "GET", url, file }) {
+export async function upsendApi({ method = "GET", url, file, email }) {
     try {
         const headers = new Headers();
         headers.append("Authorization", `Bearer ${UPSEND_KEY}`);
 
-        let formData = null;
+        let body = null;
         if (file) {
-            formData = new FormData();
-            formData.append("file", file);
+            body = new FormData();
+            body.append("file", file);
+        } else if (email) {
+            body = JSON.stringify(email);
+            headers.append("Content-Type", "application/json");
         }
         const response = await fetch("https://api.upsend.app" + url, {
             method,
             headers,
-            body: formData,
+            body,
         });
         if (!response.ok) {
             throw new Error(await response.text());
         }
-        if (response.status === 204) {
+        if (response.status === 204 || response.status === 201) {
             const empty = /** @type {T} */ ("");
             return { error: false, data: empty };
         }

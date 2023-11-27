@@ -36,3 +36,10 @@ export type UpsendImage = {
     url: string;
     buffer: Buffer;
 };
+
+export type UpsendEmail = {
+    email_to: string;
+    email_name: string;
+    email_subject: string;
+    email_html: string;
+};
