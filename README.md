@@ -38,6 +38,13 @@ It supports features like Enums, as const, and even Zod's z.infer<typeof User>, 
 
 Thx ChatGPT for these bullet points :).
 
+## Proto
+
+Whenever You change proto definitions, always remember to generate new types:
+```
+sh proto.sh
+```
+
 ## Deployment
 
 The only prerequisites are `Docker` and `Docker Compose`. 
