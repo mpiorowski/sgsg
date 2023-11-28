@@ -33,7 +33,7 @@ export async function upsendApi({ method = "GET", url, file, email }) {
         if (!response.ok) {
             throw new Error(await response.text());
         }
-        if (response.status === 204 || response.status === 201) {
+        if (response.status === 204) {
             const empty = /** @type {T} */ ("");
             return { error: false, data: empty };
         }
