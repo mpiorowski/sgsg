@@ -19,4 +19,5 @@ module.exports = {
         "no-var": "error",
         "prefer-const": "error",
     },
+    ignorePatterns: ["node_modules", "service-worker.js"],
 };

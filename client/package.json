@@ -9,7 +9,7 @@
         "check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
         "check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch",
         "test": "npm run test:integration && npm run test:unit",
-        "lint": "eslint src",
+        "lint": "eslint src --max-warnings=0",
         "test:integration": "playwright test",
         "test:unit": "vitest",
         "proto": "proto-loader-gen-types --longs=String --defaults --oneofs --arrays --grpcLib=@grpc/grpc-js --outDir=./src/lib/proto ../proto/*.proto && cp ../proto/*.proto ./src/lib/proto/"
