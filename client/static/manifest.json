@@ -1,0 +1,21 @@
+{
+    "name": "SGSG",
+    "display": "standalone",
+    "id": "/",
+    "start_url": "/",
+    "theme_color": "#374151",
+    "background_color": "#374151",
+    "icons": [
+        {
+            "src": "favicon.svg",
+            "type": "image/svg+xml",
+            "sizes": "150x150"
+        },
+        {
+            "src": "maskable.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}
