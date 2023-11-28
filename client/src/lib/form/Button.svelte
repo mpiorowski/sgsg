@@ -65,7 +65,7 @@
         {href}
         class="group inline-flex items-center justify-center gap-x-1.5 rounded-md px-3 py-2 text-sm font-semibold no-underline transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2
         {variant === 'primary' &&
-            'bg-indigo-500 text-white shadow-sm hover:bg-indigo-400 focus-visible:outline-indigo-600'}
+            'bg-indigo-600 text-white shadow-sm hover:bg-indigo-400 focus-visible:outline-indigo-600'}
         {variant === 'secondary' &&
             'bg-white text-gray-900 shadow-sm ring-1 ring-gray-300 hover:bg-gray-50 focus-visible:outline-gray-300'}
         {variant === 'link' &&

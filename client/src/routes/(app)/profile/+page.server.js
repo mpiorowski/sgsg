@@ -108,6 +108,7 @@ export const actions = {
             }
 
             resumeId = file.data.id;
+            console.log(resumeId);
         }
 
         let coverId = getFormValue(form, "coverId");

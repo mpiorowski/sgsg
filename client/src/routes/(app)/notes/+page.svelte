@@ -84,7 +84,7 @@
 
         {#each data.notes as note}
             <div
-                class="mx-auto mt-8 rounded-lg bg-gray-700 p-6 text-white shadow-md"
+                class="mx-auto mt-8 rounded-lg bg-gray-800 p-6 text-white shadow-md"
             >
                 <h2 class="mb-2 text-xl font-semibold">{note.title}</h2>
                 <p class="mb-4 text-gray-50">

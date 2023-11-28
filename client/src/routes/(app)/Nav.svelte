@@ -17,10 +17,13 @@
             <div class="flex h-16 items-center justify-between px-4 sm:px-0">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
-                        <a href="/">
-                            <div class="h-8 w-8 text-indigo-600">
-                                <LogoIcon />
-                            </div>
+                        <a
+                            href="/"
+                            aria-label="Home"
+                            class="inline-flex h-8 w-8 items-center justify-center text-indigo-600"
+                        >
+                            <span class="sr-only">Home</span>
+                            <LogoIcon />
                         </a>
                     </div>
                     <div class="hidden md:block">
