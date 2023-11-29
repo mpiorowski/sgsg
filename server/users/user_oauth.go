@@ -88,14 +88,35 @@ func (o *OAuthConfigImpl) getUserInfo(provider string, accessToken string) (*Use
 	var sub string
 	var email string
 	var avatar string
+    var ok bool
 	if provider == "github" {
-		sub = fmt.Sprintf("%.0f", userInfo["id"].(float64))
-		email = userInfo["email"].(string)
-		avatar = userInfo["avatar_url"].(string)
+        userId, ok := userInfo["id"].(float64)
+        if !ok {
+            return nil, fmt.Errorf("Invalid user id")
+        }
+		sub = fmt.Sprintf("%.0f", userId)
+        email, ok = userInfo["email"].(string)
+        if !ok {
+            email = ""
+        }
+		avatar, ok = userInfo["avatar_url"].(string)
+        if !ok {
+            avatar = ""
+        }
+
 	} else if provider == "google" {
-		sub = userInfo["id"].(string)
-		email = userInfo["email"].(string)
-		avatar = userInfo["picture"].(string)
+		sub, ok = userInfo["id"].(string)
+        if !ok {
+            return nil, fmt.Errorf("Invalid user id")
+        }
+		email, ok = userInfo["email"].(string)
+        if !ok {
+            email = ""
+        }
+		avatar, ok = userInfo["picture"].(string)
+        if !ok {
+            avatar = ""
+        }
 	} else {
 		return nil, fmt.Errorf("Invalid provider")
 	}
