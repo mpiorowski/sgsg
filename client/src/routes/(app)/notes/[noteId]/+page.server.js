@@ -27,7 +27,7 @@ export async function load({ locals, params }) {
     };
 }
 
-/** @type {import('./$types').Actions}*/
+/** @type {import('./$types').Actions} */
 export const actions = {
     update: async ({ locals, request }) => {
         const form = await request.formData();
@@ -85,7 +85,6 @@ export const actions = {
             return fail(400, { error: req.msg });
         }
 
-        // throw redirect(302, "/notes");
         return {
             success: true,
         };
