@@ -129,16 +129,22 @@
                             </span>
                         </div>
                     {:then r}
-                        {#if r}
+                        {#if !r.error && r.data}
                             <div class="mt-2">
                                 <button
                                     class="text-sm text-blue-600 hover:text-blue-500"
                                     type="button"
                                     on:click={() => {
-                                        download(r.buffer, r.name, r.mime_type);
+                                        if (r.data) {
+                                            download(
+                                                r.data.buffer,
+                                                r.data.name,
+                                                r.data.mime_type,
+                                            );
+                                        }
                                     }}
                                 >
-                                    Download {r.name}
+                                    Download {r.data.name}
                                 </button>
                             </div>
                         {/if}
