@@ -9,7 +9,7 @@ export async function load({ locals }) {
     /** @type {import("$lib/proto/proto/Note").Note__Output[]} */
     const notes = [];
     const metadata = createMetadata(locals.token);
-    const notesStream = server.GetNotes({}, metadata);
+    const notesStream = server.GetNotesByUserId({}, metadata);
 
     /** @type {Promise<void>} */
     const p = new Promise((res, rej) => {

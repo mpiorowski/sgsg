@@ -153,7 +153,7 @@ func TestProfileValidation(t *testing.T) {
 	profiles[0].UserId = ""
 	profiles[0].Username = ""
     profiles[0].About = ""
-	_, err := CreateProfile(&profiles[0])
+    err := validateProfile(&profiles[0])
 	containsTitle := strings.Contains(err.Error(), "Username") && strings.Contains(err.Error(), "required")
 	containsContent := strings.Contains(err.Error(), "About") && strings.Contains(err.Error(), "required")
 	if !containsTitle || !containsContent {
@@ -163,7 +163,7 @@ func TestProfileValidation(t *testing.T) {
 	// gen 101 chars
 	profiles[0].Username = strings.Repeat("a", 101)
 	profiles[0].About = strings.Repeat("a", 1001)
-	_, err = CreateProfile(&profiles[0])
+    err = validateProfile(&profiles[0])
 	containsTitle = strings.Contains(err.Error(), "Username") && strings.Contains(err.Error(), "max")
 	containsContent = strings.Contains(err.Error(), "About") && strings.Contains(err.Error(), "max")
 	if !containsTitle || !containsContent {

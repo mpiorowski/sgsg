@@ -16,7 +16,11 @@ export async function load({ locals }) {
 
     /** @type {import('$lib/safe').Safe<import('$lib/proto/proto/Profile').Profile__Output>} */
     const profile = await new Promise((r) => {
-        server.GetProfile({}, createMetadata(locals.token), grpcSafe(r));
+        server.GetProfileByUserId(
+            {},
+            createMetadata(locals.token),
+            grpcSafe(r),
+        );
     });
     if (profile.error) {
         throw error(500, profile.msg);
@@ -184,6 +188,7 @@ export const actions = {
 
         /**
          * Send email with the data to the user
+         * We don't check for errors cos the upsend API is not critical
          */
         await safe(
             upsendApi({

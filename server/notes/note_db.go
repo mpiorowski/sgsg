@@ -25,7 +25,7 @@ func scanNote(rows *sql.Rows, row *sql.Row) (*pb.Note, error) {
 	return &note, nil
 }
 
-func selectNotes(notesCh chan<- *pb.Note, errCh chan<- error, userId string) {
+func selectNotesByUserId(notesCh chan<- *pb.Note, errCh chan<- error, userId string) {
     rows, err := db.Db.Query("select * from notes where user_id = $1", userId)
     if err != nil {
         errCh <- fmt.Errorf("db.Query: %w", err)

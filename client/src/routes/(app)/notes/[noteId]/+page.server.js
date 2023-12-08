@@ -78,7 +78,7 @@ export const actions = {
         const metadata = createMetadata(locals.token);
         /** @type {import("$lib/safe").Safe<import("$lib/proto/proto/Empty").Empty>} */
         const req = await new Promise((r) => {
-            server.DeleteNote(data, metadata, grpcSafe(r));
+            server.DeleteNoteById(data, metadata, grpcSafe(r));
         });
 
         if (req.error) {

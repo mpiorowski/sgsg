@@ -146,7 +146,7 @@ func TestSelectNotes(t *testing.T) {
 
 	notesCh := make(chan *pb.Note)
 	errCh := make(chan error, 1)
-	go selectNotes(notesCh, errCh, notes[0].UserId)
+	go selectNotesByUserId(notesCh, errCh, notes[0].UserId)
 
 	count := 0
 	go func() {
@@ -178,7 +178,7 @@ func TestSelectNotes(t *testing.T) {
 func TestNoteValidation(t *testing.T) {
 	notes[0].Title = ""
 	notes[0].Content = ""
-	_, err := CreateNote(&notes[0])
+	err := validateNote(&notes[0])
 	containsTitle := strings.Contains(err.Error(), "Title") && strings.Contains(err.Error(), "required")
 	containsContent := strings.Contains(err.Error(), "Content") && strings.Contains(err.Error(), "required")
 	if !containsTitle || !containsContent {
@@ -188,7 +188,7 @@ func TestNoteValidation(t *testing.T) {
 	// gen 101 chars
 	notes[0].Title = strings.Repeat("a", 101)
 	notes[0].Content = strings.Repeat("a", 1001)
-	_, err = CreateNote(&notes[0])
+    err = validateNote(&notes[0])
 	containsTitle = strings.Contains(err.Error(), "Title") && strings.Contains(err.Error(), "max")
 	containsContent = strings.Contains(err.Error(), "Content") && strings.Contains(err.Error(), "max")
 	if !containsTitle || !containsContent {

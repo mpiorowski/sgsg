@@ -22,12 +22,12 @@ message AuthResponse {
 service Service {
     rpc Auth(Empty) returns (AuthResponse) {}
 
-    rpc GetProfile(Empty) returns (Profile) {}
+    rpc GetProfileByUserId(Empty) returns (Profile) {}
     rpc CreateProfile(Profile) returns (Profile) {}
-    rpc DeleteProfile(Id) returns (Empty) {}
+    rpc DeleteProfileById(Id) returns (Empty) {}
 
-    rpc GetNotes(Empty) returns (stream Note) {}
+    rpc GetNotesByUserId(Empty) returns (stream Note) {}
     rpc GetNoteById(Id) returns (Note) {}
     rpc CreateNote(Note) returns (Note) {}
-    rpc DeleteNote(Id) returns (Empty) {}
+    rpc DeleteNoteById(Id) returns (Empty) {}
 }
