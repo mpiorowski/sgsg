@@ -28,16 +28,18 @@
 
     /**
      * Download a base64 encoded file
-     * @param {string} base64
+     * @param {Buffer} buffer
      * @param {string} name
      * @param {string} mimeType
      * @returns {Promise<void>}
      */
-    async function download(base64, name, mimeType) {
+    async function download(buffer, name, mimeType) {
         try {
-            const response = await fetch(`data:${mimeType};base64,${base64}`);
-            const blob = await response.blob();
-            const url = URL.createObjectURL(blob);
+            const blob = new Blob([new Uint8Array(buffer)]);
+            const file = new File([blob], name, {
+                type: mimeType,
+            });
+            const url = URL.createObjectURL(file);
             const link = document.createElement("a");
             link.href = url;
             link.download = name;
@@ -127,16 +129,19 @@
                             </span>
                         </div>
                     {:then r}
-                        <div class="mt-2">
-                            <button
-                                class="text-sm text-blue-600 hover:text-blue-500"
-                                type="button"
-                                on:click={() =>
-                                    download(r.base64, r.name, r.mimeType)}
-                            >
-                                Download {r.name}
-                            </button>
-                        </div>
+                        {#if r}
+                            <div class="mt-2">
+                                <button
+                                    class="text-sm text-blue-600 hover:text-blue-500"
+                                    type="button"
+                                    on:click={() => {
+                                        download(r.buffer, r.name, r.mime_type);
+                                    }}
+                                >
+                                    Download {r.name}
+                                </button>
+                            </div>
+                        {/if}
                     {:catch error}
                         <div class="mt-2 text-sm text-red-600">
                             {error.message}

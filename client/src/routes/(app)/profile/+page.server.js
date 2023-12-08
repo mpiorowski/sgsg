@@ -26,37 +26,26 @@ export async function load({ locals }) {
         throw error(500, profile.msg);
     }
 
-    /** @type {Promise<{
-     *  name: string;
-     *  base64: string;
-     *  mimeType: string;
-     * }>}
+    /** @type {Promise<import("$lib/types").UpsendFile | undefined>}
      */
     const resumePromise = new Promise((resolve, reject) => {
-        let resume = {
-            name: "",
-            base64: "",
-            mimeType: "",
-        };
         if (profile.data.resumeId) {
-            /** @type {import("$lib/safe").Safe<import("$lib/types").UpsendFile>} */
-            upsendApi({
+            /**
+             * @type {Promise<import('$lib/safe').Safe<import('$lib/types').UpsendFile>>}
+             */
+            const call = upsendApi({
                 url: `/files/server/${profile.data.resumeId}`,
                 method: "GET",
-            }).then((res) => {
+            });
+            call.then((res) => {
                 if (res.error) {
                     reject(res.msg);
                 } else {
-                    resume = {
-                        name: res.data.name,
-                        base64: Buffer.from(res.data.buffer).toString("base64"),
-                        mimeType: res.data.mime_type,
-                    };
-                    resolve(resume);
+                    resolve(res.data);
                 }
             });
         } else {
-            resolve(resume);
+            resolve(undefined);
         }
     });
 
