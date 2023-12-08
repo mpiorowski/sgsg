@@ -26,28 +26,15 @@ export async function load({ locals }) {
         throw error(500, profile.msg);
     }
 
-    /** @type {Promise<import("$lib/types").UpsendFile | undefined>}
-     */
-    const resumePromise = new Promise((resolve, reject) => {
-        if (profile.data.resumeId) {
-            /**
-             * @type {Promise<import('$lib/safe').Safe<import('$lib/types').UpsendFile>>}
-             */
-            const call = upsendApi({
-                url: `/files/server/${profile.data.resumeId}`,
-                method: "GET",
-            });
-            call.then((res) => {
-                if (res.error) {
-                    reject(res.msg);
-                } else {
-                    resolve(res.data);
-                }
-            });
-        } else {
-            resolve(undefined);
-        }
-    });
+    /** @type {Promise<import("$lib/safe").Safe<import("$lib/types").UpsendFile | undefined>>} */
+    let resumePromise = Promise.resolve({ data: undefined, error: false });
+    if (profile.data.resumeId) {
+        /** @type {Promise<import('$lib/safe').Safe<import('$lib/types').UpsendFile>>} */
+        resumePromise = upsendApi({
+            url: `/files/server/${profile.data.resumeId}`,
+            method: "GET",
+        });
+    }
 
     end();
     return {
