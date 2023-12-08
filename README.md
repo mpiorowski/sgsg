@@ -39,6 +39,22 @@ It supports features like Enums, as const, and even Zod's z.infer<typeof User>, 
 
 Thx ChatGPT for these bullet points :).
 
+## Test
+
+Backend:
+```
+cd server
+ENV=test go test ./...
+```
+
+Frontend:
+```
+cd client
+npm run test:unit
+npm run test:integration
+```
+
+
 ## Proto
 
 Whenever You change proto definitions, always remember to generate new types:
