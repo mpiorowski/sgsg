@@ -2,41 +2,48 @@ package notes
 
 import (
 	"fmt"
+	"log/slog"
 	pb "sgsg/proto"
 	"sgsg/utils"
+	"time"
+
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
-func GetNotesStream(stream pb.Service_GetNotesServer, userId string) error {
-	notes, err := selectNotesStream(userId)
-	if err != nil {
-		return fmt.Errorf("selectNotesStream: %w", err)
-	}
-	defer notes.Close()
+func GetNotes(userId string, stream pb.Service_GetNotesServer) error {
+	start := time.Now()
+	notesCh := make(chan *pb.Note)
+	errCh := make(chan error, 1)
 
-	for notes.Next() {
-		note, err := scanNote(notes, nil)
-		if err != nil {
-			return fmt.Errorf("scanNote: %w", err)
+	go selectNotes(notesCh, errCh, userId)
+
+	go func() {
+		for note := range notesCh {
+			err := stream.Send(note)
+			if err != nil {
+				errCh <- fmt.Errorf("stream.Send: %w", err)
+			}
 		}
-		err = stream.Send(note)
-		if err != nil {
-			return fmt.Errorf("stream.Send: %w", err)
-		}
+		errCh <- nil
+	}()
+
+	err := <-errCh
+	if err != nil {
+		slog.Error("Error getting notes", "notes.GetNotes", err)
+		return status.Error(codes.Internal, "Internal error")
 	}
 
-	err = notes.Err()
-	if err != nil {
-		return fmt.Errorf("notes.Err: %w", err)
-	}
+	slog.Info("GetNotes", "time", time.Since(start))
 	return nil
 }
 
 func GetNoteById(id string, userId string) (*pb.Note, error) {
-    note, err := selectNoteById(id, userId)
-    if err != nil {
-        return nil, fmt.Errorf("selectNoteById: %w", err)
-    }
-    return note, nil
+	note, err := selectNoteById(id, userId)
+	if err != nil {
+		return nil, fmt.Errorf("selectNoteById: %w", err)
+	}
+	return note, nil
 }
 
 func CreateNote(in *pb.Note) (*pb.Note, error) {

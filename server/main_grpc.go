@@ -5,8 +5,8 @@ import (
 	"log/slog"
 	"time"
 
+	"sgsg/notes"
 	"sgsg/profiles"
-    "sgsg/notes"
 	pb "sgsg/proto"
 	"sgsg/users"
 
@@ -30,19 +30,19 @@ func (s *server) Auth(ctx context.Context, in *pb.Empty) (*pb.AuthResponse, erro
 }
 
 func (s *server) GetProfile(ctx context.Context, in *pb.Empty) (*pb.Profile, error) {
-    start := time.Now()
-    userId, err := users.UserCheck(ctx)
-    if err != nil {
-        slog.Error("Error authorizing user", "users.UserCheck", err)
-        return nil, status.Error(codes.Unauthenticated, "Unauthenticated")
-    }
-    profile, err := profiles.GetProfileByUserId(userId)
-    if err != nil {
-        slog.Error("Error getting profile", "profiles.GetProfileByUserId", err)
-        return nil, err
-    }
-    slog.Info("GetProfileByUserId", "time", time.Since(start))
-    return profile, nil
+	start := time.Now()
+	userId, err := users.UserCheck(ctx)
+	if err != nil {
+		slog.Error("Error authorizing user", "users.UserCheck", err)
+		return nil, status.Error(codes.Unauthenticated, "Unauthenticated")
+	}
+	profile, err := profiles.GetProfileByUserId(userId)
+	if err != nil {
+		slog.Error("Error getting profile", "profiles.GetProfileByUserId", err)
+		return nil, err
+	}
+	slog.Info("GetProfileByUserId", "time", time.Since(start))
+	return profile, nil
 }
 
 func (s *server) CreateProfile(ctx context.Context, in *pb.Profile) (*pb.Profile, error) {
@@ -81,35 +81,29 @@ func (s *server) DeleteProfile(ctx context.Context, in *pb.Id) (*pb.Empty, error
 }
 
 func (s *server) GetNotes(in *pb.Empty, stream pb.Service_GetNotesServer) error {
-	start := time.Now()
 	userId, err := users.UserCheck(stream.Context())
 	if err != nil {
 		slog.Error("Error authorizing user", "users.UserCheck", err)
 		return status.Error(codes.Unauthenticated, "Unauthenticated")
 	}
-	err = notes.GetNotesStream(stream, userId)
-	if err != nil {
-		slog.Error("Error getting notes", "notes.GetNotesStream", err)
-		return err
-	}
-	slog.Info("GetNotes", "time", time.Since(start))
-	return nil
+	return notes.GetNotes(userId, stream)
+
 }
 
 func (s *server) GetNoteById(ctx context.Context, in *pb.Id) (*pb.Note, error) {
-    start := time.Now()
-    userId, err := users.UserCheck(ctx)
-    if err != nil {
-        slog.Error("Error authorizing user", "users.UserCheck", err)
-        return nil, status.Error(codes.Unauthenticated, "Unauthenticated")
-    }
-    note, err := notes.GetNoteById(in.Id, userId)
-    if err != nil {
-        slog.Error("Error getting note", "notes.GetNoteById", err)
-        return nil, err
-    }
-    slog.Info("GetNoteById", "time", time.Since(start))
-    return note, nil
+	start := time.Now()
+	userId, err := users.UserCheck(ctx)
+	if err != nil {
+		slog.Error("Error authorizing user", "users.UserCheck", err)
+		return nil, status.Error(codes.Unauthenticated, "Unauthenticated")
+	}
+	note, err := notes.GetNoteById(in.Id, userId)
+	if err != nil {
+		slog.Error("Error getting note", "notes.GetNoteById", err)
+		return nil, err
+	}
+	slog.Info("GetNoteById", "time", time.Since(start))
+	return note, nil
 }
 
 func (s *server) CreateNote(ctx context.Context, in *pb.Note) (*pb.Note, error) {

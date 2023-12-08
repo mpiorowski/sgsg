@@ -130,13 +130,12 @@ func TestSelectNoteyId(t *testing.T) {
 		t.Errorf("selectNoteId error: id not equal")
 	}
 
-    // Test case 2: Select a note by id that does not exist
-    note, err = selectNoteById("not_exist", "not_exist")
-    if err != nil && note.Id != "" {
-        t.Errorf("selectNoteId error: %v", err)
-    }
+	// Test case 2: Select a note by id that does not exist
+	note, err = selectNoteById("not_exist", "not_exist")
+	if err != nil && note.Id != "" {
+		t.Errorf("selectNoteId error: %v", err)
+	}
 }
-
 
 func TestSelectNotes(t *testing.T) {
 	clearNotes()
@@ -144,28 +143,33 @@ func TestSelectNotes(t *testing.T) {
 	_, _ = insertNote(&notes[0])
 	_, _ = insertNote(&notes[1])
 	_, _ = insertNote(&notes[2])
-	notesStream, err := selectNotesStream(notes[0].UserId)
-	if err != nil {
-		t.Errorf("selectNotes error: %v", err)
-	}
+
+	notesCh := make(chan *pb.Note)
+	errCh := make(chan error, 1)
+	go selectNotes(notesCh, errCh, notes[0].UserId)
 
 	count := 0
-	for notesStream.Next() {
-		note, err := scanNote(notesStream, nil)
-		if err != nil {
-			t.Errorf("scanNote error: %v", err)
+	go func() {
+		for note := range notesCh {
+			if note.UserId != notes[count].UserId {
+				t.Errorf("selectNotes error: user_id not equal")
+			}
+			if note.Title != notes[count].Title {
+				t.Errorf("selectNotes error: title not equal")
+			}
+			if note.Content != notes[count].Content {
+				t.Errorf("selectNotes error: content not equal")
+			}
+            count++
 		}
-		if note.UserId != notes[count].UserId {
-			t.Errorf("scanNote error: user_id not equal")
-		}
-		if note.Title != notes[count].Title {
-			t.Errorf("scanNote error: title not equal")
-		}
-		if note.Content != notes[count].Content {
-			t.Errorf("scanNote error: content not equal")
-		}
-		count++
-	}
+		errCh <- nil
+	}()
+
+    err := <-errCh
+    if err != nil {
+        t.Errorf("selectNotes error: %v", err)
+    }
+
 	if count != 3 {
 		t.Errorf("scanNote error: count not equal")
 	}

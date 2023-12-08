@@ -25,8 +25,26 @@ func scanNote(rows *sql.Rows, row *sql.Row) (*pb.Note, error) {
 	return &note, nil
 }
 
-func selectNotesStream(userId string) (*sql.Rows, error) {
-	return db.Db.Query("select * from notes where user_id = $1", userId)
+func selectNotes(notesCh chan<- *pb.Note, errCh chan<- error, userId string) {
+    rows, err := db.Db.Query("select * from notes where user_id = $1", userId)
+    if err != nil {
+        errCh <- fmt.Errorf("db.Query: %w", err)
+        return
+    }
+    defer rows.Close()
+    for rows.Next() {
+        note, err := scanNote(rows, nil)
+        if err != nil {
+            errCh <- fmt.Errorf("scanNote: %w", err)
+            return
+        }
+        notesCh <- note
+    }
+    if err := rows.Err(); err != nil {
+        errCh <- fmt.Errorf("rows.Err: %w", err)
+        return
+    }
+    close(notesCh)
 }
 
 func selectNoteById(id string, userId string) (*pb.Note, error) {
