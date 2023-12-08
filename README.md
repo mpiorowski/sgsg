@@ -15,7 +15,7 @@ As the name suggests, the app contains four main components:
 As an example, developers from my team who were familiar with NextJS were able to grasp it in just one week and start coding web apps. Trust me, once you try it, it's hard to go back to anything else.
 - **[Go](https://go.dev/)** - The easiest backend on the market. Don't confuse simplicity with inefficiency; it's almost impossible to build a bad server using it.
 - **[SQLite](https://www.sqlite.org/index.html)** - The most used database in the world. You might be skeptical about using SQLite for production, but trust me, unless you're building the next Netflix, this is all you need.
-It will be faster than your PostgreSQL or MySQL because the database sits next to the backend, eliminating one network connection.
+It will be faster than your PostgreSQL or MySQL because the database sits next to the backend, eliminating one network connection. Also changing it to **PostgreSQL/MySQL** should take only a minute :).
 - **[gRPC](https://grpc.io/)** - Now we are delving into something a little bit harder to grasp, but I believe it's totally worth it. Two of the most important things it gives us:
     - **[Typesafety](https://protobuf.dev/)** - Thanks to protobuf, there is amazing type safety across the whole project, regardless of the language (not only for TypeScript, hi tRPC). Trust me; this is phenomenal.
   If you add one "field" to your User object, both JavaScript and Go will lint, pointing out exactly where you need to take care of it. Adding a new language like Java or Rust? Type safety for them as well.
