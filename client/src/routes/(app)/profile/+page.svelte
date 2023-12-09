@@ -28,15 +28,14 @@
 
     /**
      * Download a base64 encoded file
-     * @param {string} base64
+     * @param {Buffer} buffer
      * @param {string} name
      * @param {string} mimeType
      * @returns {Promise<void>}
      */
-    async function download(base64, name, mimeType) {
+    async function download(buffer, name, mimeType) {
         try {
-            const response = await fetch(`data:${mimeType};base64,${base64}`);
-            const blob = await response.blob();
+            const blob = new Blob([new Uint8Array(buffer)], { type: mimeType });
             const url = URL.createObjectURL(blob);
             const link = document.createElement("a");
             link.href = url;
@@ -127,16 +126,25 @@
                             </span>
                         </div>
                     {:then r}
-                        <div class="mt-2">
-                            <button
-                                class="text-sm text-blue-600 hover:text-blue-500"
-                                type="button"
-                                on:click={() =>
-                                    download(r.base64, r.name, r.mimeType)}
-                            >
-                                Download {r.name}
-                            </button>
-                        </div>
+                        {#if !r.error && r.data}
+                            <div class="mt-2">
+                                <button
+                                    class="text-sm text-blue-600 hover:text-blue-500"
+                                    type="button"
+                                    on:click={() => {
+                                        if (r.data) {
+                                            download(
+                                                r.data.buffer,
+                                                r.data.name,
+                                                r.data.mime_type,
+                                            );
+                                        }
+                                    }}
+                                >
+                                    Download {r.data.name}
+                                </button>
+                            </div>
+                        {/if}
                     {:catch error}
                         <div class="mt-2 text-sm text-red-600">
                             {error.message}
