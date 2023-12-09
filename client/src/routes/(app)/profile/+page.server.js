@@ -31,7 +31,7 @@ export async function load({ locals }) {
     if (profile.data.resumeId) {
         /** @type {Promise<import('$lib/safe').Safe<import('$lib/types').UpsendFile>>} */
         resumePromise = upsendApi({
-            url: `/files/server/${profile.data.resumeId}`,
+            url: `/files/${profile.data.resumeId}`,
             method: "GET",
         });
     }

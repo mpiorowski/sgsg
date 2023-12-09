@@ -35,11 +35,8 @@
      */
     async function download(buffer, name, mimeType) {
         try {
-            const blob = new Blob([new Uint8Array(buffer)]);
-            const file = new File([blob], name, {
-                type: mimeType,
-            });
-            const url = URL.createObjectURL(file);
+            const blob = new Blob([new Uint8Array(buffer)], { type: mimeType });
+            const url = URL.createObjectURL(blob);
             const link = document.createElement("a");
             link.href = url;
             link.download = name;
