@@ -10,7 +10,7 @@ The idea is that you can take this template and use it to build almost anything 
 Also, this is not the next **dev** template. It has everything you need to push it to production: Nginx configuration, Docker deployments, GitHub Actions, Grafana logging, etc.
 
 ## Alternative
-If you need something a little more complicated (Rust, microservices, cloud deployment), feel free to check out the second project I am running:
+If you need something a little more complicated (Rust, microservices, PostgreQSL, cloud deployment), feel free to check out the second project I am running:
 **[Rusve](https://github.com/mpiorowski/rusve)**
 
 ## Architecture
