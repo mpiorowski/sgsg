@@ -1,4 +1,3 @@
-
 # Development
 FROM node:20-slim AS dev
 
