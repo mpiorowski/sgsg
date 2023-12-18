@@ -55,20 +55,3 @@ func CreateProfile(ctx context.Context, in *pb.Profile) (*pb.Profile, error) {
 	slog.Info("CreateProfile", "time", time.Since(start))
 	return profile, nil
 }
-
-func DeleteProfileById(ctx context.Context, id string) (*pb.Empty, error) {
-	start := time.Now()
-	_, err := users.UserCheck(ctx)
-	if err != nil {
-		slog.Error("Error authorizing user", "users.UserCheck", err)
-		return nil, status.Error(codes.Unauthenticated, "Unauthenticated")
-	}
-	err = deleteProfileById(id)
-	if err != nil {
-		slog.Error("Error deleting profile", "deleteProfileById", err)
-		return nil, err
-	}
-
-	slog.Info("DeleteProfileById", "time", time.Since(start))
-	return &pb.Empty{}, nil
-}

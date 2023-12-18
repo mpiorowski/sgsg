@@ -37,10 +37,6 @@ func (s *server) CreateProfile(ctx context.Context, in *pb.Profile) (*pb.Profile
     return profiles.CreateProfile(ctx, in)
 }
 
-func (s *server) DeleteProfileById(ctx context.Context, in *pb.Id) (*pb.Empty, error) {
-    return profiles.DeleteProfileById(ctx, in.Id)
-}
-
 func (s *server) GetNotesByUserId(in *pb.Empty, stream pb.Service_GetNotesByUserIdServer) error {
 	return notes.GetNotesByUserId(stream)
 

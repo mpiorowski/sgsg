@@ -76,11 +76,3 @@ func updateProfile(in *pb.Profile) (*pb.Profile, error) {
 	}
 	return profile, nil
 }
-
-func deleteProfileById(id string) error {
-	err := db.Db.QueryRow("delete from profiles where id = $1 returning id", id).Scan(&id)
-	if err != nil {
-		return fmt.Errorf("db.Exec: %w", err)
-	}
-	return nil
-}
