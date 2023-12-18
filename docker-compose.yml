@@ -8,9 +8,9 @@ services:
       target: dev
       args:
         ENV: development
+        COOKIE_DOMAIN: .127.0.0.1
         PUBLIC_SERVER_HTTP: http://127.0.0.1:8090
         SERVER_GRPC: server:8091
-        COOKIE_DOMAIN: .127.0.0.1
         UPSEND_KEY: ${UPSEND_KEY}
     volumes:
       - ./client/src:/client/src

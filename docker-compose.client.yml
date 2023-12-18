@@ -7,12 +7,12 @@ services:
       context: ./client
       target: prod
       args:
-        - ENV=production
-        - PUBLIC_SERVER_HTTP=https://api-sgsg.bearbyte.org
-        - SERVER_HTTP=https://api-sgsg.bearbyte.org
-        - SERVER_GRPC=api-sgsg.bearbyte.org:8443
-        - COOKIE_DOMAIN=.bearbyte.org
-        - UPSEND_KEY=${UPSEND_KEY}
+        ENV: production
+        PUBLIC_SERVER_HTTP: https://api-sgsg.bearbyte.org
+        SERVER_HTTP: https://api-sgsg.bearbyte.org
+        SERVER_GRPC: api-sgsg.bearbyte.org:8443
+        COOKIE_DOMAIN: .bearbyte.org
+        UPSEND_KEY: ${UPSEND_KEY}
     restart: unless-stopped
 
   nginx:

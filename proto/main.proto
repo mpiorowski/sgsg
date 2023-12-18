@@ -24,7 +24,6 @@ service Service {
 
     rpc GetProfileByUserId(Empty) returns (Profile) {}
     rpc CreateProfile(Profile) returns (Profile) {}
-    rpc DeleteProfileById(Id) returns (Empty) {}
 
     rpc GetNotesByUserId(Empty) returns (stream Note) {}
     rpc GetNoteById(Id) returns (Note) {}
