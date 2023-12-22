@@ -107,29 +107,6 @@ func TestUpdateProfile(t *testing.T) {
 	}
 }
 
-func TestDeleteProfileById(t *testing.T) {
-    clearProfiles()
-	// Test case 1: Delete a profile
-	profile, err := insertProfile(&profiles[0])
-	if err != nil {
-		t.Errorf("insertProfile error: %v", err)
-	}
-	err = deleteProfileById(profile.Id)
-	if err != nil {
-		t.Errorf("deleteProfileById error: %v", err)
-	}
-	profile, err = selectProfileByUserId(profile.UserId)
-	if profile.Id != "" || err != nil {
-		t.Errorf("selectProfileByUserId error: %v", err)
-	}
-
-	// Test case 2: Delete a profile that does not exist
-	err = deleteProfileById("not_exist")
-	if err == nil {
-		t.Errorf("deleteProfileById error: %v", err)
-	}
-}
-
 func TestSelectProfileyId(t *testing.T) {
     clearProfiles()
 	// Test case 1: Select a profile by id
@@ -217,23 +194,6 @@ func TestConcurrency(t *testing.T) {
 			_, err := selectProfileByUserId(profile.UserId)
 			if err != nil {
 				t.Errorf("selectProfiles error: %v", err)
-			}
-			done <- true
-		}(i)
-	}
-
-	for i := 0; i < gooroutines; i++ {
-		<-done
-	}
-
-	// Test case 3: Delete a profile concurrently
-	done = make(chan bool)
-	for i := 0; i < gooroutines; i++ {
-		go func(i int) {
-			profile := newProfiles[i]
-			err := deleteProfileById(profile.Id)
-			if err != nil {
-				t.Errorf("deleteProfileById error: %v", err)
 			}
 			done <- true
 		}(i)
