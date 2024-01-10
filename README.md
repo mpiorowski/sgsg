@@ -1,4 +1,4 @@
-# SGSG - Svelte + Go + SQLite + gRPC
+# SGSG = Svelte + Go + SQLite + gRPC
 
 https://sgsg.bearbyte.org/
 
