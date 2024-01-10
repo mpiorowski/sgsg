@@ -58,7 +58,6 @@ npm run test:unit
 npm run test:integration
 ```
 
-
 ## Proto
 
 Whenever You change proto definitions, always remember to generate new types:
