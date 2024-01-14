@@ -13,10 +13,9 @@ export const packageDefinition = protoLoader.loadSync(
     },
 );
 
-/** @type {import("$lib/proto/main").ProtoGrpcType} */
-// @ts-ignore
-// TODO: fix this
-const proto = loadPackageDefinition(packageDefinition);
+const proto = /** @type {import("$lib/proto/main").ProtoGrpcType} */ (
+    /** @type {unknown} */ (loadPackageDefinition(packageDefinition))
+);
 
 /** @type {import("@grpc/grpc-js").ChannelCredentials} */
 const cr =
