@@ -1,4 +1,4 @@
-# SGSG - Svelte + Go + SQLite + gRPC
+# SGSG = Svelte + Go + SQLite + gRPC
 
 https://sgsg.bearbyte.org/
 
@@ -57,7 +57,6 @@ cd client
 npm run test:unit
 npm run test:integration
 ```
-
 
 ## Proto
 
