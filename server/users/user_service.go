@@ -13,7 +13,6 @@ import (
 	"golang.org/x/oauth2"
 )
 
-// TODO - use redis instead of in-memory storage
 var storage = utils.NewStorage()
 
 /**
