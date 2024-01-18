@@ -13,7 +13,12 @@ services:
         SERVER_GRPC: api-sgsg.bearbyte.org:8443
         COOKIE_DOMAIN: .bearbyte.org
         UPSEND_KEY: ${UPSEND_KEY}
-    restart: unless-stopped
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
 
   nginx:
     container_name: sgsg-nginx
@@ -30,4 +35,9 @@ services:
         loki-url: ${LOKI_URL}
         loki-retries: "5"
         loki-batch-size: "400"
-    restart: unless-stopped
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
