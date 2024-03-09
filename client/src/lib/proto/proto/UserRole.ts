@@ -1,13 +1,13 @@
-// Original file: ../proto/user.proto
+// Original file: proto/auth.proto
 
 export const UserRole = {
-  ROLE_UNSPECIFIED: 0,
-  ROLE_USER: 1,
-  ROLE_ADMIN: 2,
+  ROLE_UNSET: 'ROLE_UNSET',
+  ROLE_USER: 'ROLE_USER',
+  ROLE_ADMIN: 'ROLE_ADMIN',
 } as const;
 
 export type UserRole =
-  | 'ROLE_UNSPECIFIED'
+  | 'ROLE_UNSET'
   | 0
   | 'ROLE_USER'
   | 1

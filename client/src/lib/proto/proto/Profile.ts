@@ -1,4 +1,4 @@
-// Original file: ../proto/profile.proto
+// Original file: proto/profile.proto
 
 
 export interface Profile {
@@ -6,25 +6,23 @@ export interface Profile {
   'created'?: (string);
   'updated'?: (string);
   'deleted'?: (string);
-  'userId'?: (string);
+  'user_id'?: (string);
   'username'?: (string);
   'about'?: (string);
-  'resumeId'?: (string);
-  'coverId'?: (string);
-  'coverUrl'?: (string);
-  '_deleted'?: "deleted";
+  'resume_id'?: (string);
+  'cover_id'?: (string);
+  'cover_url'?: (string);
 }
 
 export interface Profile__Output {
   'id': (string);
   'created': (string);
   'updated': (string);
-  'deleted'?: (string);
-  'userId': (string);
+  'deleted': (string);
+  'user_id': (string);
   'username': (string);
   'about': (string);
-  'resumeId': (string);
-  'coverId': (string);
-  'coverUrl': (string);
-  '_deleted': "deleted";
+  'resume_id': (string);
+  'cover_id': (string);
+  'cover_url': (string);
 }

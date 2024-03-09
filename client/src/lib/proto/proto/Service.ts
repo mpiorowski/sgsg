@@ -1,4 +1,4 @@
-// Original file: ../proto/main.proto
+// Original file: proto/main.proto
 
 import type * as grpc from '@grpc/grpc-js'
 import type { MethodDefinition } from '@grpc/proto-loader'
@@ -7,6 +7,7 @@ import type { Empty as _proto_Empty, Empty__Output as _proto_Empty__Output } fro
 import type { Id as _proto_Id, Id__Output as _proto_Id__Output } from '../proto/Id';
 import type { Note as _proto_Note, Note__Output as _proto_Note__Output } from '../proto/Note';
 import type { Profile as _proto_Profile, Profile__Output as _proto_Profile__Output } from '../proto/Profile';
+import type { StripeUrlResponse as _proto_StripeUrlResponse, StripeUrlResponse__Output as _proto_StripeUrlResponse__Output } from '../proto/StripeUrlResponse';
 
 export interface ServiceClient extends grpc.Client {
   Auth(argument: _proto_Empty, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_proto_AuthResponse__Output>): grpc.ClientUnaryCall;
@@ -36,6 +37,24 @@ export interface ServiceClient extends grpc.Client {
   createProfile(argument: _proto_Profile, options: grpc.CallOptions, callback: grpc.requestCallback<_proto_Profile__Output>): grpc.ClientUnaryCall;
   createProfile(argument: _proto_Profile, callback: grpc.requestCallback<_proto_Profile__Output>): grpc.ClientUnaryCall;
   
+  CreateStripeCheckout(argument: _proto_Empty, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_proto_StripeUrlResponse__Output>): grpc.ClientUnaryCall;
+  CreateStripeCheckout(argument: _proto_Empty, metadata: grpc.Metadata, callback: grpc.requestCallback<_proto_StripeUrlResponse__Output>): grpc.ClientUnaryCall;
+  CreateStripeCheckout(argument: _proto_Empty, options: grpc.CallOptions, callback: grpc.requestCallback<_proto_StripeUrlResponse__Output>): grpc.ClientUnaryCall;
+  CreateStripeCheckout(argument: _proto_Empty, callback: grpc.requestCallback<_proto_StripeUrlResponse__Output>): grpc.ClientUnaryCall;
+  createStripeCheckout(argument: _proto_Empty, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_proto_StripeUrlResponse__Output>): grpc.ClientUnaryCall;
+  createStripeCheckout(argument: _proto_Empty, metadata: grpc.Metadata, callback: grpc.requestCallback<_proto_StripeUrlResponse__Output>): grpc.ClientUnaryCall;
+  createStripeCheckout(argument: _proto_Empty, options: grpc.CallOptions, callback: grpc.requestCallback<_proto_StripeUrlResponse__Output>): grpc.ClientUnaryCall;
+  createStripeCheckout(argument: _proto_Empty, callback: grpc.requestCallback<_proto_StripeUrlResponse__Output>): grpc.ClientUnaryCall;
+  
+  CreateStripePortal(argument: _proto_Empty, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_proto_StripeUrlResponse__Output>): grpc.ClientUnaryCall;
+  CreateStripePortal(argument: _proto_Empty, metadata: grpc.Metadata, callback: grpc.requestCallback<_proto_StripeUrlResponse__Output>): grpc.ClientUnaryCall;
+  CreateStripePortal(argument: _proto_Empty, options: grpc.CallOptions, callback: grpc.requestCallback<_proto_StripeUrlResponse__Output>): grpc.ClientUnaryCall;
+  CreateStripePortal(argument: _proto_Empty, callback: grpc.requestCallback<_proto_StripeUrlResponse__Output>): grpc.ClientUnaryCall;
+  createStripePortal(argument: _proto_Empty, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_proto_StripeUrlResponse__Output>): grpc.ClientUnaryCall;
+  createStripePortal(argument: _proto_Empty, metadata: grpc.Metadata, callback: grpc.requestCallback<_proto_StripeUrlResponse__Output>): grpc.ClientUnaryCall;
+  createStripePortal(argument: _proto_Empty, options: grpc.CallOptions, callback: grpc.requestCallback<_proto_StripeUrlResponse__Output>): grpc.ClientUnaryCall;
+  createStripePortal(argument: _proto_Empty, callback: grpc.requestCallback<_proto_StripeUrlResponse__Output>): grpc.ClientUnaryCall;
+  
   DeleteNoteById(argument: _proto_Id, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_proto_Empty__Output>): grpc.ClientUnaryCall;
   DeleteNoteById(argument: _proto_Id, metadata: grpc.Metadata, callback: grpc.requestCallback<_proto_Empty__Output>): grpc.ClientUnaryCall;
   DeleteNoteById(argument: _proto_Id, options: grpc.CallOptions, callback: grpc.requestCallback<_proto_Empty__Output>): grpc.ClientUnaryCall;
@@ -44,15 +63,6 @@ export interface ServiceClient extends grpc.Client {
   deleteNoteById(argument: _proto_Id, metadata: grpc.Metadata, callback: grpc.requestCallback<_proto_Empty__Output>): grpc.ClientUnaryCall;
   deleteNoteById(argument: _proto_Id, options: grpc.CallOptions, callback: grpc.requestCallback<_proto_Empty__Output>): grpc.ClientUnaryCall;
   deleteNoteById(argument: _proto_Id, callback: grpc.requestCallback<_proto_Empty__Output>): grpc.ClientUnaryCall;
-  
-  DeleteProfileById(argument: _proto_Id, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_proto_Empty__Output>): grpc.ClientUnaryCall;
-  DeleteProfileById(argument: _proto_Id, metadata: grpc.Metadata, callback: grpc.requestCallback<_proto_Empty__Output>): grpc.ClientUnaryCall;
-  DeleteProfileById(argument: _proto_Id, options: grpc.CallOptions, callback: grpc.requestCallback<_proto_Empty__Output>): grpc.ClientUnaryCall;
-  DeleteProfileById(argument: _proto_Id, callback: grpc.requestCallback<_proto_Empty__Output>): grpc.ClientUnaryCall;
-  deleteProfileById(argument: _proto_Id, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_proto_Empty__Output>): grpc.ClientUnaryCall;
-  deleteProfileById(argument: _proto_Id, metadata: grpc.Metadata, callback: grpc.requestCallback<_proto_Empty__Output>): grpc.ClientUnaryCall;
-  deleteProfileById(argument: _proto_Id, options: grpc.CallOptions, callback: grpc.requestCallback<_proto_Empty__Output>): grpc.ClientUnaryCall;
-  deleteProfileById(argument: _proto_Id, callback: grpc.requestCallback<_proto_Empty__Output>): grpc.ClientUnaryCall;
   
   GetNoteById(argument: _proto_Id, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_proto_Note__Output>): grpc.ClientUnaryCall;
   GetNoteById(argument: _proto_Id, metadata: grpc.Metadata, callback: grpc.requestCallback<_proto_Note__Output>): grpc.ClientUnaryCall;
@@ -86,9 +96,11 @@ export interface ServiceHandlers extends grpc.UntypedServiceImplementation {
   
   CreateProfile: grpc.handleUnaryCall<_proto_Profile__Output, _proto_Profile>;
   
-  DeleteNoteById: grpc.handleUnaryCall<_proto_Id__Output, _proto_Empty>;
+  CreateStripeCheckout: grpc.handleUnaryCall<_proto_Empty__Output, _proto_StripeUrlResponse>;
   
-  DeleteProfileById: grpc.handleUnaryCall<_proto_Id__Output, _proto_Empty>;
+  CreateStripePortal: grpc.handleUnaryCall<_proto_Empty__Output, _proto_StripeUrlResponse>;
+  
+  DeleteNoteById: grpc.handleUnaryCall<_proto_Id__Output, _proto_Empty>;
   
   GetNoteById: grpc.handleUnaryCall<_proto_Id__Output, _proto_Note>;
   
@@ -102,8 +114,9 @@ export interface ServiceDefinition extends grpc.ServiceDefinition {
   Auth: MethodDefinition<_proto_Empty, _proto_AuthResponse, _proto_Empty__Output, _proto_AuthResponse__Output>
   CreateNote: MethodDefinition<_proto_Note, _proto_Note, _proto_Note__Output, _proto_Note__Output>
   CreateProfile: MethodDefinition<_proto_Profile, _proto_Profile, _proto_Profile__Output, _proto_Profile__Output>
+  CreateStripeCheckout: MethodDefinition<_proto_Empty, _proto_StripeUrlResponse, _proto_Empty__Output, _proto_StripeUrlResponse__Output>
+  CreateStripePortal: MethodDefinition<_proto_Empty, _proto_StripeUrlResponse, _proto_Empty__Output, _proto_StripeUrlResponse__Output>
   DeleteNoteById: MethodDefinition<_proto_Id, _proto_Empty, _proto_Id__Output, _proto_Empty__Output>
-  DeleteProfileById: MethodDefinition<_proto_Id, _proto_Empty, _proto_Id__Output, _proto_Empty__Output>
   GetNoteById: MethodDefinition<_proto_Id, _proto_Note, _proto_Id__Output, _proto_Note__Output>
   GetNotesByUserId: MethodDefinition<_proto_Empty, _proto_Note, _proto_Empty__Output, _proto_Note__Output>
   GetProfileByUserId: MethodDefinition<_proto_Empty, _proto_Profile, _proto_Empty__Output, _proto_Profile__Output>

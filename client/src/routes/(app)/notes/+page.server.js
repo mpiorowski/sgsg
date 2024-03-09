@@ -1,14 +1,16 @@
 import { getFormValue } from "$lib/helpers";
-import { grpcSafe, safe } from "$lib/safe";
-import { server } from "$lib/server/grpc";
+import { safe } from "$lib/server/safe";
+import { grpcSafe, server } from "$lib/server/grpc";
 import { createMetadata } from "$lib/server/metadata";
-import { fail } from "@sveltejs/kit";
+import { error, fail } from "@sveltejs/kit";
+import { perf } from "$lib/server/logger";
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ locals }) {
+    const end = perf("load_notes");
     /** @type {import("$lib/proto/proto/Note").Note__Output[]} */
     const notes = [];
-    const metadata = createMetadata(locals.token);
+    const metadata = createMetadata(locals.user.id);
     const notesStream = server.GetNotesByUserId({}, metadata);
 
     /** @type {Promise<void>} */
@@ -19,12 +21,10 @@ export async function load({ locals }) {
     });
     const r = await safe(p);
 
-    if (r.error) {
-        return {
-            error: r.msg,
-            notes: [],
-        };
+    if (!r.success) {
+        throw error(500, r.error);
     }
+    end();
     return {
         notes: notes,
     };
@@ -33,6 +33,7 @@ export async function load({ locals }) {
 /** @type {import('./$types').Actions} */
 export const actions = {
     insert: async ({ locals, request }) => {
+        const end = perf("insert_note");
         const form = await request.formData();
 
         /** @type {import("$lib/proto/proto/Note").Note} */
@@ -40,19 +41,17 @@ export const actions = {
             title: getFormValue(form, "title"),
             content: getFormValue(form, "content"),
         };
-        const metadata = createMetadata(locals.token);
-        /** @type {import("$lib/safe").Safe<import("$lib/proto/proto/Note").Note__Output>} */
+        const metadata = createMetadata(locals.user.id);
+        /** @type {import("$lib/server/safe").GrpcSafe<import("$lib/proto/proto/Note").Note__Output>} */
         const req = await new Promise((r) => {
             server.CreateNote(data, metadata, grpcSafe(r));
         });
 
-        if (req.error) {
-            if (req.fields) {
-                return fail(400, { fields: req.fields });
-            }
-            return fail(500, { error: req.msg });
+        if (!req.success) {
+            return fail(500, { error: req.error, fields: req.fields });
         }
 
+        end();
         return { note: req.data };
     },
 };

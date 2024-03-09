@@ -2,56 +2,72 @@ package profiles
 
 import (
 	"context"
+	"database/sql"
 	"log/slog"
+	"sgsg/auth"
 	pb "sgsg/proto"
-	"sgsg/users"
+	"sgsg/system"
 	"time"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-func GetProfileByUserId(ctx context.Context, in *pb.Empty) (*pb.Profile, error) {
-	start := time.Now()
-	userId, err := users.UserCheck(ctx)
+type ProfileService interface {
+	GetProfileByUserId(ctx context.Context) (*pb.Profile, error)
+	CreateProfile(ctx context.Context, in *pb.Profile) (*pb.Profile, error)
+}
+
+type profileService struct {
+	ProfileDBProvider
+	auth.AuthService
+}
+
+func NewProfileService(db ProfileDBProvider, auth auth.AuthService) ProfileService {
+	return &profileService{db, auth}
+}
+
+func (s *profileService) GetProfileByUserId(ctx context.Context) (*pb.Profile, error) {
+	defer system.Perf("get_profile_by_user_id", time.Now())
+	user, err := s.GetUser(ctx)
 	if err != nil {
-		slog.Error("Error authorizing user", "users.UserCheck", err)
+		slog.Error("Error authorizing user", "auth.GetUser", err)
 		return nil, status.Error(codes.Unauthenticated, "Unauthenticated")
 	}
-	profile, err := selectProfileByUserId(userId)
+	profile, err := s.SelectProfileByUserID(user.Id)
+    if err == sql.ErrNoRows {
+        return &pb.Profile{}, nil
+    }
 	if err != nil {
-		slog.Error("Error getting profile", "selectProfileByUserId", err)
-		return nil, err
+		slog.Error("Error getting profile", "db.SelectProfileByUserID", err)
+		return nil, status.Error(codes.Internal, "Internal error")
 	}
-	slog.Info("GetProfileByUserId", "time", time.Since(start))
 	return profile, nil
 }
 
-func CreateProfile(ctx context.Context, in *pb.Profile) (*pb.Profile, error) {
-	start := time.Now()
-	userId, err := users.UserCheck(ctx)
+func (s *profileService) CreateProfile(ctx context.Context, in *pb.Profile) (*pb.Profile, error) {
+	defer system.Perf("create_profile", time.Now())
+	user, err := s.GetUser(ctx)
 	if err != nil {
-		slog.Error("Error authorizing user", "users.UserCheck", err)
+		slog.Error("Error authorizing user", "auth.GetUser", err)
 		return nil, status.Error(codes.Unauthenticated, "Unauthenticated")
 	}
-	in.UserId = userId
+	in.UserId = user.Id
 
-	err = validateProfile(in)
-	if err != nil {
-        slog.Error("Error validating profile", "validateProfile", err)
-		return nil, err
+	validationErrors := validateProfile(in)
+	if len(validationErrors) > 0 {
+		return nil, system.CreateErrors(validationErrors)
 	}
 
 	var profile *pb.Profile
 	if in.Id == "" {
-		profile, err = insertProfile(in)
+		profile, err = s.InsertProfile(in)
 	} else {
-		profile, err = updateProfile(in)
+		profile, err = s.UpdateProfile(in)
 	}
 	if err != nil {
 		slog.Error("Error creating profile", "createProfile", err)
-		return nil, err
+		return nil, status.Error(codes.Internal, "Internal error")
 	}
-	slog.Info("CreateProfile", "time", time.Since(start))
 	return profile, nil
 }

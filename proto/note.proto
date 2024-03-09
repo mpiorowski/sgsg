@@ -8,7 +8,7 @@ message Note {
     string id = 1;
     string created = 2;
     string updated = 3;
-    optional string deleted = 4;
+    string deleted = 4;
 
     string user_id = 5;
     string title = 6;
