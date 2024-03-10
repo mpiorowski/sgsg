@@ -31,9 +31,9 @@ services:
         loki-url: ${LOKI_URL}
         loki-retries: "5"
         loki-batch-size: "400"
-          # deploy:
-          #   restart_policy:
-          #     condition: on-failure
-          #     delay: 5s
-          #     max_attempts: 3
-          #     window: 120s
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
