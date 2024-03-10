@@ -1,7 +1,6 @@
 package notes
 
 import (
-	"fmt"
 	pb "sgsg/proto"
 	"sgsg/system"
 	"strings"
@@ -28,20 +27,20 @@ var notes = []pb.Note{
 }
 
 func setup() NoteDB {
-    storage := system.NewMemoryStorage()
-    err := storage.Migrations()
-    if err != nil {
-        panic(err)
-    }
-    _, err = storage.Conn.Exec("delete from notes")
-    if err != nil {
-        panic(err)
-    }
-    return NewNoteDB(&storage)
+	storage := system.NewMemoryStorage()
+	err := storage.Migrations()
+	if err != nil {
+		panic(err)
+	}
+	_, err = storage.Conn.Exec("delete from notes")
+	if err != nil {
+		panic(err)
+	}
+	return NewNoteDB(&storage)
 }
 
 func TestInsertNote(t *testing.T) {
-    noteDB := setup()
+	noteDB := setup()
 	// Test case 1: Insert a valid note
 	note, err := noteDB.InsertNote(&notes[0])
 	if err != nil {
@@ -65,7 +64,7 @@ func TestInsertNote(t *testing.T) {
 }
 
 func TestUpdateNote(t *testing.T) {
-    noteDB := setup()
+	noteDB := setup()
 	// Test case 1: Update a valid note
 	note, err := noteDB.InsertNote(&notes[0])
 	if err != nil {
@@ -96,7 +95,7 @@ func TestUpdateNote(t *testing.T) {
 }
 
 func TestDeleteNoteById(t *testing.T) {
-    noteDB := setup()
+	noteDB := setup()
 	// Test case 1: Delete a note
 	note, err := noteDB.InsertNote(&notes[0])
 	if err != nil {
@@ -118,7 +117,7 @@ func TestDeleteNoteById(t *testing.T) {
 	}
 }
 func TestSelectNoteyId(t *testing.T) {
-    noteDB := setup()
+	noteDB := setup()
 	// Test case 1: Select a note by id
 	newNote, _ := noteDB.InsertNote(&notes[0])
 	note, err := noteDB.SelectNoteByID(newNote.Id, newNote.UserId)
@@ -137,7 +136,7 @@ func TestSelectNoteyId(t *testing.T) {
 }
 
 func TestSelectNotes(t *testing.T) {
-    noteDB := setup()
+	noteDB := setup()
 	// Test case 1: Select notes using stream
 	_, _ = noteDB.InsertNote(&notes[0])
 	_, _ = noteDB.InsertNote(&notes[1])
@@ -189,70 +188,50 @@ func TestNoteValidation(t *testing.T) {
 }
 
 func TestConcurrency(t *testing.T) {
-    noteDB := setup()
-	newNotes := make([]*pb.Note, 0)
+	noteDB := setup()
 
 	// Test case 1: Insert a note concurrently
+	var newNotes []*pb.Note
 	notesChanel := make(chan *pb.Note)
-    errCh := make(chan error)
-    wg := sync.WaitGroup{}
+	wg := sync.WaitGroup{}
 	gooroutines := 10
 	for i := 0; i < gooroutines; i++ {
-        wg.Add(1)
+		println("i", i)
+		wg.Add(1)
 		go func() {
-            note := pb.Note{
-                UserId:  "test",
-                Title:   "Test note 1",
-                Content: "Test note content 1",
-            }
-			newNote, err := noteDB.InsertNote(&note)
-            fmt.Println(newNote)
+			defer wg.Done()
+			newNote, err := noteDB.InsertNote(&notes[0])
 			if err != nil {
-                errCh <- err
-                wg.Done()
-                return
+				t.Errorf("insertNote error: %v", err)
+				return
 			}
-            fmt.Println("sending")
 			notesChanel <- newNote
-            fmt.Println("done")
-            wg.Done()
 		}()
 	}
-go func() {
-    for newNote := range notesChanel {
-        // Process received notes
-        fmt.Println("Received note:", newNote)
-    }
-}()
-
-    fmt.Println("waiting")
-    wg.Wait()
-    fmt.Println("closed")
-    return
-    for note := range notesChanel {
-        newNotes = append(newNotes, note)
-    }
-    if len(newNotes) != gooroutines {
-        t.Errorf("insertNote error: %v", len(newNotes))
-    }
-
-    // close(errCh)
-    // if len(errCh) > 0 {
-    //     t.Errorf("insertNote error: %v", <-errCh)
-    // }
+	go func() {
+		wg.Wait()
+		close(notesChanel)
+	}()
+	for note := range notesChanel {
+		newNotes = append(newNotes, note)
+	}
+	if len(newNotes) != gooroutines {
+		t.Errorf("insertNote error: %v", len(newNotes))
+		return
+	}
 
 	// Test case 2: Update a note concurrently
 	done := make(chan bool)
 	for i := 0; i < gooroutines; i++ {
-		go func() {
-			note := newNotes[i]
+		go func(i int) {
+			note := newNotes[0]
 			note.Title = "New title"
 			_, err := noteDB.UpdateNote(note)
 			if err != nil {
 				t.Errorf("updateNoteTitle error: %v", err)
 			}
 			done <- true
-		}()
+		}(i)
 	}
 
 	for i := 0; i < gooroutines; i++ {
