@@ -32,5 +32,4 @@ jobs:
         run: ssh prod 'cd /home/mat/sgsg/ && docker compose -f docker-compose.server.yml stop'
 
       - name: Start the server
-        run: |
-          ssh prod 'cd /home/mat/sgsg/ && docker compose -f docker-compose.server.yml up --build --abort-on-container-exit --exit-code-from server'
+        run: ssh prod 'cd /home/mat/sgsg/ && docker compose -f docker-compose.server.yml up --build'
