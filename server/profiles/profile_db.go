@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type ProfileDBProvider interface {
+type ProfileDB interface {
 	SelectProfileByUserID(userID string) (*pb.Profile, error)
 	InsertProfile(profile *pb.Profile) (*pb.Profile, error)
 	UpdateProfile(profile *pb.Profile) (*pb.Profile, error)
@@ -17,7 +17,7 @@ type ProfileDBImpl struct {
 	*system.Storage
 }
 
-func NewProfileDB(storage *system.Storage) ProfileDBProvider {
+func NewProfileDB(storage *system.Storage) ProfileDB {
 	return &ProfileDBImpl{storage}
 }
 

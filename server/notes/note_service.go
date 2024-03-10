@@ -20,16 +20,16 @@ type NoteService interface {
 	DeleteNoteById(ctx context.Context, id string) (*pb.Empty, error)
 }
 
-type noteService struct {
+type NoteServiceImpl struct {
 	NoteDB
 	auth.AuthService
 }
 
 func NewNoteService(db NoteDB, auth auth.AuthService) NoteService {
-	return &noteService{db, auth}
+	return &NoteServiceImpl{db, auth}
 }
 
-func (s *noteService) GetNotesByUserId(stream pb.Service_GetNotesByUserIdServer) error {
+func (s *NoteServiceImpl) GetNotesByUserId(stream pb.Service_GetNotesByUserIdServer) error {
 	defer system.Perf("get_notes_by_user_id", time.Now())
 	user, err := s.GetUser(stream.Context())
 	if err != nil {
@@ -57,7 +57,7 @@ func (s *noteService) GetNotesByUserId(stream pb.Service_GetNotesByUserIdServer)
 	return nil
 }
 
-func (s *noteService) GetNoteById(ctx context.Context, id string) (*pb.Note, error) {
+func (s *NoteServiceImpl) GetNoteById(ctx context.Context, id string) (*pb.Note, error) {
 	defer system.Perf("get_note_by_id", time.Now())
 	user, err := s.GetUser(ctx)
 	if err != nil {
@@ -72,7 +72,7 @@ func (s *noteService) GetNoteById(ctx context.Context, id string) (*pb.Note, err
 	return note, nil
 }
 
-func (s *noteService) CreateNote(ctx context.Context, in *pb.Note) (*pb.Note, error) {
+func (s *NoteServiceImpl) CreateNote(ctx context.Context, in *pb.Note) (*pb.Note, error) {
 	defer system.Perf("create_note", time.Now())
 	user, err := s.GetUser(ctx)
 	if err != nil {
@@ -100,7 +100,7 @@ func (s *noteService) CreateNote(ctx context.Context, in *pb.Note) (*pb.Note, er
 
 }
 
-func (s *noteService) DeleteNoteById(ctx context.Context, id string) (*pb.Empty, error) {
+func (s *NoteServiceImpl) DeleteNoteById(ctx context.Context, id string) (*pb.Empty, error) {
 	defer system.Perf("delete_note_by_id", time.Now())
 	_, err := s.GetUser(ctx)
 	if err != nil {

@@ -33,15 +33,15 @@ type AuthService interface {
 	CleanTokens(ctx context.Context) error
 }
 
-type authService struct {
+type AuthServiceImpl struct {
 	AuthDBProvider
 }
 
 func NewAuthService(authDB AuthDBProvider) AuthService {
-	return &authService{authDB}
+	return &AuthServiceImpl{authDB}
 }
 
-func (a *authService) GetUser(ctx context.Context) (*pb.User, error) {
+func (a *AuthServiceImpl) GetUser(ctx context.Context) (*pb.User, error) {
 	claims, err := system.ExtractToken(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("extractToken: %w", err)
@@ -64,7 +64,7 @@ func (a *authService) GetUser(ctx context.Context) (*pb.User, error) {
  * 6. Get user from database
  * 7. Return user and new phantom token
  */
-func (a *authService) Auth(ctx context.Context) (*pb.AuthResponse, error) {
+func (a *AuthServiceImpl) Auth(ctx context.Context) (*pb.AuthResponse, error) {
 	defer system.Perf("auth", time.Now())
 	claims, err := system.ExtractToken(ctx)
 	if err != nil {
@@ -110,7 +110,7 @@ func (a *authService) Auth(ctx context.Context) (*pb.AuthResponse, error) {
 	}, nil
 }
 
-func (a *authService) CreateStripeCheckout(ctx context.Context) (*pb.StripeUrlResponse, error) {
+func (a *AuthServiceImpl) CreateStripeCheckout(ctx context.Context) (*pb.StripeUrlResponse, error) {
 	defer system.Perf("create_stripe_checkout", time.Now())
 	user, err := a.GetUser(ctx)
 	if err != nil {
@@ -161,7 +161,7 @@ func (a *authService) CreateStripeCheckout(ctx context.Context) (*pb.StripeUrlRe
 	}, nil
 }
 
-func (a *authService) CreateStripePortal(ctx context.Context) (*pb.StripeUrlResponse, error) {
+func (a *AuthServiceImpl) CreateStripePortal(ctx context.Context) (*pb.StripeUrlResponse, error) {
 	defer system.Perf("create_stripe_portal", time.Now())
 	user, err := a.GetUser(ctx)
 	if err != nil {
@@ -185,7 +185,7 @@ func (a *authService) CreateStripePortal(ctx context.Context) (*pb.StripeUrlResp
 	}, nil
 }
 
-func (a *authService) OauthLogin(c echo.Context) error {
+func (a *AuthServiceImpl) OauthLogin(c echo.Context) error {
 	defer system.Perf("oauth_login", time.Now())
 	provider := c.Param("provider")
 	var OAuth OAuth
@@ -212,7 +212,7 @@ func (a *authService) OauthLogin(c echo.Context) error {
 	return c.Redirect(http.StatusTemporaryRedirect, url)
 }
 
-func (a *authService) OauthCallback(c echo.Context) error {
+func (a *AuthServiceImpl) OauthCallback(c echo.Context) error {
 	defer system.Perf("oauth_callback", time.Now())
 
 	provider := c.Param("provider")
@@ -278,7 +278,7 @@ func (a *authService) OauthCallback(c echo.Context) error {
 	return c.Redirect(http.StatusTemporaryRedirect, system.CLIENT_URL+"/token/"+token.Id)
 }
 
-func (a *authService) CleanTokens(ctx context.Context) error {
+func (a *AuthServiceImpl) CleanTokens(ctx context.Context) error {
 	err := a.AuthDBProvider.CleanTokens()
 	if err != nil {
 		return fmt.Errorf("cleanTokens: %w", err)

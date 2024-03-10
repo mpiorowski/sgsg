@@ -17,15 +17,15 @@ type NoteDB interface {
 	DeleteNoteByID(id string) error
 }
 
-type noteDB struct {
+type NoteDBImpl struct {
 	*system.Storage
 }
 
 func NewNoteDB(storage *system.Storage) NoteDB {
-	return &noteDB{storage}
+	return &NoteDBImpl{storage}
 }
 
-func (db *noteDB) SelectNotesByUserID(notesCh chan<- *pb.Note, errCh chan<- error, userId string) {
+func (db *NoteDBImpl) SelectNotesByUserID(notesCh chan<- *pb.Note, errCh chan<- error, userId string) {
 	defer close(notesCh)
 	rows, err := db.Conn.Query("select * from notes where user_id = $1", userId)
 	if err != nil {
@@ -48,7 +48,7 @@ func (db *noteDB) SelectNotesByUserID(notesCh chan<- *pb.Note, errCh chan<- erro
 	}
 }
 
-func (db *noteDB) SelectNoteByID(id string, userId string) (*pb.Note, error) {
+func (db *NoteDBImpl) SelectNoteByID(id string, userId string) (*pb.Note, error) {
 	row := db.Conn.QueryRow("select * from notes where id = $1 and user_id = $2", id, userId)
 	var note pb.Note
 	err := row.Scan(dest(&note)...)
@@ -61,7 +61,7 @@ func (db *noteDB) SelectNoteByID(id string, userId string) (*pb.Note, error) {
 	return &note, nil
 }
 
-func (db *noteDB) InsertNote(in *pb.Note) (*pb.Note, error) {
+func (db *NoteDBImpl) InsertNote(in *pb.Note) (*pb.Note, error) {
 	id, err := uuid.NewV7()
 	if err != nil {
 		return nil, fmt.Errorf("uuid.NewV7: %w", err)
@@ -81,7 +81,7 @@ func (db *noteDB) InsertNote(in *pb.Note) (*pb.Note, error) {
 	return &note, nil
 }
 
-func (db *noteDB) UpdateNote(in *pb.Note) (*pb.Note, error) {
+func (db *NoteDBImpl) UpdateNote(in *pb.Note) (*pb.Note, error) {
 	row := db.Conn.QueryRow(
 		"update notes set title = $1, content = $2 where id = $3 and user_id = $4 returning *",
 		in.Title,
@@ -97,7 +97,7 @@ func (db *noteDB) UpdateNote(in *pb.Note) (*pb.Note, error) {
 	return &note, nil
 }
 
-func (db *noteDB) DeleteNoteByID(id string) error {
+func (db *NoteDBImpl) DeleteNoteByID(id string) error {
 	err := db.Conn.QueryRow("delete from notes where id = $1 returning id", id).Scan(&id)
 	if err != nil {
 		return fmt.Errorf("db.Exec: %w", err)

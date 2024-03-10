@@ -18,16 +18,16 @@ type ProfileService interface {
 	CreateProfile(ctx context.Context, in *pb.Profile) (*pb.Profile, error)
 }
 
-type profileService struct {
-	ProfileDBProvider
+type ProfileServiceImpl struct {
+	ProfileDB
 	auth.AuthService
 }
 
-func NewProfileService(db ProfileDBProvider, auth auth.AuthService) ProfileService {
-	return &profileService{db, auth}
+func NewProfileService(db ProfileDB, auth auth.AuthService) ProfileService {
+	return &ProfileServiceImpl{db, auth}
 }
 
-func (s *profileService) GetProfileByUserId(ctx context.Context) (*pb.Profile, error) {
+func (s *ProfileServiceImpl) GetProfileByUserId(ctx context.Context) (*pb.Profile, error) {
 	defer system.Perf("get_profile_by_user_id", time.Now())
 	user, err := s.GetUser(ctx)
 	if err != nil {
@@ -45,7 +45,7 @@ func (s *profileService) GetProfileByUserId(ctx context.Context) (*pb.Profile, e
 	return profile, nil
 }
 
-func (s *profileService) CreateProfile(ctx context.Context, in *pb.Profile) (*pb.Profile, error) {
+func (s *ProfileServiceImpl) CreateProfile(ctx context.Context, in *pb.Profile) (*pb.Profile, error) {
 	defer system.Perf("create_profile", time.Now())
 	user, err := s.GetUser(ctx)
 	if err != nil {
