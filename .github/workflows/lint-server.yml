@@ -17,3 +17,5 @@ jobs:
           version: latest
           working-directory: ./server
           args: --skip-dirs=proto --timeout=3m
+      - name: run tests
+        run: go test -v ./server/...

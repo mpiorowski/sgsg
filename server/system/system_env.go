@@ -2,12 +2,24 @@ package system
 
 import (
 	"os"
+	"strings"
 )
 
+func isRunningTest() bool {
+	for _, arg := range os.Args {
+		if strings.HasSuffix(arg, ".test") {
+			return true
+		}
+	}
+    return false
+}
+
 func mustHaveEnv(key string) string {
-	env := os.Getenv("ENV")
+	if isRunningTest() {
+		return "test"
+	}
 	value := os.Getenv(key)
-	if value == "" && env != "test" {
+	if value == "" {
 		panic("Missing environment variable: " + key)
 	}
 	return value
