@@ -25,11 +25,11 @@ jobs:
             IdentityFile ~/.ssh/key
             StrictHostKeyChecking no
           END
-      - name: Stop the server
-        run: ssh prod 'cd /home/mat/sgsg/ && docker compose -f docker-compose.server.yml stop'
-
       - name: Check out the source
         run: ssh prod 'cd /home/mat/sgsg/ && git checkout release && git pull'
+
+      - name: Stop the server
+        run: ssh prod 'cd /home/mat/sgsg/ && docker compose -f docker-compose.server.yml stop'
 
       - name: Start the server
         run: ssh prod 'cd /home/mat/sgsg/ && docker compose -f docker-compose.server.yml up -d --build'
