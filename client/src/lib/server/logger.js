@@ -1,22 +1,25 @@
+import { ENV } from "$env/static/private";
 import pino from "pino";
 
-export const logger = pino({
-    transport: {
-        target: "pino-pretty",
-        options: {
-            colorize: true,
-        },
-    },
-    // transport:
-    //     ENV === "production"
-    //         ? undefined
-    //         : {
-    //               target: "pino-pretty",
-    //               options: {
-    //                   colorize: true,
-    //               },
-    //           },
-});
+function get_pino_config() {
+    if (ENV === "development") {
+        return {
+            transport: {
+                target: "pino-pretty",
+                options: {
+                    colorize: true,
+                },
+            },
+            level: "debug",
+        };
+    } else {
+        return {
+            level: "info",
+        };
+    }
+}
+
+export const logger = pino(get_pino_config());
 
 /**
  * Measure the performance
@@ -24,11 +27,11 @@ export const logger = pino({
  * @returns {() => void} - The end function
  */
 export function perf(name) {
-    // if (ENV === "production") {
-    //     return () => {
-    //         // do nothing
-    //     };
-    // }
+    if (ENV === "productionn") {
+        return () => {
+            // do nothing
+        };
+    }
     const start = performance.now();
 
     /**

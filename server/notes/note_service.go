@@ -4,106 +4,114 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"sgsg/auth"
 	pb "sgsg/proto"
-	"sgsg/users"
+	"sgsg/system"
 	"time"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-func GetNotesByUserId(stream pb.Service_GetNotesByUserIdServer) error {
-	start := time.Now()
-	userId, err := users.UserCheck(stream.Context())
+type NoteService interface {
+	GetNotesByUserId(stream pb.Service_GetNotesByUserIdServer) error
+	GetNoteById(ctx context.Context, id string) (*pb.Note, error)
+	CreateNote(ctx context.Context, in *pb.Note) (*pb.Note, error)
+	DeleteNoteById(ctx context.Context, id string) (*pb.Empty, error)
+}
+
+type noteService struct {
+	NoteDB
+	auth.AuthService
+}
+
+func NewNoteService(db NoteDB, auth auth.AuthService) NoteService {
+	return &noteService{db, auth}
+}
+
+func (s *noteService) GetNotesByUserId(stream pb.Service_GetNotesByUserIdServer) error {
+	defer system.Perf("get_notes_by_user_id", time.Now())
+	user, err := s.GetUser(stream.Context())
 	if err != nil {
-		slog.Error("Error authorizing user", "users.UserCheck", err)
+		slog.Error("Error authorizing user", "s.GetUser", err)
 		return status.Error(codes.Unauthenticated, "Unauthenticated")
 	}
 
 	notesCh := make(chan *pb.Note)
 	errCh := make(chan error, 1)
+	defer close(errCh)
 
-	go selectNotesByUserId(notesCh, errCh, userId)
+	go s.SelectNotesByUserID(notesCh, errCh, user.Id)
 
-	go func() {
-		for note := range notesCh {
-			err := stream.Send(note)
-			if err != nil {
-				errCh <- fmt.Errorf("stream.Send: %w", err)
-			}
+	for note := range notesCh {
+		err := stream.Send(note)
+		if err != nil {
+			return fmt.Errorf("stream.Send: %w", err)
 		}
-		errCh <- nil
-	}()
-
-	err = <-errCh
-	if err != nil {
-		slog.Error("Error getting notes", "notes.GetNotes", err)
-		return status.Error(codes.Internal, "Internal error")
 	}
 
-	slog.Info("GetNotesByUserId", "time", time.Since(start))
+	if len(errCh) > 0 {
+		slog.Error("Error getting notes", "notes.GetNotes", <-errCh)
+		return status.Error(codes.Internal, "Internal error")
+	}
 	return nil
 }
 
-func GetNoteById(ctx context.Context, id string) (*pb.Note, error) {
-	start := time.Now()
-	userId, err := users.UserCheck(ctx)
+func (s *noteService) GetNoteById(ctx context.Context, id string) (*pb.Note, error) {
+	defer system.Perf("get_note_by_id", time.Now())
+	user, err := s.GetUser(ctx)
 	if err != nil {
-		slog.Error("Error authorizing user", "users.UserCheck", err)
+		slog.Error("Error authorizing user", "s.GetUser", err)
 		return nil, status.Error(codes.Unauthenticated, "Unauthenticated")
 	}
-	note, err := selectNoteById(id, userId)
+	note, err := s.SelectNoteByID(id, user.Id)
 	if err != nil {
-		slog.Error("Error getting note", "notes.GetNoteById", err)
-		return nil, err
+		slog.Error("Error getting note", "s.SelectNoteByID", err)
+		return nil, status.Error(codes.Internal, "Internal error")
 	}
-	slog.Info("GetNoteById", "time", time.Since(start))
 	return note, nil
 }
 
-func CreateNote(ctx context.Context, in *pb.Note) (*pb.Note, error) {
-	start := time.Now()
-	userId, err := users.UserCheck(ctx)
+func (s *noteService) CreateNote(ctx context.Context, in *pb.Note) (*pb.Note, error) {
+	defer system.Perf("create_note", time.Now())
+	user, err := s.GetUser(ctx)
 	if err != nil {
-		slog.Error("Error authorizing user", "users.UserCheck", err)
+		slog.Error("Error authorizing user", "s.GetUser", err)
 		return nil, status.Error(codes.Unauthenticated, "Unauthenticated")
 	}
-	in.UserId = userId
+	in.UserId = user.Id
 
-    err = validateNote(in)
-	if err != nil {
-        slog.Error("Error validating note", "utils.ValidateStruct", err)
-		return nil, err
+	validationErrors := validateNote(in)
+	if len(validationErrors) > 0 {
+		return nil, system.CreateErrors(validationErrors)
 	}
 
 	var note *pb.Note
 	if in.Id == "" {
-		note, err = insertNote(in)
+		note, err = s.InsertNote(in)
 	} else {
-		note, err = updateNote(in)
+		note, err = s.UpdateNote(in)
 	}
 	if err != nil {
 		slog.Error("Error creating note", "createNote", err)
-		return nil, err
+		return nil, status.Error(codes.Internal, "Internal error")
 	}
-	slog.Info("CreateNote", "time", time.Since(start))
 	return note, nil
 
 }
 
-func DeleteNoteById(ctx context.Context, id string) (*pb.Empty, error) {
-	start := time.Now()
-	_, err := users.UserCheck(ctx)
+func (s *noteService) DeleteNoteById(ctx context.Context, id string) (*pb.Empty, error) {
+	defer system.Perf("delete_note_by_id", time.Now())
+	_, err := s.GetUser(ctx)
 	if err != nil {
-		slog.Error("Error authorizing user", "users.UserCheck", err)
+		slog.Error("Error authorizing user", "s.GetUser", err)
 		return nil, status.Error(codes.Unauthenticated, "Unauthenticated")
 	}
-	err = deleteNoteById(id)
+	err = s.DeleteNoteByID(id)
 	if err != nil {
-		slog.Error("Error deleting note", "deleteNoteById", err)
-		return nil, err
+		slog.Error("Error deleting note", "s.DeleteNoteByID", err)
+		return nil, status.Error(codes.Internal, "Internal error")
 	}
 
-	slog.Info("DeleteNoteById", "time", time.Since(start))
 	return &pb.Empty{}, nil
 }

@@ -1,4 +1,4 @@
-// Original file: ../proto/note.proto
+// Original file: proto/note.proto
 
 
 export interface Note {
@@ -6,19 +6,17 @@ export interface Note {
   'created'?: (string);
   'updated'?: (string);
   'deleted'?: (string);
-  'userId'?: (string);
+  'user_id'?: (string);
   'title'?: (string);
   'content'?: (string);
-  '_deleted'?: "deleted";
 }
 
 export interface Note__Output {
   'id': (string);
   'created': (string);
   'updated': (string);
-  'deleted'?: (string);
-  'userId': (string);
+  'deleted': (string);
+  'user_id': (string);
   'title': (string);
   'content': (string);
-  '_deleted': "deleted";
 }

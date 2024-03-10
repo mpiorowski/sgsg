@@ -1,10 +1,9 @@
 syntax = "proto3";
-
+option go_package = "sgsg/proto";
 package proto;
 
-option go_package = "sgsg/proto";
 
-import "user.proto";
+import "auth.proto";
 import "profile.proto";
 import "note.proto";
 
@@ -15,16 +14,22 @@ message Id {
 }
 
 message AuthResponse {
-    string tokenId = 1;
+    string token = 1;
     User user = 2;
+}
+
+message StripeUrlResponse {
+    string url = 1;
 }
 
 service Service {
     rpc Auth(Empty) returns (AuthResponse) {}
 
+    rpc CreateStripeCheckout(Empty) returns (StripeUrlResponse) {}
+    rpc CreateStripePortal(Empty) returns (StripeUrlResponse) {}
+
     rpc GetProfileByUserId(Empty) returns (Profile) {}
     rpc CreateProfile(Profile) returns (Profile) {}
-    rpc DeleteProfileById(Id) returns (Empty) {}
 
     rpc GetNotesByUserId(Empty) returns (stream Note) {}
     rpc GetNoteById(Id) returns (Note) {}

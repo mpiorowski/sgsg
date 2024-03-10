@@ -1,9 +1,9 @@
 #  Development
-FROM golang:1.21 as dev
+FROM golang:1.22 as dev
 WORKDIR /server
 
 # Build
-FROM golang:1.21 as build
+FROM golang:1.22 as build
 WORKDIR /server
 
 COPY . .

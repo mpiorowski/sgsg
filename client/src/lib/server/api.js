@@ -9,7 +9,7 @@ import { logger } from "./logger";
  *  file?: File,
  *  email?: import("$lib/types").UpsendEmail,
  * }} options
- * @returns {Promise<import("$lib/safe").Safe<T>>}
+ * @returns {Promise<import("$lib/server/safe").Safe<T>>}
  * @template T
  */
 export async function upsendApi({ method = "GET", url, file, email }) {
@@ -35,16 +35,17 @@ export async function upsendApi({ method = "GET", url, file, email }) {
         }
         if (response.status === 204) {
             const empty = /** @type {T} */ ("");
-            return { error: false, data: empty };
+            return { success: true, data: empty };
         }
         const data = await response.json();
 
-        return { error: false, data };
+        return { success: true, data };
     } catch (error) {
         logger.error(error);
         return {
-            error: true,
-            msg: "Error using Upsend API",
+            success: false,
+            error:
+                error instanceof Error ? error.message : "Something went wrong",
         };
     }
 }

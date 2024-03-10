@@ -1,4 +1,4 @@
-package utils
+package system
 
 import (
 	"crypto/rand"
@@ -14,19 +14,18 @@ func ContainsString(s []string, str string) bool {
 	}
 	return false
 }
-
-func GenerateRandomState(length int) (string, error) {
+func GenerateRandomState(length int) (string) {
 	// Generate random bytes
 	randomBytes := make([]byte, length)
 	_, err := rand.Read(randomBytes)
 	if err != nil {
-		return "", err
+        panic(err)
 	}
 
 	// Encode the random bytes to a base64 URL-safe string
 	state := base64.URLEncoding.EncodeToString(randomBytes)
 
-	return state, nil
+	return state
 }
 
 func GenerateRandomString(length int) (string, error) {

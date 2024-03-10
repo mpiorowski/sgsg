@@ -5,11 +5,11 @@ import { ENV, SERVER_GRPC } from "$env/static/private";
 export const packageDefinition = protoLoader.loadSync(
     "./src/lib/proto/main.proto",
     {
-        keepCase: false,
+        keepCase: true,
         longs: String,
+        enums: String,
         defaults: true,
         oneofs: true,
-        arrays: true,
     },
 );
 
@@ -24,3 +24,56 @@ const cr =
         : credentials.createInsecure();
 
 export const server = new proto.proto.Service(SERVER_GRPC, cr);
+
+/**
+ * Callback function for handling gRPC responses safely.
+ *
+ * @template T - The type of data expected in the response.
+ *
+ * @param {(value: import("./safe").GrpcSafe<T>) => void} res - The callback function to handle the response.
+ * @returns {(err: import("@grpc/grpc-js").ServiceError | null, data: T | undefined) => void} - A callback function to be used with gRPC response handling.
+ */
+export function grpcSafe(res) {
+    /**
+     * Handles the gRPC response and calls the provided callback function safely.
+     *
+     * @param {import("@grpc/grpc-js").ServiceError | null} err - The error, if any, returned in the response.
+     * @param {T | undefined} data - The data returned in the response.
+     */
+    return (err, data) => {
+        if (err) {
+            if (err.code === 3) {
+                let fields = [];
+                try {
+                    fields = JSON.parse(err.details);
+                } catch (e) {
+                    return res({
+                        success: false,
+                        error: err?.message || "Something went wrong",
+                        code: err.code,
+                    });
+                }
+
+                return res({
+                    success: false,
+                    error: "Invalid argument",
+                    fields: fields,
+                    code: err.code,
+                });
+            }
+            return res({
+                success: false,
+                code: err.code,
+                error: err?.message || "Something went wrong",
+            });
+        }
+        if (!data) {
+            return res({
+                success: false,
+                error: "No data returned",
+                code: 0,
+            });
+        }
+        return res({ data, success: true });
+    };
+}

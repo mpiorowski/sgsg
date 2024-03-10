@@ -1,23 +1,25 @@
 package profiles
 
 import (
-	"fmt"
 	pb "sgsg/proto"
-	"sgsg/utils"
+	"sgsg/system"
 )
 
-func validateProfile(in *pb.Profile) error {
-	rules := map[string]string{
-		"UserId":   "required,uuid",
-		"Username": "required,max=100",
-		"About":    "required,max=1000",
-		"ResumeId": "max=1000",
-		"CoverId":  "max=1000",
-		"CoverUrl": "max=1000",
+func validateProfile(profile *pb.Profile) []system.ValidationError {
+	var errors []system.ValidationError
+	if profile.Username == "" {
+		errors = append(errors, system.ValidationError{Field: "Username", Tag: "required"})
 	}
-	err := utils.ValidateStruct[pb.Profile](rules, pb.Profile{}, in)
-	if err != nil {
-		return fmt.Errorf("validateProfile error: %w", err)
+	// max length 100
+	if len(profile.Username) > 100 {
+		errors = append(errors, system.ValidationError{Field: "Username", Tag: "max100"})
 	}
-	return nil
+	if profile.About == "" {
+		errors = append(errors, system.ValidationError{Field: "About", Tag: "required"})
+	}
+	// max length 1000
+	if len(profile.About) > 1000 {
+		errors = append(errors, system.ValidationError{Field: "About", Tag: "max1000"})
+	}
+    return errors
 }

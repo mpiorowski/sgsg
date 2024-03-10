@@ -6,14 +6,16 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-go@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
         with:
-          go-version: "1.21.1"
+          go-version: "1.22"
           cache: false
-      - uses: actions/checkout@v3
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v3
+        uses: golangci/golangci-lint-action@v4
         with:
           version: latest
           working-directory: ./server
           args: --skip-dirs=proto --timeout=3m
+      - name: run tests
+        run: cd server && go test -v ./...

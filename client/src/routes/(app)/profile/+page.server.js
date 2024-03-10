@@ -1,6 +1,6 @@
 import { getFormValue } from "$lib/helpers";
-import { safe } from "$lib/safe";
-import { grpcSafe } from "$lib/safe";
+import { safe } from "$lib/server/safe";
+import { grpcSafe } from "$lib/server/grpc";
 import { upsendApi } from "$lib/server/api";
 import { server } from "$lib/server/grpc";
 import { perf } from "$lib/server/logger";
@@ -9,29 +9,29 @@ import { error, fail } from "@sveltejs/kit";
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ locals }) {
-    const end = perf("Load profile");
+    const end = perf("load_profile");
     /**
      * We return the profile data immediately, and then fetch the resume and stream it to the client as it loads.
      */
 
-    /** @type {import('$lib/safe').Safe<import('$lib/proto/proto/Profile').Profile__Output>} */
+    /** @type {import('$lib/server/safe').Safe<import('$lib/proto/proto/Profile').Profile__Output>} */
     const profile = await new Promise((r) => {
         server.GetProfileByUserId(
             {},
-            createMetadata(locals.token),
+            createMetadata(locals.user.id),
             grpcSafe(r),
         );
     });
-    if (profile.error) {
-        throw error(500, profile.msg);
+    if (!profile.success) {
+        throw error(500, profile.error);
     }
 
-    /** @type {Promise<import("$lib/safe").Safe<import("$lib/types").UpsendFile | undefined>>} */
-    let resumePromise = Promise.resolve({ data: undefined, error: false });
-    if (profile.data.resumeId) {
-        /** @type {Promise<import('$lib/safe').Safe<import('$lib/types').UpsendFile>>} */
+    /** @type {Promise<import("$lib/server/safe").Safe<import("$lib/types").UpsendFile | undefined>>} */
+    let resumePromise = Promise.resolve({ data: undefined, success: true });
+    if (profile.data.resume_id) {
+        /** @type {Promise<import('$lib/server/safe').Safe<import('$lib/types').UpsendFile>>} */
         resumePromise = upsendApi({
-            url: `/files/${profile.data.resumeId}`,
+            url: `/files/${profile.data.resume_id}`,
             method: "GET",
         });
     }
@@ -46,6 +46,7 @@ export async function load({ locals }) {
 /** @type {import('./$types').Actions} */
 export const actions = {
     createProfile: async ({ locals, request }) => {
+        const end = perf("create_profile");
         const form = await request.formData();
 
         let resumeId = getFormValue(form, "resumeId");
@@ -69,26 +70,25 @@ export const actions = {
                     url: `/files/${resumeId}`,
                     method: "DELETE",
                 });
-                if (resDel.error) {
-                    return fail(400, { error: resDel.msg });
+                if (!resDel.success) {
+                    return fail(400, { error: resDel.error });
                 }
             }
 
             /**
              * Upload new resume
-             * @type {import("$lib/safe").Safe<import("$lib/types").UpsendFile>}
+             * @type {import("$lib/server/safe").Safe<import("$lib/types").UpsendFile>}
              */
             const file = await upsendApi({
                 url: "/files",
                 method: "POST",
                 file: resume,
             });
-            if (file.error) {
-                return fail(400, { error: file.msg });
+            if (!file.success) {
+                return fail(400, { error: file.error });
             }
 
             resumeId = file.data.id;
-            console.log(resumeId);
         }
 
         let coverId = getFormValue(form, "coverId");
@@ -114,22 +114,22 @@ export const actions = {
                     url: `/images/${coverId}`,
                     method: "DELETE",
                 });
-                if (resDel.error) {
-                    return fail(400, { error: resDel.msg });
+                if (!resDel.success) {
+                    return fail(400, { error: resDel.error });
                 }
             }
 
             /**
              * Upload new cover
-             * @type {import("$lib/safe").Safe<import("$lib/types").UpsendImage>}
+             * @type {import("$lib/server/safe").Safe<import("$lib/types").UpsendImage>}
              */
             const file = await upsendApi({
                 url: "/images",
                 method: "POST",
                 file: cover,
             });
-            if (file.error) {
-                return fail(400, { error: file.msg });
+            if (!file.success) {
+                return fail(400, { error: file.error });
             }
 
             coverId = file.data.id;
@@ -141,25 +141,25 @@ export const actions = {
             id: getFormValue(form, "id"),
             username: getFormValue(form, "username"),
             about: getFormValue(form, "about"),
-            resumeId: resumeId,
-            coverId: coverId,
-            coverUrl: coverUrl,
+            resume_id: resumeId,
+            cover_id: coverId,
+            cover_url: coverUrl,
         };
 
-        /** @type {import("$lib/safe").Safe<import("$lib/proto/proto/Profile").Profile__Output>} */
+        /** @type {import("$lib/server/safe").GrpcSafe<import("$lib/proto/proto/Profile").Profile__Output>} */
         const res = await new Promise((r) => {
             server.CreateProfile(
                 data,
-                createMetadata(locals.token),
+                createMetadata(locals.user.id),
                 grpcSafe(r),
             );
         });
 
-        if (res.error) {
+        if (!res.success) {
             if (res.fields) {
                 return fail(400, { fields: res.fields });
             }
-            return fail(400, { error: res.msg });
+            return fail(400, { error: res.error });
         }
 
         /**
@@ -183,6 +183,7 @@ export const actions = {
             }),
         );
 
+        end();
         return {
             profile: res.data,
         };

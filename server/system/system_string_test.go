@@ -1,4 +1,4 @@
-package utils
+package system
 
 import (
 	"encoding/base64"
@@ -24,10 +24,7 @@ func TestContainsString(t *testing.T) {
 func TestGenerateRandomState(t *testing.T) {
 	// Test case: Generate a random state with a specific length
 	length := 32
-	state, err := GenerateRandomState(length)
-	if err != nil {
-		t.Errorf("Error generating random state: %v", err)
-	}
+	state  := GenerateRandomState(length)
 	expectedLength := base64.StdEncoding.EncodedLen(length)
 	if len(state) != expectedLength {
 		t.Errorf("Expected state length of %d, but got %d", expectedLength, len(state))

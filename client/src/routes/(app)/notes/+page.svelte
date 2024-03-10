@@ -10,8 +10,8 @@
     export let data;
     /** @type {import("./$types").ActionData} */
     export let form;
-    $: if (form?.error || data?.error) {
-        toast.error("Error", form?.error || data?.error || "Unknown error");
+    $: if (form?.error) {
+        toast.error("Error", form.error);
     }
 
     /** @type {string} */
