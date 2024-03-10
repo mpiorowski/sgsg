@@ -32,10 +32,11 @@ jobs:
         run: ssh prod 'cd /home/mat/sgsg/ && docker compose -f docker-compose.server.yml stop'
 
       - name: Start the server
+        run: ssh prod 'cd /home/mat/sgsg/ && docker compose -f docker-compose.server.yml up -d --build'
+
+      - name: Check the server
         run: |
-          ssh prod 'cd /home/mat/sgsg/ && docker compose -f docker-compose.server.yml up --build --abort-on-container-exit --exit-code-from server'
-          ssh_exit_code=$?
-          if [ $ssh_exit_code -eq 0 ]; then
-            echo "SSH command failed with exit code $ssh_exit_code"
-            exit $ssh_exit_code
+          if ! ssh prod 'docker ps | grep sgsg-server'; then
+            echo "sgsg-server container is not running"
+            exit 1
           fi
