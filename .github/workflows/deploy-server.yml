@@ -34,8 +34,9 @@ jobs:
       - name: Start the server
         run: ssh prod 'cd /home/mat/sgsg/ && docker compose -f docker-compose.server.yml up -d --build'
 
-      - name: Check the server
+      - name: Check the server after 5 sec
         run: |
+          sleep 5
           if ! ssh prod 'docker ps | grep sgsg-server'; then
             echo "sgsg-server container is not running"
             exit 1
