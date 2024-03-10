@@ -37,3 +37,8 @@ services:
         delay: 5s
         max_attempts: 3
         window: 120s
+    healthcheck:
+      test: ["CMD-SHELL", "exit 1"]
+      interval: 1s
+      timeout: 10s
+      retries: 3
