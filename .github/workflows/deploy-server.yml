@@ -33,9 +33,4 @@ jobs:
 
       - name: Start the server
         run: |
-          ssh prod 'cd /home/mat/sgsg/ && docker compose -f docker-compose.server.yml up --build'
-          exit_code=$?
-          if [ $exit_code -ne 0 ]; then
-            echo "docker-compose failed with exit code $exit_code"
-            exit $exit_code
-          fi
+          ssh prod 'cd /home/mat/sgsg/ && docker compose -f docker-compose.server.yml up --build --abort-on-container-exit'
