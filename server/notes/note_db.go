@@ -75,7 +75,7 @@ func (db *noteDB) InsertNote(in *pb.Note) (*pb.Note, error) {
 	)
 	var note pb.Note
 	err = row.Scan(dest(&note)...)
-	if err != nil {
+	if err != nil || note.Id == "" {
 		return nil, fmt.Errorf("scanNote: %w", err)
 	}
 	return &note, nil
