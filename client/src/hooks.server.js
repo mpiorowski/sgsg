@@ -36,25 +36,14 @@ export async function handle({ event, resolve }) {
     }
 
     /**
-     * Check if the user is coming from the oauth flow
-     * If so, set a temporary cookie with the token
-     * On the next request, the new token will be used
+     * Check if we have a token
+     * If we don't have a token, redirect to the auth page
      */
-    let token = event.url.pathname.includes("/token/")
-        ? event.url.pathname.split("/token/")[1]
-        : "";
-    if (token) {
-        event.cookies.set("token", token, {
-            path: "/",
-            maxAge: 10,
-        });
-        throw redirect(302, "/");
-    }
-
-    token = event.cookies.get("token") ?? "";
+    const token =
+        event.url.searchParams.get("token") ?? event.cookies.get("token");
     if (!token) {
         logger.info("No token");
-        throw redirect(302, "/auth?error=1");
+        throw redirect(302, "/auth");
     }
 
     const metadata = createMetadata(token);
@@ -62,21 +51,32 @@ export async function handle({ event, resolve }) {
     const auth = await new Promise((res) => {
         server.Auth({}, metadata, grpcSafe(res));
     });
-    if (!auth.success || !auth.data.token || !auth.data.user) {
+    if (!auth.success) {
+        logger.error(`Error during auth: ${auth.error}`);
+        throw redirect(302, "/auth?error=unauthorized");
+    }
+    if (!auth.data.token || !auth.data.user) {
         logger.error("Error during auth");
-        throw redirect(302, "/auth?error=1");
+        throw redirect(302, "/auth?error=unauthorized");
     }
 
     event.locals.user = auth.data.user;
     event.locals.token = auth.data.token;
-    // logger.debug(event.locals.user, "user");
+
+    /** Last check to make sure we have a user */
+    if (!event.locals.user.id) {
+        logger.error("No user found");
+        throw redirect(302, "/auth?error=unauthorized");
+    }
 
     end();
-    const response = await resolve(event);
-    // max age is 7 days
-    response.headers.append(
-        "set-cookie",
-        `token=${auth.data.token}; HttpOnly; SameSite=Lax; Secure; Max-Age=604800; Path=/`,
-    );
-    return response;
+    event.cookies.set("token", auth.data.token, {
+        path: "/",
+        // 7 days
+        maxAge: 604800,
+        sameSite: "lax",
+        secure: true,
+        httpOnly: true,
+    });
+    return await resolve(event);
 }

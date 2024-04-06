@@ -1,4 +1,3 @@
-version: "3"
 services:
   client:
     container_name: sgsg-client

@@ -2,7 +2,7 @@ syntax = "proto3";
 option go_package = "sgsg/proto";
 package proto;
 
-enum UserRole {
+enum Role {
     ROLE_UNSET = 0;
     ROLE_USER = 1;
     ROLE_ADMIN = 2;
@@ -16,7 +16,7 @@ message User {
 
     string email = 5;
     string sub = 6;
-    UserRole role = 7;
+    Role role = 7;
     string avatar = 8;
 
     string subscription_id = 9;
