@@ -1,6 +1,7 @@
 /** @type {import('./$types').LayoutServerLoad} */
-export async function load({ locals }) {
+export function load({ locals }) {
     return {
-        user: locals.user,
+        email: locals.user.email,
+        avatar: locals.user.avatar,
     };
 }

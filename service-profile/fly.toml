@@ -1,0 +1,41 @@
+# fly.toml app configuration file generated for sgsg-service-profile on 2024-04-07T00:57:39+02:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'sgsg-service-profile'
+primary_region = 'arn'
+
+[build]
+
+[env]
+  GRPC_PORT = '3003'
+  LOG_LEVEL = 'info'
+
+[http_service]
+  internal_port = 3003
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[services]]
+  protocol = ''
+  internal_port = 3003
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[services.ports]]
+    port = 3003
+    handlers = ['tls']
+
+    [services.ports.tls_options]
+      alpn = ['h2']
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1

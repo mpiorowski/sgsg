@@ -1,19 +1,38 @@
 syntax = "proto3";
-
+option go_package = "sgsg/proto";
 package proto;
 
-option go_package = "sgsg/proto";
-
 message Profile {
+    string id = 1;
+    string created = 2;
+    string updated = 3;
+    string user_id = 4;
+    bool   active = 5;
+    string username = 6;
+    string about = 7;
+    string first_name = 8;
+    string last_name = 9;
+    string email = 10;
+    string country = 11;
+    string street_address = 12;
+    string city = 13;
+    string state = 14;
+    string zip = 15;
+    string email_notifications = 16;
+    string push_notification = 17;
+    string resume = 18;
+    string cover = 19;
+    string position = 20;
+    string skills = 21;
+}
+
+message Note {
     string id = 1;
     string created = 2;
     string updated = 3;
     string deleted = 4;
 
     string user_id = 5;
-    string username = 6;
-    string about = 7;
-    string resume_id = 8;
-    string cover_id = 9;
-    string cover_url = 10;
+    string title = 6;
+    string content = 7;
 }

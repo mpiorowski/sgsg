@@ -1,4 +1,4 @@
-// Original file: proto/note.proto
+// Original file: proto/profile.proto
 
 
 export interface Note {

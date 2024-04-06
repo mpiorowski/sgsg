@@ -1,5 +1,5 @@
-import { UserRole } from "$lib/proto/proto/UserRole";
-import { grpcSafe, server } from "$lib/server/grpc";
+import { Role } from "$lib/proto/proto/Role";
+import { authService, grpcSafe } from "$lib/server/grpc";
 import { logger, perf } from "$lib/server/logger";
 import { createMetadata } from "$lib/server/metadata";
 import { redirect } from "@sveltejs/kit";
@@ -7,6 +7,7 @@ import { building } from "$app/environment";
 
 /** @type {import('@sveltejs/kit').Handle} */
 export async function handle({ event, resolve }) {
+    logger.info(`path: ${event.url.pathname}`);
     if (building) {
         return await resolve(event);
     }
@@ -19,7 +20,7 @@ export async function handle({ event, resolve }) {
         deleted: "",
         email: "",
         avatar: "",
-        role: UserRole.ROLE_UNSET,
+        role: Role.ROLE_UNSET,
         sub: "",
         subscription_id: "",
         subscription_end: "",
@@ -49,7 +50,7 @@ export async function handle({ event, resolve }) {
     const metadata = createMetadata(token);
     /** @type {import("$lib/server/safe").Safe<import("$lib/proto/proto/AuthResponse").AuthResponse__Output>} */
     const auth = await new Promise((res) => {
-        server.Auth({}, metadata, grpcSafe(res));
+        authService.Auth({}, metadata, grpcSafe(res));
     });
     if (!auth.success) {
         logger.error(`Error during auth: ${auth.error}`);
@@ -78,5 +79,8 @@ export async function handle({ event, resolve }) {
         secure: true,
         httpOnly: true,
     });
+    if (event.url.pathname === "/") {
+        throw redirect(303, "/profile");
+    }
     return await resolve(event);
 }

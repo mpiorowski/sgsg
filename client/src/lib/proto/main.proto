@@ -2,15 +2,24 @@ syntax = "proto3";
 option go_package = "sgsg/proto";
 package proto;
 
-
 import "auth.proto";
 import "profile.proto";
-import "note.proto";
 
 message Empty {}
 
 message Id {
     string id = 1;
+}
+
+message Page {
+    // TODO: when grpc type genr error is fixed, change ito to int64
+    int32 offset = 1;
+    int32 limit = 2;
+}
+
+message Count {
+    // TODO: when grpc type genr error is fixed, change ito to int64
+    int32 count = 1;
 }
 
 message AuthResponse {
@@ -22,16 +31,19 @@ message StripeUrlResponse {
     string url = 1;
 }
 
-service Service {
+service AuthService {
     rpc Auth(Empty) returns (AuthResponse) {}
 
     rpc CreateStripeCheckout(Empty) returns (StripeUrlResponse) {}
     rpc CreateStripePortal(Empty) returns (StripeUrlResponse) {}
+}
 
-    rpc GetProfileByUserId(Empty) returns (Profile) {}
-    rpc CreateProfile(Profile) returns (Profile) {}
+service ProfileService {
+    rpc GetProfile(Empty) returns (Profile) {}
+    rpc UpdateProfile(Profile) returns (Profile) {}
 
-    rpc GetNotesByUserId(Empty) returns (stream Note) {}
+    rpc CountNotesByUserId(Empty) returns (Count) {}
+    rpc GetNotesByUserId(Page) returns (stream Note) {}
     rpc GetNoteById(Id) returns (Note) {}
     rpc CreateNote(Note) returns (Note) {}
     rpc DeleteNoteById(Id) returns (Empty) {}

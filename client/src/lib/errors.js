@@ -24,7 +24,8 @@ export function extractError(fields, field) {
 const errorMessages = {
     required: "This field is required",
     min: "A minimum of 3 characters is required",
-    max: "A maximum of 1000 characters is allowed",
+    max100: "A maximum of 100 characters is allowed",
+    max1000: "A maximum of 1000 characters is allowed",
     uuid: "Please enter a valid UUID",
     email: "Please enter a valid email address",
     url: "Please enter a valid URL",

@@ -1,17 +1,36 @@
-import { getFormValue } from "$lib/helpers";
+import { getValue } from "$lib/helpers";
 import { safe } from "$lib/server/safe";
-import { grpcSafe, server } from "$lib/server/grpc";
+import { grpcSafe, profileService } from "$lib/server/grpc";
 import { createMetadata } from "$lib/server/metadata";
 import { error, fail } from "@sveltejs/kit";
 import { perf } from "$lib/server/logger";
 
 /** @type {import('./$types').PageServerLoad} */
-export async function load({ locals }) {
+export async function load({ locals, url }) {
     const end = perf("load_notes");
+    const page = url.searchParams.get("page") || "1";
+    const limit = url.searchParams.get("limit") || "2";
+
+    const total = await new Promise((res) =>
+        profileService.CountNotesByUserId(
+            {},
+            createMetadata(locals.token),
+            grpcSafe(res),
+        ),
+    );
+    if (!total.success) {
+        throw error(500, total.error);
+    }
+
+    /** @type {import("$lib/proto/proto/Page").Page} */
+    const request = {
+        offset: (parseInt(page) - 1) * parseInt(limit),
+        limit: parseInt(limit),
+    };
     /** @type {import("$lib/proto/proto/Note").Note__Output[]} */
     const notes = [];
-    const metadata = createMetadata(locals.user.id);
-    const notesStream = server.GetNotesByUserId({}, metadata);
+    const metadata = createMetadata(locals.token);
+    const notesStream = profileService.GetNotesByUserId(request, metadata);
 
     /** @type {Promise<void>} */
     const p = new Promise((res, rej) => {
@@ -25,7 +44,10 @@ export async function load({ locals }) {
         throw error(500, r.error);
     }
     end();
+
     return {
+        total: total.data.count,
+        limit: parseInt(limit),
         notes: notes,
     };
 }
@@ -38,13 +60,13 @@ export const actions = {
 
         /** @type {import("$lib/proto/proto/Note").Note} */
         const data = {
-            title: getFormValue(form, "title"),
-            content: getFormValue(form, "content"),
+            title: getValue(form, "title"),
+            content: getValue(form, "content"),
         };
-        const metadata = createMetadata(locals.user.id);
+        const metadata = createMetadata(locals.token);
         /** @type {import("$lib/server/safe").GrpcSafe<import("$lib/proto/proto/Note").Note__Output>} */
         const req = await new Promise((r) => {
-            server.CreateNote(data, metadata, grpcSafe(r));
+            profileService.CreateNote(data, metadata, grpcSafe(r));
         });
 
         if (!req.success) {

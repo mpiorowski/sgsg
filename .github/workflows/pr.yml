@@ -6,13 +6,10 @@ on:
     branches:
       - main
 
-permissions:
-  contents: write
-  id-token: write
-  checks: write
-
 jobs:
   lint-client:
     uses: ./.github/workflows/lint-client.yml
-  lint-server:
-    uses: ./.github/workflows/lint-server.yml
+  lint-service-auth:
+    uses: ./.github/workflows/lint-service-auth.yml
+  lint-service-profile:
+    uses: ./.github/workflows/lint-service-profile.yml

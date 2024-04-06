@@ -41,30 +41,38 @@
     }
 }
 
+* {
+    min-width: 0;
+}
+
 html {
-    @apply h-full antialiased;
+  scroll-behavior: unset !important;
+}
+
+html {
+    @apply h-full;
 }
 
 body {
-    @apply h-full font-poppins;
+    @apply h-full;
 }
 
 h1 {
-    @apply text-3xl font-semibold font-poppins;
+    @apply text-3xl font-semibold;
 }
-
 h2 {
-    @apply text-2xl font-semibold font-poppins;
+    @apply text-2xl font-semibold;
 }
-
 h3 {
-    @apply text-xl font-semibold font-poppins;
+    @apply text-xl font-semibold;
+}
+h4 {
+    @apply text-lg font-medium;
 }
 
 :focus {
     outline: none;
 }
-
 .no-scroll {
     overflow: hidden;
 }

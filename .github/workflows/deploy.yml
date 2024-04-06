@@ -1,4 +1,5 @@
-name: Deploy
+name: Pull Request
+
 on:
   push:
     branches:
@@ -8,20 +9,21 @@ jobs:
   lint-client:
     uses: ./.github/workflows/lint-client.yml
   deploy-client:
-    needs:
-      - lint-client
+    needs: lint-client
     uses: ./.github/workflows/deploy-client.yml
     secrets:
-      SSH_KEY: ${{ secrets.SSH_KEY }}
-      CLIENT_IP: ${{ secrets.CLIENT_IP }}
-  lint-server:
-    uses: ./.github/workflows/lint-server.yml
-  deploy-server:
-    needs:
-      - lint-server
-      - deploy-client
-    uses: ./.github/workflows/deploy-server.yml
+      FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+  lint-service-auth:
+    uses: ./.github/workflows/lint-service-auth.yml
+  deploy-service-auth:
+    needs: lint-service-auth
+    uses: ./.github/workflows/deploy-service-auth.yml
     secrets:
-      SSH_KEY: ${{ secrets.SSH_KEY }}
-      SERVER_IP: ${{ secrets.SERVER_IP }}
- 
+      FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+  lint-service-profile:
+    uses: ./.github/workflows/lint-service-profile.yml
+  deploy-service-profile:
+    needs: lint-service-profile
+    uses: ./.github/workflows/deploy-service-profile.yml
+    secrets:
+      FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

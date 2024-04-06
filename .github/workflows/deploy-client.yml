@@ -1,43 +1,20 @@
 name: Deploy Client
-
 on:
   workflow_call:
     secrets:
-      SSH_KEY:
-        required: true
-      CLIENT_IP:
+      FLY_API_TOKEN:
         required: true
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./client
+    concurrency: deploy-service-auth
     steps:
       - uses: actions/checkout@v4
-      - name: Configure SSH
-        run: |
-          mkdir -p ~/.ssh/
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/key
-          chmod 600 ~/.ssh/key
-          cat >>~/.ssh/config <<END
-          Host prod
-            HostName ${{ secrets.CLIENT_IP }}
-            User mat
-            IdentityFile ~/.ssh/key
-            StrictHostKeyChecking no
-          END
-      - name: Check out the source
-        run: ssh prod 'cd /home/mat/sgsg/ && git checkout release && git pull'
-
-      - name: Stop the client
-        run: ssh prod 'cd /home/mat/sgsg/ && docker compose -f docker-compose.client.yml stop'
-
-      - name: Start the client
-        run: ssh prod 'cd /home/mat/sgsg/ && docker compose -f docker-compose.client.yml up -d --build'
-
-      - name: Check the client after 5 sec
-        run: |
-          sleep 5
-          if ! ssh prod 'docker ps | grep sgsg-client'; then
-            echo "sgsg-client container is not running"
-            exit 1
-          fi
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - run: flyctl deploy
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

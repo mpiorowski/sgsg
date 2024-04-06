@@ -7,10 +7,10 @@
     export let file;
     /** @type {string | undefined} */
     export let accept = "*/*";
-    /** @type {string[]} */
-    export let errors = [];
+    /** @type {string | undefined} */
+    export let error = "";
     /** @type {string} */
-    export let helper = "\x80";
+    export let helper = "";
 
     /** @type {FileList} */
     let files;
@@ -21,8 +21,8 @@
     }
 </script>
 
-<div>
-    <label for={name} class="block text-sm font-medium leading-6 text-gray-900">
+<div class="mb-2">
+    <label for={name} class="block text-sm font-medium leading-6">
         {label}
     </label>
     <div class="mt-2">
@@ -32,20 +32,20 @@
             id={name}
             {accept}
             type="file"
-            class="block w-full cursor-pointer rounded-lg border-0 text-gray-900 ring-1 ring-inset ring-gray-300
+            class="block w-full cursor-pointer rounded-lg border-0 bg-gray-800 shadow-md
             file:mr-3 file:cursor-pointer file:rounded-l-lg file:border-0 file:bg-indigo-600 file:px-3 file:py-1.5 file:text-white file:transition file:hover:bg-indigo-500
             focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-600
             sm:text-sm sm:leading-6
-            {errors.length > 0 ? 'ring-2 ring-red-600' : ''}"
-            aria-invalid={errors.length > 0}
+            {error ? 'ring-2 ring-red-600' : ''}"
+            aria-invalid={!!error}
             aria-describedby="{name}-description"
         />
     </div>
     <p
         id="{name}-description"
-        class="text-xs leading-6
-        {errors.length > 0 ? 'text-red-600' : 'text-gray-500'}"
+        class="inline-block text-xs leading-6
+        {error ? 'text-red-600' : 'text-gray-400'}"
     >
-        {errors.length > 0 ? errors.join(", ") : helper}
+        {error || helper}
     </p>
 </div>

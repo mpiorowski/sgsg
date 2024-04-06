@@ -1,10 +1,10 @@
 <script>
-    import { toast } from "$lib/overlay/toast";
-    import Input from "$lib/form/Input.svelte";
-    import Button from "$lib/form/Button.svelte";
+    import { toast } from "$lib/ui/toast.store";
     import { enhance } from "$app/forms";
+    import Button from "$lib/form/Button.svelte";
+    import Input from "$lib/form/Input.svelte";
     import { extractError } from "$lib/errors";
-    import SaveIcon from "$lib/icons/SaveIcon.svelte";
+    import Pagination from "$lib/ui/Pagination.svelte";
 
     /** @type {import("./$types").PageData} */
     export let data;
@@ -23,7 +23,7 @@
 </script>
 
 <form
-    class="m-auto max-w-2xl p-10"
+    class="max-w-2xl"
     action="?/insert"
     method="post"
     use:enhance={() => {
@@ -43,11 +43,11 @@
     <div class="space-y-12">
         <div>
             <h2
-                class="flex items-center gap-2 text-base font-semibold leading-7 text-gray-900"
+                class="flex items-center gap-2 text-base font-semibold leading-7"
             >
                 Notes
             </h2>
-            <p class="mt-1 text-sm leading-6 text-gray-600">
+            <p class="mt-1 text-sm leading-6 text-gray-400">
                 List of notes you have created.
             </p>
         </div>
@@ -75,7 +75,24 @@
             <div class="col-span-full flex justify-end">
                 <Button type="submit" {loading}>
                     <svelte:fragment slot="icon">
-                        <SaveIcon />
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="feather feather-save"
+                        >
+                            <path
+                                d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"
+                            ></path>
+                            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                            <polyline points="7 3 7 8 15 8"></polyline>
+                        </svg>
                     </svelte:fragment>
                     Save
                 </Button>
@@ -93,5 +110,6 @@
                 <Button class="w-20" href="/notes/{note.id}">Edit</Button>
             </div>
         {/each}
+        <Pagination total={data.total} limit={data.limit} />
     </div>
 </form>
