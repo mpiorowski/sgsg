@@ -67,7 +67,7 @@ npm run test:integration
 
 ## Proto
 
-Whenever You change proto definitions, always remember to generate new types:
+Whenever You change proto definitions, always remember to generate new types. You will need to have installed `protoc-gen-go`, `protoc-gen-go-grpc` and `@grpc/proto-loader` globally. Then run:
 
 ```
 sh proto.sh
