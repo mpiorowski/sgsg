@@ -2,7 +2,7 @@
     import "../app.css";
     import Toast from "$lib/ui/toast.svelte";
     import { navigating } from "$app/stores";
-    import { toastStore } from "$lib/ui/toast.store";
+    import { toastStore } from "$lib/ui/toast";
     import Loading from "./loading.svelte";
 </script>
 

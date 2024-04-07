@@ -1,7 +1,7 @@
 <script>
     import { page } from "$app/stores";
     import Button from "$lib/form/Button.svelte";
-    import { toast } from "$lib/ui/toast.store";
+    import { toast } from "$lib/ui/toast";
 
     /** @type {import("./$types").PageData} */
     export let data;

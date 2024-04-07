@@ -2,7 +2,7 @@
     import { page } from "$app/stores";
     import { env } from "$env/dynamic/public";
     import Button from "$lib/form/Button.svelte";
-    import { toast } from "$lib/ui/toast.store";
+    import { toast } from "$lib/ui/toast";
 
     let loading = false;
 
@@ -27,7 +27,7 @@
     async function onLogin(provider) {
         try {
             loading = true;
-            const response = await fetch(`${env["PUBLIC_AUTH_URL"]}`);
+            const response = await fetch(`${env.PUBLIC_AUTH_URL}`);
             if (response.status !== 200) {
                 toast.error("Error", "Server is not running");
                 return;
@@ -38,7 +38,7 @@
             loading = false;
             return;
         }
-        window.location.href = `${env["PUBLIC_AUTH_URL"]}/oauth-login/${provider}`;
+        window.location.href = `${env.PUBLIC_AUTH_URL}/oauth-login/${provider}`;
     }
 </script>
 

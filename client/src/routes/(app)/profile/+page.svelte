@@ -12,7 +12,7 @@
     import Tooltip from "$lib/ui/Tooltip.svelte";
     import SelectNative from "$lib/form/SelectNative.svelte";
     import { enhance } from "$app/forms";
-    import { showToast, toast } from "$lib/ui/toast.store";
+    import { showToast, toast } from "$lib/ui/toast";
     import { extractError } from "$lib/errors";
     import { generateId } from "$lib/helpers";
 

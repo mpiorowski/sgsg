@@ -2,14 +2,6 @@ name: Lint Client
 on:
   workflow_call:
 
-env:
-  TARGET: production
-  JWT_SECRET: JWT_SECRET
-  PUBLIC_DIRECTUS_URL: https://template-directus.fly.dev
-  PUBLIC_AUTH_URL: http://localhost:3001
-  AUTH_URI: service-auth:3002
-  PROFILE_URI: service-profile:3003
-
 jobs:
   lint:
     runs-on: ubuntu-latest

@@ -1,5 +1,5 @@
 <script>
-    import { toast } from "$lib/ui/toast.store";
+    import { toast } from "$lib/ui/toast";
     import { enhance } from "$app/forms";
     import Button from "$lib/form/Button.svelte";
     import Input from "$lib/form/Input.svelte";

@@ -1,9 +1,9 @@
 <script>
     import { cubicOut } from "svelte/easing";
     import { fade, fly } from "svelte/transition";
-    import { toastStore } from "./toast.store.js";
+    import { toastStore } from "./toast.js";
 
-    /** @type {import("./toast.type").Toast} */
+    /** @type {import("./toast").Toast} */
     export let toast;
 </script>
 

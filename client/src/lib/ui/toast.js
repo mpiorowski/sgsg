@@ -1,12 +1,24 @@
 import { writable } from "svelte/store";
 import { generateId } from "$lib/helpers";
 
-/** @type {import("svelte/store").Writable<import("./toast.type").Toast[]>}*/
+/**
+ * @typedef {{
+ * id: string;
+ * type: "success" | "error" | "warning" | "info";
+ * title: string;
+ * description: string;
+ * duration: number;
+ * action?: {label: string, onClick: () => void};
+ * }} Toast
+ */
+export {};
+
+/** @type {import("svelte/store").Writable<Toast[]>} */
 export const toastStore = writable([]);
 
 /**
  * Show a toast
- * @param {import("./toast.type").Toast} toast
+ * @param {Toast} toast
  * @returns {void}
  */
 export function showToast(toast) {

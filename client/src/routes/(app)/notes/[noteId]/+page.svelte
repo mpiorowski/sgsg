@@ -4,7 +4,7 @@
     import { extractError } from "$lib/errors";
     import Button from "$lib/form/Button.svelte";
     import Input from "$lib/form/Input.svelte";
-    import { toast } from "$lib/ui/toast.store";
+    import { toast } from "$lib/ui/toast";
 
     /** @type {import("./$types").PageData} */
     export let data;
