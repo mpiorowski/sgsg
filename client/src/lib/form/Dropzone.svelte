@@ -9,10 +9,10 @@
     export let description;
     /** @type {string | undefined} */
     export let accept = "*/*";
-    /** @type {string[]} */
-    export let errors = [];
+    /** @type {string | undefined} */
+    export let error = "";
     /** @type {string} */
-    export let helper = "\x80";
+    export let helper = "";
 
     /** @type {FileList} */
     let files;
@@ -29,16 +29,16 @@
     }
 </script>
 
-<div>
-    <label for={name} class="block text-sm font-medium leading-6 text-gray-900">
+<div class="mb-2">
+    <label for={name} class="block text-sm font-medium leading-6">
         {label}
     </label>
     <label
         id={label}
         for={name}
-        class="mt-2 flex h-[200px] cursor-pointer justify-center rounded-lg border border-dashed border-gray-900/25
-        focus-within:border-0 focus-within:ring-2 focus-within:ring-indigo-600 hover:bg-gray-200/25
-        {errors.length > 0 ? 'border-0 ring-2 ring-red-600' : ''}"
+        class="mt-2 flex h-[200px] cursor-pointer justify-center rounded-lg border border-dashed border-gray-600 bg-gray-800
+        focus-within:border-0 focus-within:ring-2 focus-within:ring-indigo-600 hover:border-gray-500
+        {error ? 'border-0 ring-2 ring-red-600' : ''}"
     >
         <input
             bind:files
@@ -76,12 +76,12 @@
                         {file.size} bytes
                     </p>
                 {:else}
-                    <div class="mt-4 flex text-sm leading-6 text-gray-600">
+                    <div class="mt-4 flex text-sm leading-6">
                         <span class="font-semibold">
                             Click to upload an image
                         </span>
                     </div>
-                    <p class="text-xs leading-5 text-gray-500">
+                    <p class="text-xs leading-5 text-gray-400">
                         {description}
                     </p>
                 {/if}
@@ -90,9 +90,9 @@
     </label>
     <p
         id="{name}-description"
-        class="text-xs leading-6
-        {errors.length > 0 ? 'text-red-600' : 'text-gray-500'}"
+        class="inline-block text-xs leading-6
+        {error ? 'text-red-600' : 'text-gray-400'}"
     >
-        {errors.length > 0 ? errors.join(", ") : helper}
+        {error || helper}
     </p>
 </div>

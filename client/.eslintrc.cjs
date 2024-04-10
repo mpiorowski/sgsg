@@ -1,4 +1,4 @@
-/** @type { import("eslint").Linter.FlatConfig } */
+/** @type { import("eslint").Linter.Config } */
 module.exports = {
     root: true,
     extends: ["eslint:recommended", "plugin:svelte/recommended"],
@@ -6,7 +6,6 @@ module.exports = {
         sourceType: "module",
         ecmaVersion: 2020,
         extraFileExtensions: [".svelte"],
-        project: "./jsconfig.json",
     },
     env: {
         browser: true,
@@ -20,5 +19,4 @@ module.exports = {
         "no-var": "error",
         "prefer-const": "error",
     },
-    ignorePatterns: ["node_modules", "service-worker.js"],
 };

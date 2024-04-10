@@ -1,6 +1,6 @@
 // Original file: proto/auth.proto
 
-import type { UserRole as _proto_UserRole, UserRole__Output as _proto_UserRole__Output } from '../proto/UserRole';
+import type { Role as _proto_Role, Role__Output as _proto_Role__Output } from '../proto/Role';
 
 export interface User {
   'id'?: (string);
@@ -9,7 +9,7 @@ export interface User {
   'deleted'?: (string);
   'email'?: (string);
   'sub'?: (string);
-  'role'?: (_proto_UserRole);
+  'role'?: (_proto_Role);
   'avatar'?: (string);
   'subscription_id'?: (string);
   'subscription_end'?: (string);
@@ -24,7 +24,7 @@ export interface User__Output {
   'deleted': (string);
   'email': (string);
   'sub': (string);
-  'role': (_proto_UserRole__Output);
+  'role': (_proto_Role__Output);
   'avatar': (string);
   'subscription_id': (string);
   'subscription_end': (string);

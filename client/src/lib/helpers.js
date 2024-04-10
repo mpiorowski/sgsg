@@ -21,16 +21,46 @@ export function checkElement(element) {
 }
 
 /**
- * Get the value of a form field
+ * Get the string from a form field
  * @param {FormData} form
  * @param {string} key
  * @returns {string}
  */
-export function getFormValue(form, key) {
+export function getValue(form, key) {
     const value = form.get(key);
     if (!value || typeof value !== "string") {
         return "";
     }
+    return value;
+}
 
+/**
+ * Get all values from a form field
+ * @param {FormData} form
+ * @param {string} key
+ * @returns {string[]}
+ */
+export function getAllValues(form, key) {
+    const values = form.getAll(key);
+    const result = [];
+    for (const value of values) {
+        if (typeof value === "string") {
+            result.push(value);
+        }
+    }
+    return result;
+}
+
+/**
+ * Get the file from a form field
+ * @param {FormData} form
+ * @param {string} key
+ * @returns {File}
+ */
+export function getFile(form, key) {
+    const value = form.get(key);
+    if (!value || !(value instanceof File)) {
+        return new File([], "");
+    }
     return value;
 }

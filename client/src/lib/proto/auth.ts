@@ -8,8 +8,8 @@ type SubtypeConstructor<Constructor extends new (...args: any) => any, Subtype> 
 
 export interface ProtoGrpcType {
   proto: {
+    Role: EnumTypeDefinition
     User: MessageTypeDefinition
-    UserRole: EnumTypeDefinition
   }
 }
 

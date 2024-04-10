@@ -1,13 +1,13 @@
 import protoLoader from "@grpc/proto-loader";
 import { credentials, loadPackageDefinition } from "@grpc/grpc-js";
-import { ENV, SERVER_GRPC } from "$env/static/private";
+import { env } from "$env/dynamic/private";
 
 export const packageDefinition = protoLoader.loadSync(
     "./src/lib/proto/main.proto",
     {
         keepCase: true,
         longs: String,
-        enums: String,
+        enums: Number,
         defaults: true,
         oneofs: true,
     },
@@ -19,11 +19,12 @@ const proto = /** @type {import("$lib/proto/main").ProtoGrpcType} */ (
 
 /** @type {import("@grpc/grpc-js").ChannelCredentials} */
 const cr =
-    ENV === "production"
+    env.TARGET === "production"
         ? credentials.createSsl()
         : credentials.createInsecure();
 
-export const server = new proto.proto.Service(SERVER_GRPC, cr);
+export const authService = new proto.proto.AuthService(env.AUTH_URI ?? "localhost", cr);
+export const profileService = new proto.proto.ProfileService(env.PROFILE_URI ?? "localhost", cr);
 
 /**
  * Callback function for handling gRPC responses safely.

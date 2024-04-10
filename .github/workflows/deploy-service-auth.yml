@@ -1,0 +1,20 @@
+name: Deploy Service Auth
+on:
+  workflow_call:
+    secrets:
+      FLY_API_TOKEN:
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./service-auth
+    concurrency: deploy-service-profile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - run: flyctl deploy
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

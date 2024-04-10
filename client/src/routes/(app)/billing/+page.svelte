@@ -1,7 +1,7 @@
 <script>
     import { page } from "$app/stores";
     import Button from "$lib/form/Button.svelte";
-    import { toast } from "$lib/overlay/toast";
+    import { toast } from "$lib/ui/toast";
 
     /** @type {import("./$types").PageData} */
     export let data;
@@ -21,23 +21,23 @@
 
 <div class="max-w-7xl px-6 lg:px-8">
     <div class="mx-auto max-w-2xl sm:text-center">
-        <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+        <h2 class="text-3xl font-bold tracking-tight text-gray-100 sm:text-4xl">
             Simple no-tricks pricing
         </h2>
-        <p class="mt-6 text-lg leading-8 text-gray-800">
+        <p class="mt-6 text-lg leading-8 text-gray-200">
             Distinctio et nulla eum soluta et neque labore quibusdam. Saepe et
             quasi iusto modi velit ut non voluptas in. Explicabo id ut laborum.
         </p>
     </div>
     <div
         class="mx-auto mt-16 max-w-2xl rounded-3xl ring-1 sm:mt-20 lg:mx-0 lg:flex lg:max-w-none
-        {data.subscriptionActive ? 'ring-indigo-500' : 'ring-gray-700'}"
+        {data.subscription_active ? 'ring-indigo-500' : 'ring-gray-700'}"
     >
         <div class="p-8 sm:p-10 lg:flex-auto">
-            <h3 class="text-2xl font-bold tracking-tight text-gray-900">
+            <h3 class="text-2xl font-bold tracking-tight text-gray-100">
                 Best value for small teams
             </h3>
-            <p class="mt-6 text-base leading-7 text-gray-800">
+            <p class="mt-6 text-base leading-7 text-gray-200">
                 Lorem ipsum dolor sit amet consect etur adipisicing elit. Itaque
                 amet indis perferendis blanditiis repellendus etur quidem
                 assumenda.
@@ -52,7 +52,7 @@
             </div>
             <ul
                 role="list"
-                class="mt-8 grid grid-cols-1 gap-4 text-sm leading-6 text-gray-800 sm:grid-cols-2 sm:gap-6"
+                class="mt-8 grid grid-cols-1 gap-4 text-sm leading-6 text-gray-200 sm:grid-cols-2 sm:gap-6"
             >
                 <li class="flex gap-x-3">
                     <svg
@@ -121,7 +121,7 @@
                 class="rounded-2xl bg-gray-800 py-10 text-center ring-1 ring-inset ring-gray-900/5 lg:flex lg:flex-col lg:justify-center lg:py-16"
             >
                 <div class="mx-auto max-w-xs px-8">
-                    <p class="text-base font-semibold text-gray-100">
+                    <p class="text-base font-semibold text-gray-200">
                         Subscription
                     </p>
                     <p class="mt-6 flex items-baseline justify-center gap-x-2">
@@ -131,13 +131,13 @@
                             $349
                         </span>
                         <span
-                            class="text-sm font-semibold leading-6 tracking-wide text-gray-100"
+                            class="text-sm font-semibold leading-6 tracking-wide text-gray-200"
                         >
                             /month
                         </span>
                     </p>
                     <div class="mt-8">
-                        {#if data.subscriptionActive}
+                        {#if data.subscription_active}
                             <form action="?/createStripePortal" method="post">
                                 <Button class="w-full">
                                     Manage subscription
@@ -150,7 +150,7 @@
                         {/if}
                     </div>
 
-                    <p class="mt-6 text-xs leading-5 text-gray-100">
+                    <p class="mt-6 text-xs leading-5 text-gray-200">
                         Invoices and receipts available for easy company
                         reimbursement
                     </p>

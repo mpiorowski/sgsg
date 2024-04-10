@@ -1,4 +1,4 @@
-import { server, grpcSafe } from "$lib/server/grpc";
+import { authService, grpcSafe } from "$lib/server/grpc";
 import { perf } from "$lib/server/logger";
 import { createMetadata } from "$lib/server/metadata";
 import { fail, redirect } from "@sveltejs/kit";
@@ -6,7 +6,7 @@ import { fail, redirect } from "@sveltejs/kit";
 /** @type {import('./$types').PageServerLoad} */
 export function load({ locals }) {
     return {
-        subscriptionActive: locals.user.subscription_active,
+        subscription_active: locals.user.subscription_active,
     };
 }
 
@@ -14,11 +14,11 @@ export function load({ locals }) {
 export const actions = {
     createStripeCheckout: async ({ locals }) => {
         const end = perf("create_stripe_checkout");
-        const metadata = createMetadata(locals.user.id);
+        const metadata = createMetadata(locals.token);
 
         /** @type {import("$lib/server/safe").Safe<import("$lib/proto/proto/StripeUrlResponse").StripeUrlResponse__Output>} */
         const s = await new Promise((r) =>
-            server.CreateStripeCheckout({}, metadata, grpcSafe(r)),
+            authService.CreateStripeCheckout({}, metadata, grpcSafe(r)),
         );
 
         if (!s.success) {
@@ -30,11 +30,11 @@ export const actions = {
     },
     createStripePortal: async ({ locals }) => {
         const end = perf("create_stripe_portal");
-        const metadata = createMetadata(locals.user.id);
+        const metadata = createMetadata(locals.token);
 
         /** @type {import("$lib/server/safe").Safe<import("$lib/proto/proto/StripeUrlResponse").StripeUrlResponse__Output>} */
         const s = await new Promise((r) =>
-            server.CreateStripePortal({}, metadata, grpcSafe(r)),
+            authService.CreateStripePortal({}, metadata, grpcSafe(r)),
         );
 
         if (!s.success) {

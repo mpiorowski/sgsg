@@ -1,49 +1,60 @@
-version: "3"
 services:
   client:
     container_name: sgsg-client
-    working_dir: /client
     build:
       context: ./client
       target: dev
-      args:
-        ENV: development
-        COOKIE_DOMAIN: localhost
-        PUBLIC_SERVER_HTTP: http://localhost:8090
-        SERVER_GRPC: server:8091
-        UPSEND_KEY: ${UPSEND_KEY}
     volumes:
       - ./client/src:/client/src
       - ./client/.svelte-kit:/client/.svelte-kit
     ports:
       - 3000:3000
-    command: npm run dev
+    environment:
+      TARGET: development
+      JWT_SECRET: ${JWT_SECRET}
+      PUBLIC_AUTH_URL: http://localhost:3001
+      AUTH_URI: service-auth:3002
+      PROFILE_URI: service-profile:3003
+    command: sh -c "npm run dev"
 
-  server:
-    container_name: sgsg-server
+  service-auth:
+    container_name: sgsg-service-auth
     working_dir: /server
     build:
-      context: ./server
+      context: ./service-auth
       target: dev
     volumes:
-      - ./server:/server
+      - ./service-auth:/server
     ports:
-      - 8090:8090
-      - 8091:8091
+      - 3001:3001
+      - 3002:3002
     environment:
       LOG_LEVEL: debug
-      HTTP_PORT: 8090
-      GRPC_PORT: 8091
+      HTTP_PORT: 3001
+      GRPC_PORT: 3002
       CLIENT_URL: http://localhost:3000
-      SERVER_HTTP: http://localhost:8090
-      COOKIE_DOMAIN: localhost
-      TLS: "false"
-      CERT_PATH: /etc/letsencrypt/live/example.com/fullchain.pem
-      KEY_PATH: /etc/letsencrypt/live/example.com/privkey.pem
+      SERVER_HTTP: http://localhost:3001
+      JWT_SECRET: ${JWT_SECRET}
       STRIPE_API_KEY: ${STRIPE_API_KEY}
       STRIPE_PRICE_ID: ${STRIPE_PRICE_ID}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
       GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
       GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
+      TURSO_URL: libsql://sgsg-auth-mpiorowski.turso.io?authToken=${TURSO_TOKEN}
+    command: sh -c "go run /server/."
+
+  service-profile:
+    container_name: sgsg-service-profile
+    working_dir: /server
+    build:
+      context: ./service-profile
+      target: dev
+    volumes:
+      - ./service-profile:/server
+    environment:
+      LOG_LEVEL: debug
+      GRPC_PORT: 3003
+      JWT_SECRET: ${JWT_SECRET}
+      TURSO_URL: libsql://sgsg-profile-mpiorowski.turso.io?authToken=${TURSO_TOKEN}
     command: sh -c "go run /server/."

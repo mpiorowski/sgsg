@@ -1,0 +1,41 @@
+# fly.toml app configuration file generated for sgsg-service-auth on 2024-04-07T00:56:57+02:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'sgsg-service-auth'
+primary_region = 'arn'
+
+[build]
+
+[env]
+  CLIENT_URL = 'https://sgsg-client.fly.dev'
+  GRPC_PORT = '3002'
+  HTTP_PORT = '3001'
+  LOG_LEVEL = 'info'
+  REDIS_URL = 'fly-sgsg-service-auth-redis.upstash.io:6379'
+  SERVER_HTTP = 'https://sgsg-service-auth.fly.dev'
+
+[http_service]
+  internal_port = 3001
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[services]]
+  protocol = ''
+  internal_port = 3002
+
+[[services.ports]]
+    port = 3002
+    handlers = ['tls']
+
+    [services.ports.tls_options]
+      alpn = ['h2']
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1

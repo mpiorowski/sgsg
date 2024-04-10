@@ -3,9 +3,7 @@
     import Button from "$lib/form/Button.svelte";
 </script>
 
-<main
-    class="grid h-screen place-items-center bg-gray-800 px-6 py-24 sm:py-32 lg:px-8"
->
+<div class="mt-20 grid place-items-center">
     <div class="text-center">
         <p class="text-base font-semibold text-indigo-600">{$page.status}</p>
         <h1
@@ -17,7 +15,7 @@
             {$page.error?.message ?? "Unknown error"}
         </p>
         <div class="mt-10 flex items-center justify-center gap-x-6">
-            <Button class="flex-1" href="/">Go back home</Button>
+            <Button class="flex-1" href="/contact">Go back home</Button>
             <a
                 href="/support"
                 target="_blank"
@@ -27,4 +25,4 @@
             </a>
         </div>
     </div>
-</main>
+</div>

@@ -2,15 +2,6 @@ name: Lint Client
 on:
   workflow_call:
 
-env:
-  ENV: development
-  PUBLIC_SERVER_HTTP: http://127.0.0.1:8090
-  PUBLIC_SERVER_WS: ws://127.0.0.1:8090
-  SERVER_HTTP: http://server:8090
-  SERVER_GRPC: server:8091
-  COOKIE_DOMAIN: .127.0.0.1
-  UPSEND_KEY: ${UPSEND_KEY}
-
 jobs:
   lint:
     runs-on: ubuntu-latest

@@ -1,8 +1,6 @@
 // See https://kit.svelte.dev/docs/types#app
-
-import type { User__Output } from "$lib/proto/proto/User";
-
 // for information about these interfaces
+import type { User__Output } from "$lib/proto/proto/User";
 declare global {
     namespace App {
         // interface Error {}
@@ -11,6 +9,7 @@ declare global {
             token: string;
         }
         // interface PageData {}
+        // interface PageState {}
         // interface Platform {}
     }
 }

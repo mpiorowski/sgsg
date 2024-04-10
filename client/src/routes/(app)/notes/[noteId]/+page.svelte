@@ -4,7 +4,7 @@
     import { extractError } from "$lib/errors";
     import Button from "$lib/form/Button.svelte";
     import Input from "$lib/form/Input.svelte";
-    import { toast } from "$lib/overlay/toast";
+    import { toast } from "$lib/ui/toast";
 
     /** @type {import("./$types").PageData} */
     export let data;
@@ -17,7 +17,7 @@
 </script>
 
 <form
-    class="m-auto max-w-2xl p-10"
+    class="max-w-2xl"
     action="?/update"
     method="post"
     use:enhance={() => {
@@ -31,12 +31,36 @@
 >
     <div class="space-y-12">
         <div>
-            <h2
-                class="flex items-center gap-2 text-base font-semibold leading-7 text-gray-900"
-            >
-                Note details
-            </h2>
-            <p class="mt-1 text-sm leading-6 text-gray-600">
+            <div class="flex items-center gap-2">
+                <button
+                    type="button"
+                    class="relative -m-2 p-2"
+                    on:click={() => window.history.back()}
+                >
+                    <span class="sr-only">Back</span>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="feather feather-arrow-left"
+                    >
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                </button>
+                <h2
+                    class="flex items-center gap-2 text-base font-semibold leading-7"
+                >
+                    Note details
+                </h2>
+            </div>
+            <p class="mt-1 text-sm leading-6 text-gray-400">
                 {data.note.id}
             </p>
         </div>

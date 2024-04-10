@@ -1,9 +1,8 @@
-import { logger } from "$lib/server/logger";
-
 /**
- * @param {Promise<T> | Function} promiseOrFunc
+ * @param {Promise<T> | (() => T)} promiseOrFunc
  * @returns {Promise<import("./safe").Safe<T>> | import("./safe").Safe<T>}
  * @template T
+ * @public
  */
 export function safe(promiseOrFunc) {
     if (promiseOrFunc instanceof Promise) {
@@ -23,7 +22,6 @@ async function safeAsync(promise) {
         const data = await promise;
         return { data, success: true };
     } catch (e) {
-        logger.error(e);
         if (e instanceof Error) {
             return { success: false, error: e.message };
         }
@@ -32,7 +30,7 @@ async function safeAsync(promise) {
 }
 
 /**
- * @param {Function} func
+ * @param {() => T} func
  * @returns {import("./safe").Safe<T>}
  * @template T
  * @private
@@ -42,7 +40,6 @@ function safeSync(func) {
         const data = func();
         return { data, success: true };
     } catch (e) {
-        logger.error(e);
         if (e instanceof Error) {
             return { success: false, error: e.message };
         }

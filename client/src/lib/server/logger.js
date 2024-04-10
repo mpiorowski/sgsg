@@ -1,8 +1,8 @@
-import { ENV } from "$env/static/private";
+import { env } from "$env/dynamic/private";
 import pino from "pino";
 
 function get_pino_config() {
-    if (ENV === "development") {
+    if (env.TARGET === "development") {
         return {
             transport: {
                 target: "pino-pretty",
@@ -27,7 +27,7 @@ export const logger = pino(get_pino_config());
  * @returns {() => void} - The end function
  */
 export function perf(name) {
-    if (ENV === "productionn") {
+    if (env.TARGET === "productionn") {
         return () => {
             // do nothing
         };
