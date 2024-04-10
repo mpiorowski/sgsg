@@ -7,7 +7,7 @@ https://sgsg.bearbyte.org/
 It is an open-source full-stack application with two main principles in mind: **PERFORMANCE** and **SIMPLICITY**.
 The idea is that you can take this template and use it to build almost anything you need, and it will scale very well.
 
-We are also adding **SCALABILITY** to the mix with the usage of [Fly.io](https://fly.io/) and [Turso](https://turso.dev/).
+We are also adding **SCALABILITY** to the mix with the usage of [Fly.io](https://fly.io/) and [Turso](https://turso.tech/).
 
 Also, this is not the next **dev** template. It has everything you need to push it to production: Nginx configuration, Docker deployments, GitHub Actions, Grafana logging, etc.
 
