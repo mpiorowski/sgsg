@@ -9,7 +9,7 @@ The idea is that you can take this template and use it to build almost anything 
 
 We are also adding **SCALABILITY** to the mix with the usage of [Fly.io](https://fly.io/) and [Turso](https://turso.tech/).
 
-Also, this is not the next **dev** template. It has everything you need to push it to production: Nginx configuration, Docker deployments, GitHub Actions, Grafana logging, etc.
+Also, this is not the next **dev** template. It has everything you need to push it to production: Docker deployments, GitHub Actions, Grafana logging, etc.
 
 ## Alternative
 
@@ -75,14 +75,6 @@ Whenever You change proto definitions, always remember to generate new types. Yo
 sh proto.sh
 ```
 
-## Backup
-
-To backup the database, run the following command:
-
-```
-sqlite3 server/system/db.sqlite3 ".backup 'server/system/db.sqlite3.bak'"
-```
-
 ## Deployment
 
 The only prerequisites are `Docker` and `Docker Compose`.
@@ -92,6 +84,7 @@ Afterward, the only task remaining is to configure environment variables accordi
 ### Development
 
 ```
+JWT_SECRET=JWT_SECRET \
 STRIPE_API_KEY=STRIPE_API_KEY \
 STRIPE_PRICE_ID=STRIPE_PRICE_ID \
 GOOGLE_CLIENT_ID=GOOGLE_CLIENT_ID \
@@ -99,10 +92,13 @@ GOOGLE_CLIENT_SECRET=GOOGLE_CLIENT_SECRET \
 GITHUB_CLIENT_ID=GITHUB_CLIENT_ID \
 GITHUB_CLIENT_SECRET=GITHUB_CLIENT_SECRET \
 UPSEND_KEY=UPSEND_KEY \
+TURSO_TOKEN=TURSO_TOKEN \
 docker compose up --build
 ```
 
-### Production (or how to set up a production application for less than 10 euros per month)
+### Production single server (or how to set up a production application for less than 10 euros per month)
+
+The main source of deployment have been changed to Fly.io and Turso. But there is a copy of server alone deployment on branch `server`.
 
 Let's embark on the full journey:
 
@@ -163,3 +159,11 @@ docker compose -f docker-compose.client/server.yml up -d --build
 That's all! From now on, every push to the `release` branch will automatically pull new changes to your servers and rerun the application. You will be able to see the deployments using GitHub Actions.
 
 Enjoy!
+
+## Backup
+
+To backup the database, run the following command:
+
+```
+sqlite3 server/system/db.sqlite3 ".backup 'server/system/db.sqlite3.bak'"
+```
