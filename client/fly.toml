@@ -12,7 +12,6 @@ primary_region = 'arn'
   AUTH_URI = 'sgsg-service-auth.fly.dev:3002'
   PROFILE_URI = 'sgsg-service-profile.fly.dev:3003'
   PUBLIC_AUTH_URL = 'https://sgsg-service-auth.fly.dev'
-  PUBLIC_PROFILE_AUTH = 'https://sgsg-service-profile.fly.dev'
   TARGET = 'production'
 
 [http_service]
@@ -24,6 +23,6 @@ primary_region = 'arn'
   processes = ['app']
 
 [[vm]]
-  memory = '1gb'
+  memory = '2gb'
   cpu_kind = 'shared'
-  cpus = 1
+  cpus = 2

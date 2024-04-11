@@ -9,11 +9,10 @@ primary_region = 'arn'
 [build]
 
 [env]
-  CLIENT_URL = 'https://sgsg-client.fly.dev'
+  CLIENT_URL = 'https://sgsg.bearbyte.org'
   GRPC_PORT = '3002'
   HTTP_PORT = '3001'
   LOG_LEVEL = 'info'
-  REDIS_URL = 'fly-sgsg-service-auth-redis.upstash.io:6379'
   SERVER_HTTP = 'https://sgsg-service-auth.fly.dev'
 
 [http_service]
@@ -27,6 +26,10 @@ primary_region = 'arn'
 [[services]]
   protocol = ''
   internal_port = 3002
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
 
 [[services.ports]]
     port = 3002
