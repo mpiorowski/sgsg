@@ -135,7 +135,7 @@
         bind:this={floatingEl}
         id="tooltip-{id}"
         role="tooltip"
-        class="invisible absolute w-fit rounded bg-gray-800 p-2 font-normal text-white opacity-0 transition-opacity delay-200
+        class="invisible absolute w-fit rounded bg-gray-800 px-4 py-2 font-normal text-white opacity-0 transition-opacity delay-200
         group-hover:visible group-hover:opacity-100 group-focus:visible group-focus:opacity-100"
     >
         {text}

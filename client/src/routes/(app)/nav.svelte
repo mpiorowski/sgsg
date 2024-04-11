@@ -1,5 +1,6 @@
 <script>
     import { page } from "$app/stores";
+    import Tooltip from "$lib/ui/Tooltip.svelte";
 
     /** @type {() => void} */
     export let close = () => {};
@@ -45,80 +46,82 @@
     <nav class="flex flex-1 flex-col">
         <ul role="list" class="flex flex-col items-center space-y-2">
             {#each nav as { name, title }}
-                <li class="w-full lg:w-auto">
-                    <a
-                        on:click={close}
-                        href="/{name}"
-                        class="group flex rounded-md p-3 text-sm font-semibold leading-6
+                <Tooltip text={title}>
+                    <li class="w-full lg:w-auto">
+                        <a
+                            on:click={close}
+                            href="/{name}"
+                            class="group flex rounded-md p-3 text-sm font-semibold leading-6
                     {current === name
-                            ? 'bg-gray-800 text-white'
-                            : 'text-gray-400 hover:bg-gray-800 hover:text-white'}"
-                    >
-                        {#if name === "profile"}
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                class="feather feather-user"
-                            >
-                                <path
-                                    d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
-                                ></path>
-                                <circle cx="12" cy="7" r="4"></circle>
-                            </svg>
-                        {:else if name === "notes"}
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                class="feather feather-pen-tool"
-                            >
-                                <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
-                                <path
-                                    d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"
-                                ></path>
-                                <path d="M2 2l7.586 7.586"></path>
-                                <circle cx="11" cy="11" r="2"></circle>
-                            </svg>
-                        {:else if name === "billing"}
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                class="feather feather-credit-card"
-                            >
-                                <rect
-                                    x="1"
-                                    y="4"
-                                    width="22"
-                                    height="16"
-                                    rx="2"
-                                    ry="2"
-                                ></rect>
-                                <line x1="1" y1="10" x2="23" y2="10"></line>
-                            </svg>
-                        {/if}
-                        <span class="lg:sr-only ml-4">{title}</span>
-                    </a>
-                </li>
+                                ? 'bg-gray-800 text-white'
+                                : 'text-gray-400 hover:bg-gray-800 hover:text-white'}"
+                        >
+                            {#if name === "profile"}
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="feather feather-user"
+                                >
+                                    <path
+                                        d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
+                                    ></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                            {:else if name === "notes"}
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="feather feather-pen-tool"
+                                >
+                                    <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+                                    <path
+                                        d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"
+                                    ></path>
+                                    <path d="M2 2l7.586 7.586"></path>
+                                    <circle cx="11" cy="11" r="2"></circle>
+                                </svg>
+                            {:else if name === "billing"}
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="feather feather-credit-card"
+                                >
+                                    <rect
+                                        x="1"
+                                        y="4"
+                                        width="22"
+                                        height="16"
+                                        rx="2"
+                                        ry="2"
+                                    ></rect>
+                                    <line x1="1" y1="10" x2="23" y2="10"></line>
+                                </svg>
+                            {/if}
+                            <span class="ml-4 lg:sr-only">{title}</span>
+                        </a>
+                    </li>
+                </Tooltip>
             {/each}
         </ul>
     </nav>
