@@ -14,7 +14,7 @@ export async function load({ locals, url }) {
     const total = await new Promise((res) =>
         profileService.CountNotesByUserId(
             {},
-            createMetadata(locals.token),
+            createMetadata(locals.user.id),
             grpcSafe(res),
         ),
     );
@@ -29,7 +29,7 @@ export async function load({ locals, url }) {
     };
     /** @type {import("$lib/proto/proto/Note").Note__Output[]} */
     const notes = [];
-    const metadata = createMetadata(locals.token);
+    const metadata = createMetadata(locals.user.id);
     const notesStream = profileService.GetNotesByUserId(request, metadata);
 
     /** @type {Promise<void>} */
@@ -63,7 +63,7 @@ export const actions = {
             title: getValue(form, "title"),
             content: getValue(form, "content"),
         };
-        const metadata = createMetadata(locals.token);
+        const metadata = createMetadata(locals.user.id);
         /** @type {import("$lib/server/safe").GrpcSafe<import("$lib/proto/proto/Note").Note__Output>} */
         const req = await new Promise((r) => {
             profileService.CreateNote(data, metadata, grpcSafe(r));

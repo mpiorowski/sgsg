@@ -9,7 +9,7 @@ export async function load({ locals, params }) {
     const end = perf("load_note");
     const id = params.noteId;
 
-    const metadata = createMetadata(locals.token);
+    const metadata = createMetadata(locals.user.id);
     /** @type {import("$lib/server/safe").GrpcSafe<import("$lib/proto/proto/Note").Note__Output>} */
     const req = await new Promise((r) => {
         profileService.GetNoteById({ id }, metadata, grpcSafe(r));
@@ -38,7 +38,7 @@ export const actions = {
             content: getValue(form, "content"),
         };
 
-        const metadata = createMetadata(locals.token);
+        const metadata = createMetadata(locals.user.id);
         /** @type {import("$lib/server/safe").GrpcSafe<import("$lib/proto/proto/Note").Note__Output>} */
         const req = await new Promise((r) => {
             profileService.CreateNote(data, metadata, grpcSafe(r));
@@ -57,7 +57,7 @@ export const actions = {
         const data = {
             id: getValue(form, "id"),
         };
-        const metadata = createMetadata(locals.token);
+        const metadata = createMetadata(locals.user.id);
         /** @type {import("$lib/server/safe").GrpcSafe<import("$lib/proto/proto/Empty").Empty__Output>} */
         const req = await new Promise((r) => {
             profileService.DeleteNoteById(data, metadata, grpcSafe(r));
