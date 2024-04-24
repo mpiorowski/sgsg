@@ -28,7 +28,7 @@ primary_region = 'arn'
   min_machines_running = 1
   processes = ['app']
 
-[[services.ports]]
+  [[services.ports]]
     port = 3003
     handlers = ['tls']
 
