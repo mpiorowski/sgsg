@@ -1,7 +1,9 @@
-package auth
+package service
 
 import (
+	"context"
 	pb "service-auth/proto"
+	"service-auth/store"
 	"service-auth/system"
 	"testing"
 )
@@ -30,22 +32,23 @@ func TestMain(m *testing.M) {
 	m.Run()
 }
 
-func setup() AuthDB {
+func cleanup() system.Storage {
 	storage := system.NewMemoryStorage()
 	_, err := storage.Conn.Exec("delete from users")
 	if err != nil {
 		panic(err)
 	}
-	var db = NewAuthDB(&storage)
-	return db
+	return storage
 }
 
 func TestInsertUsers(t *testing.T) {
-	db := setup()
+	var ctx context.Context = context.Background()
+	storage := cleanup()
+	db := store.NewAuthDB(&storage)
 
 	// Test case 1: Insert users
 	for _, user := range users {
-		newUser, err := db.insertUser(user.Email, user.Sub, user.Avatar)
+		newUser, err := db.InsertUser(ctx, user.Email, user.Sub, user.Avatar)
 		if err != nil {
 			t.Error(err)
 		}
@@ -59,40 +62,42 @@ func TestInsertUsers(t *testing.T) {
 	}
 
 	// Test case 2: Insert duplicate user
-	_, err := db.insertUser(users[0].Email, users[0].Sub, users[0].Avatar)
+	_, err := db.InsertUser(ctx, users[0].Email, users[0].Sub, users[0].Avatar)
 	if err == nil {
 		t.Error("Duplicate user is inserted")
 	}
 
 	// Test case 3: Insert user with empty email
-	_, err = db.insertUser("", users[0].Sub, users[0].Avatar)
+	_, err = db.InsertUser(ctx, "", users[0].Sub, users[0].Avatar)
 	if err == nil {
 		t.Error("User with empty email is inserted")
 	}
 
 	// Test case 4: Insert user with empty sub
-	_, err = db.insertUser(users[0].Email, "", users[0].Avatar)
+	_, err = db.InsertUser(ctx, users[0].Email, "", users[0].Avatar)
 	if err == nil {
 		t.Error("User with empty sub is inserted")
 	}
 
 	// Test case 5: Insert user with empty avatar
-	_, err = db.insertUser("mat@gmail.com", "789", "")
+	_, err = db.InsertUser(ctx, "mat@gmail.com", "789", "")
 	if err != nil {
 		t.Error("User with empty avatar is not inserted")
 	}
 }
 
 func TestSelectUsers(t *testing.T) {
-	db := setup()
+	var ctx context.Context = context.Background()
+	storage := cleanup()
+	db := store.NewAuthDB(&storage)
 
 	// Test case 1: Select users
 	for _, user := range users {
-		u, err := db.insertUser(user.Email, user.Sub, user.Avatar)
+		u, err := db.InsertUser(ctx, user.Email, user.Sub, user.Avatar)
 		if err != nil {
 			t.Error(err)
 		}
-		newUser, err := db.selectUserById(u.Id)
+		newUser, err := db.SelectUserById(ctx, u.Id)
 		if err != nil {
 			t.Error(err)
 		}
@@ -106,13 +111,13 @@ func TestSelectUsers(t *testing.T) {
 	}
 
 	// Test case 2: Select non-existing user
-	_, err := db.selectUserById("789")
+	_, err := db.SelectUserById(ctx, "789")
 	if err == nil {
 		t.Error("Non-existing user is selected")
 	}
 
-	// Test case 3: Select user by email and sub
-	newUser, err := db.selectUserByEmailAndSub(users[0].Email, users[0].Sub)
+	// Test case 3: Select user by email
+	newUser, err := db.SelectUserByEmail(ctx, users[0].Email)
 	if err != nil {
 		t.Error(err)
 	}
@@ -124,8 +129,8 @@ func TestSelectUsers(t *testing.T) {
 		t.Error("User is not equal")
 	}
 
-	// Test case 4: Select non-existing user by email and sub
-	_, err = db.selectUserByEmailAndSub("", users[0].Sub)
+	// Test case 4: Select non-existing user by email
+	_, err = db.SelectUserByEmail(ctx, "")
 	if err == nil {
 		t.Error("Non-existing user is selected")
 	}

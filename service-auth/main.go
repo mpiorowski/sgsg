@@ -6,7 +6,8 @@ import (
 	"log/slog"
 	"net"
 	"net/http"
-	"service-auth/auth"
+	"service-auth/service"
+	"service-auth/store"
 	"service-auth/system"
 	"time"
 
@@ -60,11 +61,13 @@ func main() {
 	}()
 
 	// Run the HTTP server
-	var authDb = auth.NewAuthDB(&storage)
-	var auth = auth.NewAuthService(authDb)
 	mux := http.NewServeMux()
-	mux.HandleFunc("/oauth-login/{provider}", auth.OauthLogin)
-	mux.HandleFunc("/oauth-callback/{provider}", auth.OauthCallback)
+	mux.HandleFunc("/oauth-login/{provider}", func(w http.ResponseWriter, r *http.Request) {
+        service.OauthLogin(storage, w, r)
+    })
+	mux.HandleFunc("/oauth-callback/{provider}", func(w http.ResponseWriter, r *http.Request) {
+        service.OauthCallback(storage, w, r)
+    })
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		defer system.Perf("ping", time.Now())
 		w.Header().Set("Access-Control-Allow-Origin", system.CLIENT_URL)
@@ -92,7 +95,8 @@ func main() {
 	}()
 
 	// Run the system tasks
-	go system.StartTask(context.Background(), auth.CleanTokens, time.Hour*24, "auth.CleanTokens")
+    var authDB = store.NewAuthDB(&storage)
+	go system.StartTask(context.Background(), authDB.CleanTokens, time.Hour*24, "auth.CleanTokens")
 
 	select {}
 }

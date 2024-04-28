@@ -3,24 +3,18 @@ package main
 import (
 	"context"
 
-	"service-auth/auth"
 	pb "service-auth/proto"
+	"service-auth/service"
 )
 
 func (s *server) Auth(ctx context.Context, in *pb.Empty) (*pb.AuthResponse, error) {
-    var authDb = auth.NewAuthDB(&s.storage)
-	var auth = auth.NewAuthService(authDb)
-	return auth.Auth(ctx)
+	return service.Auth(ctx, s.storage)
 }
 
 func (s *server) CreateStripeCheckout(ctx context.Context, in *pb.Empty) (*pb.StripeUrlResponse, error) {
-    var authDb = auth.NewAuthDB(&s.storage)
-	var auth = auth.NewAuthService(authDb)
-	return auth.CreateStripeCheckout(ctx)
+	return service.CreateStripeCheckout(ctx, s.storage)
 }
 
 func (s *server) CreateStripePortal(ctx context.Context, in *pb.Empty) (*pb.StripeUrlResponse, error) {
-    var authDb = auth.NewAuthDB(&s.storage)
-	var auth = auth.NewAuthService(authDb)
-	return auth.CreateStripePortal(ctx)
+	return service.CreateStripePortal(ctx, s.storage)
 }
