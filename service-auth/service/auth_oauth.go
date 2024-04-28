@@ -35,16 +35,11 @@ type UserInfo struct {
 	avatar string
 }
 
-type OAuth interface {
-    getOAuthConfig() *oauth2.Config
-	getUserInfo(accessToken string) (*UserInfo, error)
-}
-
 type OAuthGoogle struct {
 	googleOAuthConfig oauth2.Config
 }
 
-func newOAuthGoogle() OAuth {
+func newOAuthGoogle() *OAuthGoogle {
 	return &OAuthGoogle{
 		googleOAuthConfig: googleOAuthConfig,
 	}
@@ -54,7 +49,7 @@ type OAuthGithub struct {
 	githubOAuthConfig oauth2.Config
 }
 
-func newOAuthGithub() OAuth {
+func newOAuthGithub() *OAuthGithub {
 	return &OAuthGithub{
 		githubOAuthConfig: githubOAuthConfig,
 	}

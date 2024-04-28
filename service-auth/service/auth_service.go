@@ -31,6 +31,11 @@ type AuthStorage interface {
 	UpdateUserActivity(ctx context.Context, id string) error
 }
 
+type OAuth interface {
+    getOAuthConfig() *oauth2.Config
+	getUserInfo(accessToken string) (*UserInfo, error)
+}
+
 func getUser(ctx context.Context, storage system.Storage) (*pb.User, error) {
 	claims, err := system.ExtractToken(ctx)
 	if err != nil {
