@@ -20,7 +20,7 @@ primary_region = 'arn'
   force_https = true
   auto_stop_machines = true
   auto_start_machines = true
-  min_machines_running = 1
+  min_machines_running = 0
   processes = ['app']
 
 [[services]]
@@ -28,7 +28,7 @@ primary_region = 'arn'
   internal_port = 3002
   auto_stop_machines = true
   auto_start_machines = true
-  min_machines_running = 1
+  min_machines_running = 0
   processes = ['app']
 
   [[services.ports]]
