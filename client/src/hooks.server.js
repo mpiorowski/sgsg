@@ -82,5 +82,8 @@ export async function handle({ event, resolve }) {
     if (event.url.pathname === "/") {
         throw redirect(303, "/profile");
     }
-    return await resolve(event);
+    return await resolve(event, {
+        preload: ({ type }) =>
+            type === "js" || type === "css" || type === "font",
+    });
 }
