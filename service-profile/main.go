@@ -22,8 +22,7 @@ func main() {
 
 	// Connect to the database
 	storage, err, clean := system.NewStorage()
-    defer clean()
-
+	defer clean()
 	if err != nil {
 		slog.Error("Error opening database", "db.Connect", err)
 		panic(err)

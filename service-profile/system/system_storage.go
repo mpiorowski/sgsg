@@ -6,7 +6,6 @@ import (
 	"os"
 	"path/filepath"
 
-	// _ "github.com/mattn/go-sqlite3"
 	"github.com/tursodatabase/go-libsql"
 )
 
@@ -20,7 +19,6 @@ func NewStorage() (Storage, error, func()) {
 	if err != nil {
 		return Storage{}, fmt.Errorf("Error creating temp dir: %w", err), nil
 	}
-	defer os.RemoveAll(dir)
 
 	dbPath := filepath.Join(dir, dbName)
 
@@ -32,12 +30,8 @@ func NewStorage() (Storage, error, func()) {
 	if err != nil {
 		return Storage{}, fmt.Errorf("Error creating connector: %w", err), nil
 	}
-	// defer connector.Close()
 
 	db := sql.OpenDB(connector)
-	// defer db.Close()
-	// conn, err := sql.Open("libsql", TURSO_URL)
-	// conn, err := sql.Open("sqlite3", "file::memory:?cache=shared&mode=rwc&_journal_mode=WAL&busy_timeout=10000")
 
 	var clean func() = func() {
 		os.RemoveAll(dir)

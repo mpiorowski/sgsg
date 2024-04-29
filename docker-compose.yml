@@ -41,7 +41,8 @@ services:
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
       GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
       GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
-      TURSO_URL: libsql://sgsg-auth-mpiorowski.turso.io?authToken=${TURSO_TOKEN}
+      TURSO_URL: libsql://sgsg-auth-mpiorowski.turso.io
+      TURSO_TOKEN: ${TURSO_TOKEN}
     command: sh -c "go run /server/."
 
   service-profile:
