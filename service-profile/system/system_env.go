@@ -30,4 +30,5 @@ var (
 	GRPC_PORT            = mustHaveEnv("GRPC_PORT")
 	JWT_SECRET           = mustHaveEnv("JWT_SECRET")
 	TURSO_URL            = mustHaveEnv("TURSO_URL")
+    TURSO_TOKEN          = mustHaveEnv("TURSO_TOKEN")
 )

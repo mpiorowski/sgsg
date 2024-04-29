@@ -26,7 +26,8 @@ func main() {
 	system.InitLogger()
 
 	// Connect to the database
-	storage, err := system.NewStorage()
+	storage, err, clean := system.NewStorage()
+	defer clean()
 	if err != nil {
 		slog.Error("Error opening database", "system.NewStorage", err)
 		panic(err)
@@ -63,11 +64,11 @@ func main() {
 	// Run the HTTP server
 	mux := http.NewServeMux()
 	mux.HandleFunc("/oauth-login/{provider}", func(w http.ResponseWriter, r *http.Request) {
-        service.OauthLogin(storage, w, r)
-    })
+		service.OauthLogin(storage, w, r)
+	})
 	mux.HandleFunc("/oauth-callback/{provider}", func(w http.ResponseWriter, r *http.Request) {
-        service.OauthCallback(storage, w, r)
-    })
+		service.OauthCallback(storage, w, r)
+	})
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		defer system.Perf("ping", time.Now())
 		w.Header().Set("Access-Control-Allow-Origin", system.CLIENT_URL)
@@ -95,7 +96,7 @@ func main() {
 	}()
 
 	// Run the system tasks
-    var authDB = store.NewAuthDB(&storage)
+	var authDB = store.NewAuthDB(&storage)
 	go system.StartTask(context.Background(), authDB.CleanTokens, time.Hour*24, "auth.CleanTokens")
 
 	select {}

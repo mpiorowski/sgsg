@@ -21,7 +21,8 @@ func main() {
 	system.InitLogger()
 
 	// Connect to the database
-	storage, err := system.NewStorage()
+	storage, err, clean := system.NewStorage()
+	defer clean()
 	if err != nil {
 		slog.Error("Error opening database", "db.Connect", err)
 		panic(err)
@@ -42,7 +43,7 @@ func main() {
 		slog.Error("Error listening on gRPC port", "net.Listen", err)
 		panic(err)
 	}
-    s := grpc.NewServer()
+	s := grpc.NewServer()
 	pb.RegisterProfileServiceServer(s, &server{
 		storage: storage,
 	})
