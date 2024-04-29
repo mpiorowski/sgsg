@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
 @font-face {
     font-family: Poppins;
     font-weight: 300;
@@ -38,6 +39,7 @@
     src: url(/fonts/Poppins-ExtraBold.ttf);
     font-display: swap;
 }
+*/
 
 * {
     min-width: 0;
