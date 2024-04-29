@@ -56,5 +56,6 @@ services:
       LOG_LEVEL: debug
       GRPC_PORT: 3003
       JWT_SECRET: ${JWT_SECRET}
-      TURSO_URL: libsql://sgsg-profile-mpiorowski.turso.io?authToken=${TURSO_TOKEN}
+      TURSO_URL: libsql://sgsg-profile-mpiorowski.turso.io
+      TURSO_TOKEN: ${TURSO_TOKEN}
     command: sh -c "go run /server/."
