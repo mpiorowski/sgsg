@@ -11,8 +11,6 @@ import (
 	"time"
 
 	"golang.org/x/oauth2"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 
 	pb "service-auth/proto"
 )
@@ -32,35 +30,18 @@ type AuthStorage interface {
 }
 
 type OAuth interface {
-    getOAuthConfig() *oauth2.Config
+	getOAuthConfig() *oauth2.Config
 	getUserInfo(accessToken string) (*UserInfo, error)
 }
 
-func getUser(ctx context.Context, storage system.Storage) (*pb.User, error) {
-	claims, err := system.ExtractToken(ctx)
-	if err != nil {
-		return nil, fmt.Errorf("extractToken: %w", err)
-	}
 
-	var store AuthStorage = store.NewAuthDB(&storage)
-	user, err := store.SelectUserById(ctx, claims.Id)
-	if err != nil {
-		return nil, fmt.Errorf("selectUserById: %w", err)
-	}
-	subscribed := checkIfSubscribed(ctx, storage, user)
-	user.SubscriptionActive = subscribed
-	return user, nil
-}
-
-/**
- * 1. Extract phantom token from context
- * 2. Using it's id, get oauth token from database
- * 3. Check if oauth token is valid
- * 4. Refresh oauth token if it's expired
- * 5. Create new phantom token
- * 6. Get user from database
- * 7. Return user and new phantom token
- */
+// 1. Extract phantom token from context
+// 2. Using it's id, get oauth token from database
+// 3. Check if oauth token is valid
+// 4. Refresh oauth token if it's expired
+// 5. Create new phantom token
+// 6. Get user from database
+// 7. Return user and new phantom token
 func Auth(
 	ctx context.Context,
 	storage system.Storage,
@@ -69,7 +50,7 @@ func Auth(
 	claims, err := system.ExtractToken(ctx)
 	if err != nil {
 		slog.Error("Error extracting token", "system.ExtractToken", err)
-		return nil, status.Error(codes.Unauthenticated, "Unauthenticated")
+		return nil, err
 	}
 
 	var store AuthStorage = store.NewAuthDB(&storage)
@@ -77,24 +58,24 @@ func Auth(
 	token, err := store.SelectTokenById(ctx, claims.Id)
 	if err != nil {
 		slog.Error("Error selecting token by id", "authDB.selectTokenById", err)
-		return nil, status.Error(codes.Unauthenticated, "Unauthenticated")
+		return nil, err
 	}
 	expires, err := time.Parse(time.RFC3339, token.Expires)
 	if err != nil || time.Now().After(expires) {
 		slog.Error("Token expired", "token.Expires", token.Expires)
-		return nil, status.Error(codes.Unauthenticated, "Unauthenticated")
+		return nil, err
 	}
 
 	// get user from database
 	user, err := store.SelectUserById(ctx, token.UserId)
 	if err != nil {
 		slog.Error("Error selecting user by id", "authDB.selectUserById", err)
-		return nil, status.Error(codes.Unauthenticated, "Unauthenticated")
+		return nil, err
 	}
 
 	// Update token expiration and user
 	go func() {
-        var ctx context.Context = context.Background()
+		var ctx context.Context = context.Background()
 		err = store.UpdateToken(ctx, claims.Id, time.Now().Add(7*24*time.Hour).Format(time.RFC3339))
 		if err != nil {
 			slog.Error("Error updating token", "authDB.updateToken", err)
