@@ -21,6 +21,6 @@ export function createMetadata(id) {
         expiresIn: "1h",
     });
 
-    metadata.set("x-authorization", `bearer ${oauthToken}`);
+    metadata.set("authorization", `bearer ${oauthToken}`);
     return metadata;
 }

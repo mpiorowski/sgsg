@@ -20,7 +20,7 @@ func ExtractToken(ctx context.Context) (Claims, error) {
 		return claims, fmt.Errorf("Missing context metadata")
 	}
 
-	token := md.Get("x-authorization")
+	token := md.Get("authorization")
 	if len(token) == 0 {
 		return claims, fmt.Errorf("Missing authorization header")
 	}

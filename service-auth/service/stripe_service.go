@@ -11,8 +11,6 @@ import (
 	checkout_session "github.com/stripe/stripe-go/v76/checkout/session"
 	"github.com/stripe/stripe-go/v76/customer"
 	"github.com/stripe/stripe-go/v76/subscription"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 
 	pb "service-auth/proto"
 	"service-auth/store"
@@ -25,6 +23,22 @@ type StripeStorage interface {
 	UpdateSubscriptionEnd(ctx context.Context, userId string, subscriptionEnd string) error
 }
 
+func getUser(ctx context.Context, storage system.Storage) (*pb.User, error) {
+	claims, err := system.ExtractToken(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("extractToken: %w", err)
+	}
+
+	var store AuthStorage = store.NewAuthDB(&storage)
+	user, err := store.SelectUserById(ctx, claims.Id)
+	if err != nil {
+		return nil, fmt.Errorf("selectUserById: %w", err)
+	}
+	subscribed := checkIfSubscribed(ctx, storage, user)
+	user.SubscriptionActive = subscribed
+	return user, nil
+}
+
 func CreateStripeCheckout(
 	ctx context.Context,
 	storage system.Storage,
@@ -33,7 +47,7 @@ func CreateStripeCheckout(
 	user, err := getUser(ctx, storage)
 	if err != nil {
 		slog.Error("Error authorizing user", "auth.GetUser", err)
-		return nil, status.Error(codes.Unauthenticated, "Unauthenticated")
+		return nil, err
 	}
 
 	customerId := user.SubscriptionId
@@ -47,7 +61,7 @@ func CreateStripeCheckout(
 		)
 		if err != nil {
 			slog.Error("Error creating stripe user", "createStripeUser", err)
-			return nil, status.Error(codes.Internal, "Error creating stripe user")
+			return nil, err
 		}
 	}
 
@@ -72,7 +86,7 @@ func CreateStripeCheckout(
 	session, err := checkout_session.New(params)
 	if err != nil {
 		slog.Error("Error creating stripe checkout", "checkout_session.New", err)
-		return nil, status.Error(codes.Internal, "Error creating stripe checkout")
+		return nil, err
 	}
 
 	var store StripeStorage = store.NewAuthDB(&storage)
@@ -80,7 +94,7 @@ func CreateStripeCheckout(
 	err = store.UpdateSubscriptionCheck(ctx, user.Id, "1970-01-01T00:00:00Z")
 	if err != nil {
 		slog.Error("Error updating subscription check date", "updateSubscriptionCheck", err)
-		return nil, status.Error(codes.Internal, "Error updating subscription check date")
+		return nil, err
 	}
 	return &pb.StripeUrlResponse{
 		Url: session.URL,
@@ -95,7 +109,7 @@ func CreateStripePortal(
 	user, err := getUser(ctx, storage)
 	if err != nil {
 		slog.Error("Error authorizing user", "auth.GetUser", err)
-		return nil, status.Error(codes.Unauthenticated, "Unauthenticated")
+		return nil, err
 	}
 	stripe.Key = system.STRIPE_API_KEY
 
@@ -106,7 +120,7 @@ func CreateStripePortal(
 	session, err := portal_session.New(params)
 	if err != nil {
 		slog.Error("Error creating stripe portal", "portal_session.New", err)
-		return nil, status.Error(codes.Internal, "Error creating stripe portal")
+		return nil, err
 	}
 
 	return &pb.StripeUrlResponse{
