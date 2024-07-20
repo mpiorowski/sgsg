@@ -27,7 +27,7 @@ export const logger = pino(get_pino_config());
  * @returns {() => void} - The end function
  */
 export function perf(name) {
-    if (env.TARGET === "productionn") {
+    if (env.TARGET === "production") {
         return () => {
             // do nothing
         };
