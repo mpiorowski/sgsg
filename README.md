@@ -10,7 +10,9 @@ I'll keep this brief and skip the marketing talk. GoFast is a more advanced skel
 
 In short, within 2 minutes, you can have OAuth, payments, emails, files, and monitoring up and running.
 
-As it's already generating some interest, this is where I will be focusing my efforts. The code will always be open and free, but I invite everyone to try GoFast and/or join the community I'm building around Go + any modern framework: https://discord.com/invite/EdSZbQbRyJ
+As it's already generating some interest, this is where I will be focusing my efforts. The SGSG will always be open and free, but I invite everyone to try GoFast and/or join the community I'm building around Go + any modern framework: 
+
+https://discord.com/invite/EdSZbQbRyJ
 
 ## Demo
 
