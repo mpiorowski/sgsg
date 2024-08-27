@@ -1,5 +1,19 @@
 # SGSG = Svelte + Go + SQLite + gRPC
 
+## Announcement
+
+This release is mostly about cleaning up, but I also have a small announcement. While I love gRPC, introducing it to the company has been challenging, and most of the time, it's not necessary. So, I had to create something that gives me a choice—and I did. I spent a lot of time branching this code into a tool that would be usable in my current company. Then, I started adding features: providers to choose from, and more. The end product became so popular that I decided to share it:
+
+https://gofast.live
+
+I'll keep this brief and skip the marketing talk. GoFast is a more advanced skeleton, configurable using CLI, that allows you to choose from a wide range of technologies and providers - gRPC or HTTP, SvelteKit or NextJS, Turso, PostgreSQL, Stripe, Lemon Squeeze, SendGrid, Postmark, S3, GCS, and much more. It also has a built-in monitoring stack with Grafana, Loki, and Prometheus.
+
+In short, within 2 minutes, you can have OAuth, payments, emails, files, and monitoring up and running.
+
+As it's already generating some interest, this is where I will be focusing my efforts. The code will always be open and free, but I invite everyone to try GoFast and/or join the community I'm building around Go + any modern framework: https://discord.com/invite/EdSZbQbRyJ
+
+## Demo
+
 https://sgsg.bearbyte.org/
 
 ## What is SGSG?
