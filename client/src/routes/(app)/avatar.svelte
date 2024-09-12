@@ -178,6 +178,20 @@
                         on:mouseover={() => (active = 1)}
                         on:focus={() => (active = 1)}
                         on:click={() => (open = false)}
+                        href="https://gofast.live"
+                        target="_blank"
+                        class="block px-4 py-2 text-sm text-gray-700
+                    {active === 1 ? 'bg-gray-100 text-gray-900' : ''}"
+                        role="menuitem"
+                        tabindex="-1"
+                        id="menu-item-1"
+                    >
+                        GoFast
+                    </a>
+                    <a
+                        on:mouseover={() => (active = 2)}
+                        on:focus={() => (active = 2)}
+                        on:click={() => (open = false)}
                         href="https://www.upsend.app/"
                         target="_blank"
                         class="block px-4 py-2 text-sm text-gray-700
