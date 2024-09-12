@@ -42,7 +42,7 @@ services:
       GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
       GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
       TURSO_URL: libsql://sgsg-auth-mpiorowski.turso.io
-      TURSO_TOKEN: ${TURSO_TOKEN}
+      TURSO_TOKEN: ${TURSO_TOKEN_AUTH}
     command: sh -c "go run /server/."
 
   service-profile:
@@ -58,5 +58,5 @@ services:
       GRPC_PORT: 3003
       JWT_SECRET: ${JWT_SECRET}
       TURSO_URL: libsql://sgsg-profile-mpiorowski.turso.io
-      TURSO_TOKEN: ${TURSO_TOKEN}
+      TURSO_TOKEN: ${TURSO_TOKEN_PROFILE}
     command: sh -c "go run /server/."
