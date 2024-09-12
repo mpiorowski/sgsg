@@ -195,10 +195,10 @@
                         href="https://www.upsend.app/"
                         target="_blank"
                         class="block px-4 py-2 text-sm text-gray-700
-                    {active === 1 ? 'bg-gray-100 text-gray-900' : ''}"
+                    {active === 2 ? 'bg-gray-100 text-gray-900' : ''}"
                         role="menuitem"
                         tabindex="-1"
-                        id="menu-item-1"
+                        id="menu-item-2"
                     >
                         UpSend
                     </a>
