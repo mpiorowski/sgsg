@@ -112,6 +112,10 @@ TURSO_TOKEN=TURSO_TOKEN \
 docker compose up --build
 ```
 
+### Production serverless
+
+https://dev.to/mpiorowski/breaking-the-myth-scalable-multi-region-low-latency-app-exists-and-will-not-cost-you-a-kidney-537a
+
 ### Production single server (or how to set up a production application for less than 10 euros per month)
 
 The main source of deployment have been changed to Fly.io and Turso. But there is a copy of server alone deployment on branch `server`.
