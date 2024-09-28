@@ -2,7 +2,7 @@
 
 ## Announcement
 
-While I love gRPC, introducing it to the company has been challenging, and most of the time, it's an overkill. So, I had to create something that gives me a choice—and I did. I spent a lot of time branching this code into a tool that would be usable in my current company. Then, I started adding features: providers to choose from,montiroing, automatic production release and more. The end product became so popular that I decided to share it:
+While I love gRPC, introducing it to the company has been challenging, and most of the time, it feels like overkill. So, I needed to create something that gave me flexibility—and I did. I spent a lot of time refining this code into a tool that would be practical for my current company. Then, I started adding features: providers to choose from, monitoring, automatic production releases, and more. The end product became so popular that I decided to share it.
 
 https://gofast.live
 
