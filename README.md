@@ -6,7 +6,7 @@ While I love gRPC, introducing it to the company has been challenging, and most 
 
 https://gofast.live
 
-I'll keep this brief and skip the marketing talk. GoFast is a more advanced skeleton, configurable using CLI, that allows you to choose from a wide range of technologies and providers - gRPC or HTTP, SvelteKit or NextJS, Turso, PostgreSQL, Stripe, Lemon Squeeze, SendGrid, Postmark, S3, GCS, and much more. It also has a built-in monitoring stack with Grafana, Loki, and Prometheus.
+I'll keep this brief and skip the marketing talk. GoFast is a more advanced skeleton, configurable using CLI, that allows you to choose from a wide range of technologies and providers - gRPC or HTTP, SvelteKit, NextJS or Vue.js, Turso, PostgreSQL, Stripe, Lemon Squeeze, SendGrid, Postmark, S3, GCS, and much more. It also has a built-in monitoring stack with Grafana, Loki, and Prometheus. And on top of that, a fully working guide to deploy it using Kubernetes + Grafana LGTM + OpenTelemetry.
 
 In short, within 2 minutes, you can have OAuth, payments, emails, files, and monitoring up and running.
 
