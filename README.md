@@ -14,10 +14,6 @@ As it's already generating some interest, this is where I will be focusing my ef
 
 https://discord.com/invite/EdSZbQbRyJ
 
-## Demo
-
-https://sgsg.bearbyte.org/
-
 ## What is SGSG?
 
 It is an open-source full-stack application with two main principles in mind: **PERFORMANCE** and **SIMPLICITY**.
